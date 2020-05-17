@@ -1,0 +1,117 @@
+@font-face {
+	font-family: "Book OS Style";
+	src: url("../fonts/BookOS.ttf");
+}
+
+#slider {
+	background: url("../images/slider_frame.png") no-repeat;
+	width: 473px;
+	height: 217px;
+	position: relative;
+	overflow: hidden;
+}
+
+.wrap {
+	color: #fff;
+	text-align: center;
+	margin-top: 4px;
+}
+
+.wrap header {
+	background: black;
+	position: absolute;
+	top: 145px;
+	height: 44px;
+	left: 0;
+	z-index: 500;
+	margin-left: 4px;
+	opacity: 0.8;
+	width: 461px;
+	height: 48px;
+}
+
+.wrap header div.labels {
+	margin-top: 15px;
+	margin-left: 342px;
+}
+
+.wrap header label {
+	display: inline-block;
+	border-style: solid;
+	border-width: 1px;
+	border-color: rgb(103, 59, 50);
+	border-radius: 4px;
+	background-image: -moz-linear-gradient( 90deg, rgb(49, 28, 24) 0%, rgb(83, 47, 41) 100%);
+	background-image: -webkit-linear-gradient( 90deg, rgb(49, 28, 24) 0%, rgb(83, 47, 41) 100%);
+	background-image: -ms-linear-gradient( 90deg, rgb(49, 28, 24) 0%, rgb(83, 47, 41) 100%);
+	width: 12px;
+	height: 11px;
+}
+
+.wrap header label:active {
+	border-style: solid;
+	border-width: 1px;
+	border-color: rgb(103, 59, 50);
+	border-radius: 4px;
+	background-image: -moz-linear-gradient( 90deg, rgb(49, 28, 24) 0%, rgb(83, 47, 41) 100%);
+	background-image: -webkit-linear-gradient( 90deg, rgb(49, 28, 24) 0%, rgb(83, 47, 41) 100%);
+	background-image: -ms-linear-gradient( 90deg, rgb(49, 28, 24) 0%, rgb(83, 47, 41) 100%);
+	box-shadow: inset 0px 5px 5px 0px rgba(0, 0, 0, 0.75);
+	width: 12px;
+	height: 11px;
+}
+
+.wrap header label:hover {
+	background: #2e353b;
+}
+
+.slide {
+	height: 77px;
+	width: 429px;
+	position: absolute;
+	top: 5px;
+	left: 100%;
+	margin-left: 4px;
+	padding: 8em 1em 0;
+	background-size: cover;
+	transition: left 0s .75s;
+	/* z-index: 300; */
+}
+
+.slide-one {
+	background-image: url("../images/slider/slide_1.jpg");
+}
+
+.slide-two {
+	background-image: url('https://vgtimes.ru/uploads/posts/2019-04/4game-zapuskaet-lineage-2-essence-besplatnuyu-klassicheskuyu-lineage-2-56551-m.jpg?1554487050');
+}
+
+.slide-three {
+	background-image: url('https://cdn.igromania.ru/mnt/articles/4/1/d/9/8/b/25924/html/img/bb6c745d4c816972.jpg');
+}
+
+.slide h1 {
+	opacity: 0;
+	transform: translateY(100%);
+	transition: transform .5s .5s, opacity .5s;
+	display: block;
+	float: left;
+	font-size: 14px;
+	position: absolute;
+	z-index: 1000;
+	width: 70%;
+	top: 143px;
+	font-family: "Book OS Style";
+}
+
+[id^='slide']:checked+.slide {
+	left: 0;
+	/* z-index: 400; */
+	transition: left .65s ease-out;
+}
+
+[id^='slide']:checked+.slide h1 {
+	opacity: 1;
+	transform: translateY(0);
+	transition: all .5s .5s;
+}
