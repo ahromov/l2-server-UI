@@ -38,11 +38,13 @@ h2 {
 
 #main {
     margin: 0 auto;
+    width: 980px;
+    background: url("../images/article_bg.jpg") repeat-y;
+    border-radius: 0px 0px 15px 15px;
 }
 
 header {
     padding-top: 25px;
-    width: 100%;
     height: 805px;
 }
 
@@ -79,7 +81,6 @@ header {
 
 nav {
     background-image: url("../images/menu_bg.png");
-    width: 978px;
     height: 55px;
     margin: 0 auto;
 }
@@ -87,7 +88,7 @@ nav {
 nav ul {
     list-style: none;
     padding: 0px;
-    width: 660px;
+    width: 774px;
     margin: 0 auto;
 }
 
@@ -187,7 +188,6 @@ nav ul li.checked a {
 }
 
 #content {
-    background: url("../images/article_bg.jpg") repeat-y;
     border-radius: 15px;
     position: relative;
     width: 981px;
@@ -280,31 +280,31 @@ article section {
     background: url("../images/section_bg.png") -4px no-repeat;
 }
 
-article section div#contact {
+article section div.message {
     background: url(../images/next_page_bg.png) repeat-y, url(../images/next_page_bg_rev.png) right repeat-y;
     text-align: center;
     font-size: 16px;
 }
 
-article section div#contact form {
+article section div.message form {
     width: 500px;
     margin: 0 auto;
     padding-top: 50px;
     padding-bottom: 50px;
 }
 
-article section div#contact form p {
+article section div.message form p {
     margin: 0;
     font-size: 10px;
     margin-bottom: 20px;
 }
 
-article section div#contact form input {
+article section div.message form input {
     height: 30px;
     text-align: center;
 }
 
-article section div#contact form input, article section form textarea {
+article section div.message form input, article section div.message form textarea {
     display: block;
     width: 100%;
     border: 1px solid rgb(214, 234, 247, 0.3);
@@ -318,16 +318,16 @@ article section div#contact form input, article section form textarea {
     border-radius: 10px;
 }
 
-article section div#contact form textarea {
+article section div.message form textarea {
     height: 200px;
 }
 
-article section div#contact form input.question {
+article section div.message form input.question {
     width: 130px;
     margin: 0 auto;
 }
 
-article section div#contact form button {
+article section div.message form button {
     display: block;
     background: #5b2123;
     border: 1px solid rgb(214, 234, 247, 0.3);
@@ -474,7 +474,6 @@ article section a:active {
     float: left;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     text-align: right;
-    /* box-sizing: border-box; */
 }
 
 #content #right #lk_form form h1 {
@@ -556,7 +555,6 @@ article section a:active {
 #content #right #lk_form #formBoard span {
     display: block;
     position: absolute;
-    width: 107px;
     margin-left: 8px;
     margin-top: 9px;
     font-weight: bold;
@@ -569,10 +567,10 @@ article section a:active {
     background-image: -moz-linear-gradient( 90deg, rgb(52, 13, 5) 0%, rgb(63, 16, 6) 100%);
     background-image: -webkit-linear-gradient( 90deg, rgb(52, 13, 5) 0%, rgb(63, 16, 6) 100%);
     background-image: -ms-linear-gradient( 90deg, rgb(52, 13, 5) 0%, rgb(63, 16, 6) 100%);
-    margin-left: 119px;
+    margin-left: 123px;
     position: absolute;
     top: 4px;
-    width: 40px;
+    width: 39px;
     height: 26px;
     text-decoration: none;
     color: white;
@@ -586,7 +584,6 @@ article section a:active {
     float: right;
     width: 93px;
     position: absolute;
-    /* left: 0px; */
     margin-left: 386px;
 }
 
@@ -641,7 +638,6 @@ article section a:active {
 
 #forum .caption h1 {
     display: block;
-    width: 180px;
     height: 21px;
     margin: 0 auto;
     margin-top: 16px;
@@ -687,35 +683,38 @@ article section a:active {
     top: 2px;
 }
 
-#content footer {
-    width: 980px;
+footer {
+    display: flex;
+    justify-content: space-between;
+}
+
+footer section {
+    margin: 0px;
+}
+
+footer section.left {
+    border-radius: 0 15px 0 0;
 }
 
 #content div.main {
-    height: 793px;
+    display: flex;
+    justify-content: center;
+    background: url("../images/article_bg.jpg") repeat-y;
 }
 
-#content footer section.left, footer section.right {
-    display: inline-block;
-}
-
-#content footer section.left {
-    width: 392px;
-}
-
-#content footer #next_page {
+footer #next_page {
     background-image: url("../images/next_page_bg.png");
     width: 392px;
     height: 48px;
     margin-top: 15px;
 }
 
-#content footer #next_page li {
+footer #next_page li {
     display: inline-block;
     list-style: none;
 }
 
-#content footer #next_page li a {
+footer #next_page li a {
     display: block;
     background: url("../images/next_page_btn.png") no-repeat;
     width: 35px;
@@ -729,42 +728,40 @@ article section a:active {
     font-family: "Book OS Style";
 }
 
-#content footer #next_page li a:hover {
+footer #next_page li a:hover {
     background: url("../images/next_page_btn_active.png") no-repeat;
 }
 
-#content footer h1, #content footer p {
+footer h1, footer p {
     margin-left: 15px;
 }
 
-#content footer h1 {
+footer h1 {
     font-family: "Book OS Style";
     font-size: 12px;
 }
 
-#content footer p {
+footer p {
     font-family: "Book OS Style";
     font-size: 10px;
 }
 
-#content footer #social {
+footer #social {
     background-image: url("../images/socials_bg.png");
     margin-top: 17px;
-    width: 490px;
-    height: 137px;
     position: relative;
     float: right;
     border-radius: 0 0 15px 0;
 }
 
-#content footer #social .title {
+footer #social .title {
     width: 490px;
-    height: 31px;
+    height: 46px;
     background: url("../images/socials_title_bg.png") no-repeat;
     padding-top: 5px;
 }
 
-#content footer #social h1 {
+footer #social h1 {
     display: block;
     margin-top: 0px;
     font-family: "Book OS Style";
@@ -773,41 +770,40 @@ article section a:active {
     margin-right: 20px;
 }
 
-#content footer #social .l2logo {
+footer #social .l2logo {
     background-image: url("../images/lineage2_logo.png");
     width: 180px;
     height: 74px;
     float: left;
 }
 
-#content footer #social .social_list {
+footer #social .social_list {
     float: right;
-    width: 280px;
     height: 74px;
     position: absolute;
     left: 230px;
     font-size: 14px;
 }
 
-#content footer #social .social_list ul {
+footer #social .social_list ul {
     list-style: none;
     margin: 0;
     padding: 0;
 }
 
-#content footer #social .social_list ul li {
+footer #social .social_list ul li {
     display: block;
     width: 100%;
     float: right;
     box-sizing: border-box;
 }
 
-#content footer #social .social_list ul li a {
+footer #social .social_list ul li a {
     display: block;
     margin-top: 8px;
 }
 
-#content footer #social .social_list ul li div {
+footer #social .social_list ul li div {
     content: "";
     display: block;
     background: url("../images/social_marker_bg.png") no-repeat;

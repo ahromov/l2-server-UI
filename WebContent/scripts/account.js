@@ -1,6 +1,7 @@
 var login;
 
-function showStartMenu() {
+
+function showLoginForm() {
 	$("#lk_form form").html(
 		`<form>
 		<h1>${messages.personalCabinet}</h1>
@@ -22,8 +23,8 @@ function showStartMenu() {
 	);
 }
 
-function showMenu() {
 
+function showCabinetMenu() {
 	$("#lk_form form").html(
 		'<h1>' + messages.welcome + ', ' + login + '!</h1>' +
 		'<button type="button" class="changePass">' + messages.passwordChanging + '</button>' +
@@ -31,11 +32,10 @@ function showMenu() {
 	);
 
 	$('#content #right #lk_form form button').css('transform', 'translateX(-32px)').css('width', '333px');
-
 }
 
-$(document).on('click', '#submit', function () {
 
+$(document).on('click', '#submit', function () {
 	grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
 		action: 'login'
 	}).then(function (token) {
@@ -64,7 +64,7 @@ $(document).on('click', '#submit', function () {
 						switch (data.status) {
 							case 'Success':
 								$('form').trigger('reset');
-								showMenu();
+								showCabinetMenu();
 								$('#lk_form form h1').css("color", "green");
 								break;
 							case 'Not exists':
@@ -88,15 +88,12 @@ $(document).on('click', '#submit', function () {
 			})
 		}
 	});
-
 });
-
 
 $(document).on('click', ".exit", function () {
 	login = '';
-	showStartMenu();
+	showLoginForm();
 });
-
 
 $(document).on('click', ".changePass", function () {
 	$("#lk_form form").html(
@@ -107,11 +104,10 @@ $(document).on('click', ".changePass", function () {
 		'<label><span>' + messages.newPassword + ':</span><input id="newFirstPassword" type="password"></label></div>' +
 		'<div>' +
 		'<label><span>' + messages.newPassword + ':</span><input id="newSecondPassword"" type="password"></label></div>' +
-		'<button class="back" type="button" onclick="showMenu()"><< ' + messages.back + '</button><button class="submit" type="button">' + messages.change + '</button>'
+		'<button class="back" type="button" onclick="showCabinetMenu()"><< ' + messages.back + '</button><button class="submit" type="button">' + messages.change + '</button>'
 	);
 
 	$('#content #right #lk_form form h1').css('font-size', '10px').css('margin-top', '-5px');
-	// $('#content #right #lk_form form div').css('margin-top', '-1px');
 	$('#content #right #lk_form form div span').css('width', '138px');
 	$('#content #right #lk_form form div input').css('height', '25px').css('width', '214px');
 	$('#content #right #lk_form form button').css('width', '105px').css('transform', 'translateX(-32px)').css('margin-right', '2px').css('height', '20px').css('width', '105px');
@@ -170,8 +166,7 @@ $(document).on('click', ".submit", function () {
 	);
 });
 
-
-$(".remember").click(function () {
+$(document).on('click', "#lk_form .remember", function () {
 	$("#lk_form form").html(
 		'<form>' +
 		'<h1>' + messages.passwordChanging + '</h1>' +
@@ -183,14 +178,12 @@ $(".remember").click(function () {
 	);
 
 	$("button[type='button']").removeClass().addClass('rem');
-	// $('#content #right #lk_form form button').css('width', '134px').css('margin-right', '35px').css('margin-top', '5px');
-	$('#content #right #lk_form form button').animate({
+	$('#content #right #lk_form form button').css({
 		'width': '134px',
 		'margin-right': '35px',
 		'margin-top': '5px'
 	});
 })
-
 
 $(document).on('click', ".rem", function () {
 	grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
@@ -218,23 +211,20 @@ $(document).on('click', ".rem", function () {
 
 					$.post(url + "/accounts/restorePass", userRegistration,
 						function (data) {
-							switch (data.message) {
+							switch (data.status) {
 								case 'Success':
 									$('form').trigger('reset');
 									if (data.status == 'Success')
 										$('#lk_form form h1').css("color", "green").html(messages.passwordChanged + '! ' + messages.checkEmail);
 									break;
-
+								case 'Invalid login':
+									$('#lk_form form h1').css("color", "yellow").html(messages.invalidLogin);
+									$('form').trigger('reset');
+									break;
 								case 'Not exists':
 									$('#lk_form form h1').css("color", "yellow").html(messages.accountNotExists);
 									$('form').trigger('reset');
 									break;
-
-								case 'Invalid email':
-									$('#lk_form form h1').css("color", "yellow").html(messages.incorrectEmail);
-									$('form').trigger('reset');
-									break;
-
 								case 'Invalid data':
 									$('#lk_form form h1').css("color", "red").html(messages.somthingWrong);
 									$('form').trigger('reset');
@@ -251,29 +241,6 @@ $(document).on('click', ".rem", function () {
 		}
 	});
 });
-
-$("#reg").click(function () {
-	$("#lk_form form").html(
-		'<form>' +
-		'<h1>' + messages.registration + '</h1>' +
-		'<div>' +
-		'<label><span>' + messages.loginName + ':</span><input id="inputLoginl3" type="text"></label></div>' +
-		'<div>' +
-		'<label><span>' + messages.email + ':</span><input id="inputEmail3" type="email"></label></div>' +
-		'<div>' +
-		'<label><span>' + messages.password + ':</span><input id="inputPassword3" type="password"></label></div>' +
-		'<div>' +
-		'<label><span>' + messages.repeatePassword + ':</span><input id="inputSecondPassword3" type="password"></label></div>' +
-		'<button class="register" type="button">' + messages.send + '</button>'
-	).fadeTo(3000, 0.6);
-
-	$('#content #right #lk_form form h1').css('font-size', '10px').css('margin-top', '-5px');
-	$('#content #right #lk_form form div').css('margin-top', '0px').css('margin-bottom', '2px');
-	$('#content #right #lk_form form div input').css('height', '20px');
-	$('#content #right #lk_form form div span').css('padding-top', '2px');
-	$('#content #right #lk_form form button').css('width', '134px').css('margin-right', '35px').css('height', '18px');
-})
-
 
 $(document).on('click', ".register", function () {
 	grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
@@ -341,11 +308,13 @@ $(document).on('click', ".register", function () {
 	});
 })
 
+
 function cantEmpty(data) {
-	$('div#contact form  p.' + data).html(messages.fieldsCannotEmpty).css('color', 'red');
+	$('div.message form  p.' + data).html(messages.fieldsCannotEmpty).css('color', 'red');
 }
 
-$(document).on('click', 'div#contact form button[type="button"]', function () {
+
+$(document).on('click', 'div.message form button[type="button"]', function () {
 	grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
 		action: 'social'
 	}).then(function (token) {
@@ -354,12 +323,11 @@ $(document).on('click', 'div#contact form button[type="button"]', function () {
 				response: token
 			}).done(function (result) {
 				if (result.success && result.score > 0.5) {
-					var name = $('div#contact form input.name').val();
-					var email = $('div#contact form input.email').val();
-					var message = $('div#contact form textarea.message').val();
-					var answer = $('div#contact form input.question').val();
+					var login = $('div.message form input.name').val();
+					var email = $('div.message form input.email').val();
+					var message = $('div.message form textarea.message').val();
 
-					if (name === '' || name == null) {
+					if (login === '' || login == null) {
 						cantEmpty('name');
 						return;
 					}
@@ -374,43 +342,31 @@ $(document).on('click', 'div#contact form button[type="button"]', function () {
 						return;
 					}
 
-					if (answer === '' || answer == null) {
-						cantEmpty('question');
-						return;
-					} else {
-						if (parseInt(answer) == 2 * 2 - 2) {
-							var userRegistration = {
-								name: name,
-								email: email,
-								message: message,
-								answer: answer
-							};
+					let formData = {
+						login: login,
+						email: email,
+						message: message
+					};
 
-							$.post(url + "/accounts/sendMess", userRegistration,
-								function (data) {
-									switch (data.message) {
-										case 'Success':
-											$('form').trigger('reset');
-											if (data.isMailSended)
-												$('div#contact form').css("color", "green").html(message.messageSended);
-											else
-												$('div#contact form').css("color", "red").html(message.messageNotSended);
-											break;
+					$.post(url + "/accounts/sendMess", formData,
+						function (data) {
+							$('#content div.message form').hide();
 
-										case 'Invalid data':
-											$('div#contact form').css("color", "red").html(message.somthingWrong);
-											$('form').trigger('reset');
-											break;
-									}
-								}
-							);
-						} else {
-							$('div#contact form p.question').html(message.invalidAnswer).css('color', 'red');
-							return;
+							switch (data.status) {
+								case 'Success':
+									$('#content div.message').html(messages.messageSended).css("color", "green");
+									break;
+								case 'Invalid login':
+									$('#content div.message').html(messages.invalidLogin).css("color", "orange");
+									break;
+								case 'Not found':
+									$('#content div.message').html(messages.accountNotExists).css("color", "red");
+									break;
+							}
 						}
-					}
+					);
 				} else {
-					$('div#contact form p.question').html(message.botsAction).css('color', 'red');
+					$('div.message form p.question').html(message.botsAction).css('color', 'red');
 					return;
 				}
 			})
