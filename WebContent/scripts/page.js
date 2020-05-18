@@ -2,273 +2,6 @@ var serverName = 'LineageII server';
 
 var developerName = 'LaJDev';
 
-var ruMessages = {
-    title: `${serverName}::Бесплатный игровой сервер`,
-    slogan: `от ${developerName} - качество, проверенное временем`,
-    general: "Главная",
-    aboutServer: "О сервере",
-    registration: "Регистрация",
-    contact: 'Контакты',
-    files: "Файлы",
-    statistic: "Статистика",
-    forum: "Форум",
-    fieldsCannotEmpty: 'Поля не должны быть пустыми!',
-    waiting: 'Подождите ...',
-    loginExists: 'Логин уже существует!',
-    accountCreated: 'Аккаунт создан!',
-    accountNotExists: 'Аккаунт не существует!',
-    incorrectPassword: 'Не верный пароль!',
-    incorrerctOldPassword: 'Неверный старый пароль!',
-    invalidLogin: 'Неверный логин!',
-    emailExists: 'Такой е-мейл уже существует',
-    passwordsNotMatch: 'Пароли не совпадают!',
-    passwordChanged: 'Пароль изменен',
-    checkEmail: 'Проверьте почту :)',
-    mesageCanOnlyRegisteredUsers: 'Сообщения могут отправлять только зарегистрированые пользователи',
-    incorrectEmail: 'Не корректный e-mail:(...',
-    somthingWrong: 'Что-то пошло не так(...',
-    botsAction: 'Подозрение на бот-активность(...',
-    passwordChanging: 'Смена пароля',
-    forgotPassword: 'Забыли пароль',
-    password: 'Пароль',
-    oldPassword: 'Старый пароль',
-    newPassword: 'Новый пароль',
-    repeatePassword: 'Повторить пароль',
-    back: 'Назад',
-    change: 'Сменить',
-    loginName: 'Логин',
-    enter: 'Войти',
-    email: 'E-mail',
-    send: 'Отправить',
-    messageSended: 'Сообщение отправлено!',
-    messageNotSended: 'Письмо не отправлено :( ...',
-    invalidAnswer: 'Неверный ответ!',
-    news: 'НОВОСТИ ПРОЕКТА',
-    dataCenter: 'Датацентр',
-    publishingIn: 'Опубликовано в',
-    readMore: 'Подробнее ...',
-    personalCabinet: 'ЛИЧНЫЙ КАБИНЕТ',
-    newsCaption: 'Заголовок',
-    forumMessages: 'СЛУХИ НА ФОРУМЕ',
-    exit: 'Выход',
-    welcome: 'Приветствуем',
-    license: 'ДАННЫЙ СЕРВЕР ЯВЛЯЕТСЯ ТЕСТОВЫМ ВАРИАНТОМ ИГРЫ LINEAGE II И ПРЕДНАЗНАЧЕН ТОЛЬКО ДЛЯ ОЗНАКОМЛЕНИЯ ИГРОКОВ. ВСЕ ПРАВА ПРИНАДЛЕЖАТ КОМПАНИИ NCSOFT.',
-    rates: 'Рейты',
-    selectIntoTop: 'Отбор в ТОП',
-    selectIntoTopDescription: 'Проводится автоматически. Необходимое условие - получения статуса дворянина. Далеее сортировка происходит от наибольшего количества проведенного времени в игре. Отобранные в "десятку" еженедельно будут получать вознаграждение в виде Адены.',
-    common: 'Общее',
-    commonDescription: 'Броня, оружие, бижа с "Д" - до "Дино" сэтов, патроны - возможно покупать в комьюнити шопе. Пожелания, предложения, отчет по багам присылайте используя форму разделе "Контакты". Приятного геймплея!:)',
-    ourCommunitys: 'Наши сообщества в социальных сетях',
-    contactsForm: 'Форма для связи',
-    fullName: 'Логин',
-    emailForFeedback: 'Е-мейл (для обратной связи)',
-    messagesText: 'Текст сообщения',
-    accounts: 'Аккаунтов',
-    characters: 'Персонажей',
-    nobleses: 'Дворян',
-    heroes: 'Героев',
-    gameMasters: 'Гейм мастеров',
-    clans: 'Кланы',
-    allys: 'Альянсов',
-    top10chars: 'Тор 10 персонажей',
-    charName: 'Игровой ник',
-    charClass: 'Класс',
-    charSex: 'Пол',
-    clanName: 'Название клана',
-    gameTime: 'Время в игре',
-    lvl: 'Ур.',
-    leader: 'Лидер',
-    reputation: 'Репутация',
-    midLvl: 'Ср.ур',
-    ally: 'Альянс',
-    castles: 'Замки',
-    castleName: 'Название замка',
-    owner: 'Владелец',
-    tax: 'Ставка налога',
-    treasure: 'Казна',
-    siegeDate: 'Дата осады',
-    forts: 'Форты',
-    fortName: 'Название форта'
-}
-
-var enMessages = {
-    title: `${serverName}::Free game server`,
-    slogan: `from ${developerName} - time-tested quality`,
-    general: 'Home',
-    aboutServer: 'About server',
-    registration: 'Registration',
-    files: 'Files',
-    statistic: 'Statistics',
-    contact: 'Contacts',
-    forum: 'Forum',
-    fieldsCannotEmpty: 'Fields must not be empty!',
-    waiting: 'Wait ...',
-    loginExists: 'Login already exists!',
-    accountCreated: 'Account created!',
-    accountNotExists: 'Account does not exist!',
-    incorrectPassword: 'Invalid password!',
-    incorrerctOldPassword: 'Invalid old password!',
-    invalidLogin: 'Invalid login!',
-    emailExists: 'This e-mail exists',
-    passwordsNotMatch: 'Passwords do not match!',
-    passwordChanged: 'Password changed',
-    checkEmail: 'Check mail :)',
-    incorrectEmail: 'Incorrect e-mail: (...',
-    mesageCanOnlyRegisteredUsers: 'Messages can only be sent by registered users',
-    somthingWrong: 'Something went wrong (...',
-    botsAction: 'Suspicion of bot activity (...',
-    passwordChanging: 'Change password',
-    forgotPassword: 'Forgot password',
-    password: 'Password',
-    oldPassword: 'Old password',
-    newPassword: 'New password',
-    repeatePassword: 'Repeat password',
-    back: 'Back',
-    change: 'Change',
-    loginName: 'Login',
-    enter: 'Login',
-    email: 'E-mail',
-    send: 'Send',
-    messageSended: 'Message sent!',
-    messageNotSended: 'Email not sent :( ...',
-    invalidAnswer: 'Invalid answer!',
-    news: 'PROJECT NEWS',
-    dataCenter: 'Datacenter',
-    publishingIn: 'Posted in',
-    readMore: 'Read more ...',
-    personalCabinet: 'PERSONAL OFFICE',
-    newsCaption: 'Headline',
-    forumMessages: 'HEARINGS ON THE FORUM',
-    exit: 'Exit',
-    welcome: 'Welcome',
-    rates: 'Rates',
-    license: 'THIS SERVER IS A TEST OPTION OF THE LINEAGE II GAME AND IS DESIGNED ONLY TO ACQUAINT PLAYERS. ALL RIGHTS OWNED BY NCSOFT. ',
-    selectIntoTop: 'Selection in TOP',
-    selectIntoTopDescription: 'Held automatically. A necessary condition is to obtain the status of a nobleman. The following sorting occurs from the greatest amount of time spent in the game. Selected in the top ten will receive a weekly reward in the form of Adena. ',
-    common: 'General',
-    commonDescription: 'Armor, weapons, bijou from "D" - to "Dino" sets, ammunition - it is possible to buy in the community store. Send wishes, suggestions, bug reports using the form to the "Contacts" section. Enjoy the gameplay! :)',
-    ourCommunitys: 'Our communities in social networks',
-    contactsForm: 'Contact form',
-    fullName: 'Login',
-    emailForFeedback: 'Email (for feedback)',
-    messagesText: 'Message text',
-    accounts: 'Accounts',
-    characters: 'Characters',
-    nobleses: 'Nobles',
-    heroes: 'Heroes',
-    gameMasters: 'Game Masters',
-    clans: 'Clans',
-    allys: 'Alliances',
-    top10chars: 'Thor 10 characters',
-    charName: 'Game nickname',
-    charClass: 'Class',
-    charSex: 'Gender',
-    clanName: 'Clan name',
-    gameTime: 'Time in the game',
-    lvl: 'Lv.',
-    leader: 'Leader',
-    reputation: 'Reputation',
-    midLvl: 'Wed.ur',
-    ally: 'Alliance',
-    castles: 'Castles',
-    castleName: 'Castle name',
-    owner: 'Owner',
-    tax: 'tax rate',
-    treasure: 'Treasury',
-    siegeDate: 'Siege Date',
-    forts: 'Forts',
-    fortName: 'Fort name'
-}
-
-var uaMessages = {
-    title: `${serverName}::Безкоштовний ігровий сервер`,
-    slogan: `від ${developerName} - якість, перевірена часом`,
-    general: 'Головна',
-    aboutServer: 'Про сервер',
-    registration: 'Реєстрація',
-    files: 'Файли',
-    statistic: 'Статистика',
-    contact: 'Контакти',
-    forum: 'Форум',
-    fieldsCannotEmpty: 'Поля не повинні бути порожніми!',
-    waiting: 'Зачекайте ...',
-    loginExists: 'Логін вже існує!',
-    emailExists: 'Такий е-мейл вже існує',
-    accountCreated: 'Аккаунт створений!',
-    accountNotExists: 'Аккаунт не існує!',
-    incorrectPassword: 'Не вірний пароль!',
-    incorrerctOldPassword: 'Неправильний старий пароль!',
-    invalidLogin: 'Невірний логін!',
-    passwordsNotMatch: 'Паролі не співпадають!',
-    passwordChanged: 'Пароль змінений',
-    checkEmail: 'Перевірте пошту :)',
-    incorrectEmail: 'Не коректна e-mail адреса:(...',
-    mesageCanOnlyRegisteredUsers: 'Повідомлення можуть відправляти тільки зареєстровані користувачі',
-    somthingWrong: 'Щось пішло не так (...',
-    botsAction: 'Підозра на бот-активність (...',
-    passwordChanging: 'Зміна паролю',
-    forgotPassword: 'Забули пароль',
-    password: 'Пароль',
-    oldPassword: 'Старий пароль',
-    newPassword: 'Новий пароль',
-    repeatePassword: 'Повторити пароль',
-    back: 'Назад',
-    change: 'Змінити',
-    loginName: 'Логін',
-    enter: 'Увійти',
-    email: 'E-mail',
-    send: 'Відправити',
-    messageSended: 'Повідомлення відправлено!',
-    messageNotSended: 'Повідомлення не надіслано:( ...',
-    invalidAnswer: 'Не вірна відповідь!',
-    news: 'НОВИНИ ПРОЕКТУ',
-    dataCenter: 'Датацентр',
-    publishingIn: 'Опубліковано в',
-    readMore: 'Детальніше ...',
-    personalCabinet: 'ОСОБИСТИЙ КАБІНЕТ',
-    newsCaption: 'Заголовок',
-    forumMessages: 'ЧУТКИ НА ФОРУМІ',
-    exit: 'Вихід',
-    welcome: 'Вітаємо',
-    license: 'ДАНИЙ СЕРВЕР Є ТЕСТОВИМ ВАРІАНТОМ ГРИ LINEAGEII ТА ПРИЗНАЧЕНИЙ ТІЛЬКИ ДЛЯ ОЗНАЙОМЛЕННЯ. ВСІ ПРАВА НАЛЕЖАТЬ КОМПАНІЇ NCSOFT.',
-    rates: 'Рейти',
-    selectIntoTop: 'Відбір в ТОП',
-    selectIntoTopDescription: 'Проводиться автоматично. Необхідна умова - отримання статусу дворянина. Далі сортування відбувається від найбільшої кількості проведеного часу в грі. Відібрані в "десятку" щотижня отримуватимуть винагороду у вигляді адени. ',
-    common: 'Загальна',
-    commonDescription: 'Броня, зброя, біжа з "Д" - до "Діно" сетів, патрони - можливо купувати в ком`юніті шопі. Побажання, пропозиції, звіт по багам надсилайте використовуючи форму розділі "Контакти". Приємного геймплею!:)',
-    ourCommunitys: 'Наші спільноти в соціальних мережах',
-    contactsForm: 'Форма для зв`язку',
-    fullName: 'Логін',
-    emailForFeedback: 'Е-мейл (для зворотного зв`язку) ',
-    messagesText: 'Текст повідомлення',
-    accounts: 'Акаунтів',
-    characters: 'Персонажів',
-    nobleses: 'Дворян',
-    heroes: 'Героїв',
-    gameMasters: 'Гейм майстрів',
-    clans: 'Клани',
-    allys: 'Альянсів',
-    top10chars: 'Тор 10 персонажів',
-    charName: 'Ігровий нік',
-    charClass: 'Клас',
-    charSex: 'Пол',
-    clanName: 'Назва клану',
-    gameTime: 'Час в грі',
-    lvl: 'Рів.',
-    leader: 'Лідер',
-    reputation: 'Репутація',
-    midLvl: 'Ср.рів',
-    ally: 'Альянс',
-    castles: 'Замки',
-    castleName: 'Назва замку',
-    owner: 'Власник',
-    tax: 'Ставка податку',
-    treasure: 'Казна',
-    siegeDate: 'Дата облоги',
-    forts: 'Форти',
-    fortName: 'Назва форту'
-}
-
 var lang;
 
 var messages;
@@ -294,6 +27,40 @@ function generateLogo() {
         <h1>${serverName}</h1>
         <p>${messages.slogan}</p>
     `)
+}
+
+
+function showLoginForm() {
+    $("#lk_form form").html(
+        `<form>
+		<h1>${messages.personalCabinet}</h1>
+		<div>
+			<label><span class="login">${messages.loginName}:</span><input id="inputLoginl3"
+					type="text"></label>
+		</div>
+		<div>
+			<label><span class="password">${messages.password}:</span><input id="inputPassword3"
+					type="password"></label>
+		</div>
+		<div>
+			<button class="login" type="button">${messages.enter}</button>
+		</div>
+		</form>
+		<div id="formBoard">
+			<span>${messages.forgotPassword}</span> <a class="forgot">? >></a>
+		</div>`
+    );
+}
+
+
+function showCabinetMenu() {
+    $("#lk_form form").html(
+        '<h1>' + messages.welcome + ', ' + login + '!</h1>' +
+        '<button type="button" class="changePass">' + messages.passwordChanging + '</button>' +
+        '<button type="button" class="exit">' + messages.exit + '</button></<button>'
+    );
+
+    $('#content #right #lk_form form button').css('transform', 'translateX(-32px)').css('width', '333px');
 }
 
 
@@ -373,11 +140,11 @@ function generateMainContent(articles, posts, languages) {
                                     type="password"></label>
                         </div>
                         <div>
-                            <button id="submit" type="button">${messages.enter}</button>
+                            <button class="login" type="button">${messages.enter}</button>
                         </div>
                     </form>
                     <div id="formBoard">
-                        <span>${messages.forgotPassword}</span> <a class="remember">? >></a>
+                        <span>${messages.forgotPassword}</span> <a class="forgot">? >></a>
                     </div>
                 </section>
                 <section id="lang">
@@ -787,7 +554,7 @@ $(document).on('click', 'nav #contact', function () {
                                 <label>${messages.fullName}: <input type="text" class="name"><p class="name"></p></label>
                                 <label>${messages.emailForFeedback}: <input type="email" class="email"><p class="email"></p></label>
                                 <label>${messages.messagesText}: <textarea class="message"></textarea><p class="message"></p></label>
-                                <button type="button">${messages.send}</button>
+                                <button class="sendMessage" type="button">${messages.send}</button>
                             </form>
                         </div>
                     </section>
@@ -795,6 +562,49 @@ $(document).on('click', 'nav #contact', function () {
             </div>
         </div>
     `)
+})
+
+$(document).on('click', "button.changePass", function () {
+    $("#lk_form form").html(
+        '<h1>' + messages.passwordChanging + ' ' + login + '!</h1>' +
+        '<div>' +
+        '<label><span>' + messages.oldPassword + ':</span><input id="oldPassword" type="password"></label></div>' +
+        '<div>' +
+        '<label><span>' + messages.newPassword + ':</span><input id="newFirstPassword" type="password"></label></div>' +
+        '<div>' +
+        '<label><span>' + messages.repeatePassword + ':</span><input id="newSecondPassword"" type="password"></label></div>' +
+        '<button class="back" type="button" onclick="showCabinetMenu()"><< ' + messages.back + '</button><button class="changePassword" type="button">' + messages.change + '</button>'
+    );
+
+    $('#content #right #lk_form form h1').css('font-size', '10px').css('margin-top', '-5px');
+    $('#content #right #lk_form form div span').css('width', '138px');
+    $('#content #right #lk_form form div input').css('height', '25px').css('width', '214px');
+    $('#content #right #lk_form form button').css('width', '105px').css('transform', 'translateX(-32px)').css('margin-right', '2px').css('height', '20px').css('width', '105px');
+    $('#content #right #lk_form form button.back').css('width', '97px')
+});
+
+$(document).on('click', "button.exit", function () {
+    login = null;
+    showLoginForm();
+});
+
+$(document).on('click', "a.forgot", function () {
+    $("#lk_form form").html(
+        '<form>' +
+        '<h1>' + messages.passwordChanging + '</h1>' +
+        '<div>' +
+        '<label><span>' + messages.loginName + ':</span><input id="inputLoginl3" type="text"></label></div>' +
+        '<div>' +
+        '<label><span>' + messages.email + ':</span><input id="inputEmail3" type="email"></label></div>' +
+        '<button class="restore" type="button">' + messages.change + '</button>'
+    );
+
+    $("button[type='button']").removeClass().addClass('restore');
+    $('#content #right #lk_form form button').css({
+        'width': '134px',
+        'margin-right': '35px',
+        'margin-top': '5px'
+    });
 })
 
 $(document).on('click', '#lang a#ua', function () {
