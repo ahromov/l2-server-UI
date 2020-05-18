@@ -756,7 +756,6 @@ footer #social {
 
 footer #social .title {
     width: 490px;
-    height: 46px;
     background: url("../images/socials_title_bg.png") no-repeat;
     padding-top: 5px;
 }
@@ -780,8 +779,6 @@ footer #social .l2logo {
 footer #social .social_list {
     float: right;
     height: 74px;
-    position: absolute;
-    left: 230px;
     font-size: 14px;
 }
 
