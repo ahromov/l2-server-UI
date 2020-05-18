@@ -1,3 +1,5 @@
+var url = 'http://localhost:8080';
+
 var login;
 
 
@@ -282,19 +284,20 @@ $(document).on('click', ".register", function () {
 									$('form').trigger('reset');
 									$('#lk_form form h1').css("color", "green").html(messages.accountCreated + '! ' + messages.checkEmail);
 									break;
-
 								case 'No match':
 									$('#lk_form form h1').css("color", "orange").html(messages.passwordsNotMatch);
 									$('form').trigger('reset');
 									break;
-
-								case 'Exists':
+								case 'Login exists':
 									$('#lk_form form h1').css("color", "yellow").html(messages.loginExists);
 									$('form').trigger('reset');
 									break;
-
-								case 'Invalid data':
-									$('#lk_form form h1').css("color", "red").html(messages.somthingWrong);
+								case 'Email exists':
+									$('#lk_form form h1').css("color", "red").html(messages.emailExists);
+									$('form').trigger('reset');
+									break;
+								case 'Invalid email':
+									$('#lk_form form h1').css("color", "red").html(messages.incorrectEmail);
 									$('form').trigger('reset');
 									break;
 							}
@@ -309,7 +312,7 @@ $(document).on('click', ".register", function () {
 })
 
 
-function cantEmpty(data) {
+function showCantEmptyMessage(data) {
 	$('div.message form  p.' + data).html(messages.fieldsCannotEmpty).css('color', 'red');
 }
 
@@ -328,17 +331,17 @@ $(document).on('click', 'div.message form button[type="button"]', function () {
 					var message = $('div.message form textarea.message').val();
 
 					if (login === '' || login == null) {
-						cantEmpty('name');
+						showCantEmptyMessage('name');
 						return;
 					}
 
 					if (email === '' || email == null) {
-						cantEmpty('email');
+						showCantEmptyMessage('email');
 						return;
 					}
 
 					if (message === '' || message == null) {
-						cantEmpty('message');
+						showCantEmptyMessage('message');
 						return;
 					}
 

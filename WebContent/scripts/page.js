@@ -1,11 +1,9 @@
-var url = 'http://localhost:8080';
-
 var serverName = 'LineageII server';
 
 var developerName = 'LaJDev';
 
 var ruMessages = {
-    title: 'LaJDev::Бесплатный игровой сервер LineageII',
+    title: `${serverName}::Бесплатный игровой сервер`,
     slogan: `от ${developerName} - качество, проверенное временем`,
     general: "Главная",
     aboutServer: "О сервере",
@@ -22,11 +20,12 @@ var ruMessages = {
     incorrectPassword: 'Не верный пароль!',
     incorrerctOldPassword: 'Неверный старый пароль!',
     invalidLogin: 'Неверный логин!',
+    emailExists: 'Такой е-мейл уже существует',
     passwordsNotMatch: 'Пароли не совпадают!',
     passwordChanged: 'Пароль изменен',
     checkEmail: 'Проверьте почту :)',
     mesageCanOnlyRegisteredUsers: 'Сообщения могут отправлять только зарегистрированые пользователи',
-    incorrectEmail: 'Неправильный e-mail :(...',
+    incorrectEmail: 'Не корректный e-mail:(...',
     somthingWrong: 'Что-то пошло не так(...',
     botsAction: 'Подозрение на бот-активность(...',
     passwordChanging: 'Смена пароля',
@@ -93,7 +92,7 @@ var ruMessages = {
 }
 
 var enMessages = {
-    title: 'LaJDev::Free LineageII game server',
+    title: `${serverName}::Free game server`,
     slogan: `from ${developerName} - time-tested quality`,
     general: 'Home',
     aboutServer: 'About server',
@@ -110,10 +109,11 @@ var enMessages = {
     incorrectPassword: 'Invalid password!',
     incorrerctOldPassword: 'Invalid old password!',
     invalidLogin: 'Invalid login!',
+    emailExists: 'This e-mail exists',
     passwordsNotMatch: 'Passwords do not match!',
     passwordChanged: 'Password changed',
     checkEmail: 'Check mail :)',
-    incorrectEmail: 'Invalid e-mail: (...',
+    incorrectEmail: 'Incorrect e-mail: (...',
     mesageCanOnlyRegisteredUsers: 'Messages can only be sent by registered users',
     somthingWrong: 'Something went wrong (...',
     botsAction: 'Suspicion of bot activity (...',
@@ -181,7 +181,7 @@ var enMessages = {
 }
 
 var uaMessages = {
-    title: 'LaJDev::Безкоштовний ігровий сервер LineageII',
+    title: `${serverName}::Безкоштовний ігровий сервер`,
     slogan: `від ${developerName} - якість, перевірена часом`,
     general: 'Головна',
     aboutServer: 'Про сервер',
@@ -193,6 +193,7 @@ var uaMessages = {
     fieldsCannotEmpty: 'Поля не повинні бути порожніми!',
     waiting: 'Зачекайте ...',
     loginExists: 'Логін вже існує!',
+    emailExists: 'Такий е-мейл вже існує',
     accountCreated: 'Аккаунт створений!',
     accountNotExists: 'Аккаунт не існує!',
     incorrectPassword: 'Не вірний пароль!',
@@ -201,7 +202,7 @@ var uaMessages = {
     passwordsNotMatch: 'Паролі не співпадають!',
     passwordChanged: 'Пароль змінений',
     checkEmail: 'Перевірте пошту :)',
-    incorrectEmail: 'Неправильний e-mail: (...',
+    incorrectEmail: 'Не коректна e-mail адреса:(...',
     mesageCanOnlyRegisteredUsers: 'Повідомлення можуть відправляти тільки зареєстровані користувачі',
     somthingWrong: 'Щось пішло не так (...',
     botsAction: 'Підозра на бот-активність (...',
@@ -218,8 +219,8 @@ var uaMessages = {
     email: 'E-mail',
     send: 'Відправити',
     messageSended: 'Повідомлення відправлено!',
-    messageNotSended: 'Письмо не відправлено :( ...',
-    invalidAnswer: 'Неправильна відповідь!',
+    messageNotSended: 'Повідомлення не надіслано:( ...',
+    invalidAnswer: 'Не вірна відповідь!',
     news: 'НОВИНИ ПРОЕКТУ',
     dataCenter: 'Датацентр',
     publishingIn: 'Опубліковано в',
@@ -229,12 +230,12 @@ var uaMessages = {
     forumMessages: 'ЧУТКИ НА ФОРУМІ',
     exit: 'Вихід',
     welcome: 'Вітаємо',
-    license: 'ДАНИЙ СЕРВЕР Є ТЕСТОВИМ ВАРІАНТОМ ГРИ LINEAGE II І ПРИЗНАЧЕНИЙ ТІЛЬКИ ДЛЯ ОЗНАЙОМЛЕННЯ. ВСІ ПРАВА НАЛЕЖАТЬ КОМПАНІЇ NCSOFT.',
+    license: 'ДАНИЙ СЕРВЕР Є ТЕСТОВИМ ВАРІАНТОМ ГРИ LINEAGEII ТА ПРИЗНАЧЕНИЙ ТІЛЬКИ ДЛЯ ОЗНАЙОМЛЕННЯ. ВСІ ПРАВА НАЛЕЖАТЬ КОМПАНІЇ NCSOFT.',
     rates: 'Рейти',
     selectIntoTop: 'Відбір в ТОП',
-    selectIntoTopDescription: 'Проводиться автоматично. Необхідна умова - отримання статусу дворянина. Дале сортування відбувається від найбільшої кількості проведеного часу в грі. Відібрані в "десятку" щотижня отримуватимуть винагороду у вигляді адени. ',
+    selectIntoTopDescription: 'Проводиться автоматично. Необхідна умова - отримання статусу дворянина. Далі сортування відбувається від найбільшої кількості проведеного часу в грі. Відібрані в "десятку" щотижня отримуватимуть винагороду у вигляді адени. ',
     common: 'Загальна',
-    commonDescription: 'Броня, зброя, біжать з "Д" - до "Діно" сетів, патрони - можливо купувати в ком`юніті шопі. Побажання, пропозиції, звіт по Багам надсилайте використовуючи форму розділі "Контакти". Приємного геймплея! :)',
+    commonDescription: 'Броня, зброя, біжа з "Д" - до "Діно" сетів, патрони - можливо купувати в ком`юніті шопі. Побажання, пропозиції, звіт по багам надсилайте використовуючи форму розділі "Контакти". Приємного геймплею!:)',
     ourCommunitys: 'Наші спільноти в соціальних мережах',
     contactsForm: 'Форма для зв`язку',
     fullName: 'Логін',
@@ -268,17 +269,12 @@ var uaMessages = {
     fortName: 'Назва форту'
 }
 
-var lang = 'ru';
+var lang;
 
-var messages = ruMessages;
-
-
-$(document).ready(function () {
-    generateMainPage(messages);
-})
+var messages;
 
 
-function generateMenu(messages) {
+function generateMenu() {
     $('nav').html(`
         <ul>
             <li><a href="#" id="main">${messages.general}</a></li>
@@ -290,6 +286,14 @@ function generateMenu(messages) {
             <li><a href="./forum/" id="forum">${messages.forum}</a></li>
         </ul>
     `);
+}
+
+
+function generateLogo() {
+    $('#logo').html(`
+        <h1>${serverName}</h1>
+        <p>${messages.slogan}</p>
+    `)
 }
 
 
@@ -306,7 +310,7 @@ function generatePosts() {
 }
 
 
-function generetArticles(messages) {
+function generetArticles() {
     let article = '';
 
     for (i = 0; i < 3; i++) {
@@ -345,7 +349,7 @@ function generateLanguageSelectors(checkedUa, checkedRu, checkedEn) {
 }
 
 
-function generateMainContent(messages, articles, posts, languages) {
+function generateMainContent(articles, posts, languages) {
     $('#content .main').html(`
         <div id="left">
         <article>
@@ -417,26 +421,29 @@ function generateMainContent(messages, articles, posts, languages) {
 }
 
 
-function generateMainPage(messages) {
-    generateMenu(messages);
+function generateMainPage() {
+    document.title = messages.title;
+
+    generateMenu();
+    generateLogo();
 
     switch (lang) {
         case 'ru':
-            generateMainContent(messages, generetArticles(messages), generatePosts(messages), generateLanguageSelectors('', 'checked', ''));
+            generateMainContent(generetArticles(), generatePosts(), generateLanguageSelectors('', 'checked', ''));
             break;
         case 'ua':
-            generateMainContent(messages, generetArticles(messages), generatePosts(messages), generateLanguageSelectors('checked', '', ''));
+            generateMainContent(generetArticles(), generatePosts(), generateLanguageSelectors('checked', '', ''));
             break;
         case 'en':
-            generateMainContent(messages, generetArticles(messages), generatePosts(messages), generateLanguageSelectors('', '', 'checked'));
+            generateMainContent(generetArticles(), generatePosts(), generateLanguageSelectors('', '', 'checked'));
             break;
     }
 
-    generateFooter(messages);
+    generateFooter();
 }
 
 
-function generateFooter(messages) {
+function generateFooter() {
     $('footer').html(`
         <section class="left">
             <div id="next_page">
@@ -470,35 +477,28 @@ function generateFooter(messages) {
 }
 
 
-function changeLanguage(messages) {
-    document.title = messages.title;
+$(document).ready(function () {
+    if ($.cookie('language') != null)
+        lang = $.cookie('language');
+    else lang = 'ru';
 
-    generateMenu(messages);
+    switch (lang) {
+        case 'ru':
+            messages = ruMessages;
+            break;
+        case 'ua':
+            messages = uaMessages;
+            break;
+        case 'en':
+            messages = enMessages;
+            break;
+    }
 
-    $('#logo h1').text(serverName);
-    $('#logo p').text(messages.slogan);
-    $('.social_list a span').html(developerName);
-    $('#left article h1').html(messages.news);
-
-    $('#content #left #articles').html(generetArticles(messages));
-
-    $('footer .left p').html(messages.footersServerDescription);
-
-    $('#lk_form h1').html(messages.personalCabinet);
-    $('#lk_form .login').html(messages.loginName);
-    $('#lk_form .password').html(messages.password);
-    $('#lk_form #submit').html(messages.enter);
-    $('#formBoard span').html(messages.forgotPassword);
-    $('#forum .caption h1').html(messages.forumMessages);
-
-    $('#forum .posts').html(generatePosts(messages));
-
-    $('#social .title h1').html(messages.ourCommunitys);
-}
-
+    generateMainPage();
+})
 
 $(document).on('click', 'nav #main', function () {
-    generateMainPage(messages);
+    generateMainPage();
 })
 
 $(document).on('click', 'nav #about', function () {
@@ -578,7 +578,7 @@ $(document).on('click', 'nav #about', function () {
 })
 
 $(document).on('click', 'nav #reg', function () {
-    generateMainPage(messages);
+    generateMainPage();
 
     $("#lk_form form").html(
         '<form>' +
@@ -798,20 +798,23 @@ $(document).on('click', 'nav #contact', function () {
 })
 
 $(document).on('click', '#lang a#ua', function () {
-    messages = uaMessages;
     lang = 'ua';
-    generateMainPage(messages);
+    messages = uaMessages;
+    $.cookie('language', lang);
+    generateMainPage();
 })
 
 $(document).on('click', '#lang a#ru', function () {
-    messages = ruMessages;
     lang = 'ru';
-    generateMainPage(messages);
+    messages = ruMessages;
+    $.cookie('language', lang);
+    generateMainPage();
 })
 
 $(document).on('click', '#lang a#en', function () {
-    messages = enMessages;
     lang = 'en';
-    generateMainPage(messages);
+    messages = enMessages;
+    $.cookie('language', lang);
+    generateMainPage();
 })
 
