@@ -222,6 +222,7 @@ nav ul li.checked a {
     width: 100%;
     background: none;
     height: auto;
+    text-align: center;
 }
 
 #content #stat table th {
@@ -282,7 +283,6 @@ article section {
 
 article section div.message {
     background: url(../images/next_page_bg.png) repeat-y, url(../images/next_page_bg_rev.png) right repeat-y;
-    text-align: center;
     font-size: 16px;
 }
 
