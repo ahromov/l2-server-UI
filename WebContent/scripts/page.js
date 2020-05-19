@@ -1,3 +1,5 @@
+var url = 'http://localhost:8080';
+
 var serverName = 'LineageII server';
 
 var developerName = 'LaJDev';
@@ -66,6 +68,7 @@ function showCabinetMenu() {
 
 function generatePosts() {
     let posts = '';
+
     for (i = 0; i < 5; i++) {
         posts += `
         <li>
@@ -73,37 +76,75 @@ function generatePosts() {
             Insider</h2>
         </li>`
     }
+
     return posts;
 }
 
 
-function generetArticles() {
-    let article = '';
+function genereteNews() {
+    function myFunction(value) {
+        let date = new Date(value.date);
 
-    for (i = 0; i < 3; i++) {
-        article += `
-        <section>
-            <figure>
-                <img src="images/news/14.jpg" alt="${messages.dataCenter}">
-                <div>
-                    <figcaption>
-                        <time datetime="2019-06-30T07:25"><span>30</span>/06/2019</time>
-                        <p><span>${messages.publishingIn}</span> 7:25</p>
-                    </figcaption>
+        $('#articles').append(`
+            <section>
+                <figure>
+                    <img src="data:image/png;base64,${value.image}">
+                    <div>
+                        <figcaption>
+                            <time datetime="${value.date}"><span>${date.getDate()}</span>/${date.getMonth()}/${date.getFullYear()}</time>
+                            <p><span>${messages.publishingIn}</span> ${date.toLocaleTimeString()}</p>
+                        </figcaption>
+                    </div>
+                    <a class="readMore" id="${value.id}" href="#">${messages.readMore}</a>
+                </figure>
+                <div id="news">                
+                    <h2>${value.title}</h2>
+                    <p>${value.text.substring(0, 200) + (value.text.length > 200 ? " ..." : "")}</p>
                 </div>
-                <a href="">${messages.readMore}</a>
-            </figure>
-            <div id="news">
-                <h2>${messages.newsCaption}</h2>
-                <p>Завтра ожидается переезд нашего любимого проекта в новый датацентр в Киеве.
-                Теперь пинг для жителей Украины,России и Белоруси будет во много раз меньше...</p>
-            </div>
-        </section>
-    `}
+            </section>
+        `)
+    };
 
-    return article;
+    $.get(url + '/news/get/all', function (data) {
+        if (data != null) {
+            data.forEach(element => { myFunction(element) });
+        }
+    });
 }
 
+$(document).on('click', 'a.readMore', function () {
+    function myFunction(value) {
+        let date = new Date(value.date);
+
+        $('#content .main').html(
+            `<div class="top">
+                    <div id="stat">
+                        <article>
+                            <h1>${value.title}</h1>
+                            <section>
+                                <table>
+                                    <tr>
+                                        <td id="accCount"><img src="data:image/png;base64,${value.image}">
+                                        ${date.toLocaleDateString()} ${date.toLocaleTimeString()}
+                                        </td>
+                                        <td id="countAll">
+                                            ${value.text}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </section>
+                        </article>
+                    </div>
+            </div>`
+        );
+    };
+
+    $.get(url + '/news/get/' + $(this).attr('id'), function (data) {
+        if (data != null) {
+            myFunction(data);
+        }
+    });
+})
 
 function generateLanguageSelectors(checkedUa, checkedRu, checkedEn) {
     block = `<ul>
@@ -122,7 +163,7 @@ function generateMainContent(articles, posts, languages) {
         <article>
             <h1>${messages.news}</h1>
             <div id="articles">
-                ${articles}
+
             </div>
         </article>
         </div>
@@ -196,13 +237,13 @@ function generateMainPage() {
 
     switch (lang) {
         case 'ru':
-            generateMainContent(generetArticles(), generatePosts(), generateLanguageSelectors('', 'checked', ''));
+            generateMainContent(genereteNews(), generatePosts(), generateLanguageSelectors('', 'checked', ''));
             break;
         case 'ua':
-            generateMainContent(generetArticles(), generatePosts(), generateLanguageSelectors('checked', '', ''));
+            generateMainContent(genereteNews(), generatePosts(), generateLanguageSelectors('checked', '', ''));
             break;
         case 'en':
-            generateMainContent(generetArticles(), generatePosts(), generateLanguageSelectors('', '', 'checked'));
+            generateMainContent(genereteNews(), generatePosts(), generateLanguageSelectors('', '', 'checked'));
             break;
     }
 
@@ -627,4 +668,5 @@ $(document).on('click', '#lang a#en', function () {
     $.cookie('language', lang);
     generateMainPage();
 })
+
 

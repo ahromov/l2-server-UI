@@ -1,5 +1,3 @@
-var url = 'http://localhost:8080';
-
 var login;
 
 $(document).ready(function () {
