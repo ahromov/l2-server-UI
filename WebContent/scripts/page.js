@@ -1,13 +1,10 @@
 var url = 'http://localhost:8080';
-
 var serverName = 'LineageII server';
-
 var developerName = 'LaJDev';
-
 var lang;
-
 var messages;
-
+var login;
+let newsButtonNumber = 1;
 
 function generateMenu() {
     $('nav').html(`
@@ -81,7 +78,7 @@ function generatePosts() {
 }
 
 
-function genereteNews() {
+function generateNews() {
     function myFunction(value) {
         let date = new Date(value.date);
 
@@ -105,46 +102,50 @@ function genereteNews() {
         `)
     };
 
-    $.get(url + '/news/get/all', function (data) {
+    $.get(url + '/news/get/lastThree', function (data) {
         if (data != null) {
             data.forEach(element => { myFunction(element) });
         }
     });
 }
 
-$(document).on('click', 'a.readMore', function () {
+
+function generateNextNews(firstNewsId, ev) {
+
+    $('#articles').html('');
+    $('#next_page ul li a').removeClass('npActive');
+    $(ev).addClass('npActive');
+
     function myFunction(value) {
         let date = new Date(value.date);
 
-        $('#content .main').html(
-            `<div class="top">
-                    <div id="stat">
-                        <article>
-                            <h1>${value.title}</h1>
-                            <section>
-                                <table>
-                                    <tr>
-                                        <td id="accCount"><img src="data:image/png;base64,${value.image}">
-                                        ${date.toLocaleDateString()} ${date.toLocaleTimeString()}
-                                        </td>
-                                        <td id="countAll">
-                                            ${value.text}
-                                        </td>
-                                    </tr>
-                                </table>
-                            </section>
-                        </article>
+        $('#articles').append(`
+            <section>
+                <figure>
+                    <img src="data:image/png;base64,${value.image}">
+                    <div>
+                        <figcaption>
+                            <time datetime="${value.date}"><span>${date.getDate()}</span>/${date.getMonth()}/${date.getFullYear()}</time>
+                            <p><span>${messages.publishingIn}</span> ${date.toLocaleTimeString()}</p>
+                        </figcaption>
                     </div>
-            </div>`
-        );
+                    <a class="readMore" id="${value.id}" href="#">${messages.readMore}</a>
+                </figure>
+                <div id="news">                
+                    <h2>${value.title}</h2>
+                    <p>${value.text.substring(0, 200) + (value.text.length > 200 ? " ..." : "")}</p>
+                </div>
+            </section>
+        `)
     };
 
-    $.get(url + '/news/get/' + $(this).attr('id'), function (data) {
+    $.get(url + '/news/get/nextNews/' + firstNewsId, function (data) {
         if (data != null) {
-            myFunction(data);
+            data.forEach(element => { myFunction(element) });
         }
     });
-})
+}
+
 
 function generateLanguageSelectors(checkedUa, checkedRu, checkedEn) {
     block = `<ul>
@@ -194,26 +195,7 @@ function generateMainContent(articles, posts, languages) {
             </div>
             <section id="slider">
                 <div class="wrap">
-                    <header>
-                        <div class="labels">
-                            <label for="slide-1"></label> <label for="slide-2"></label> <label
-                                for="slide-3"></label>
-                        </div>
-                    </header>
-                    <input id="slide-1" type="radio" name="slides" checked>
-                    <section class="slide slide-one">
-                        <div>
-                            <h1>Бонусы за выявление багов!</h1>
-                        </div>
-                    </section>
-                    <input id="slide-2" type="radio" name="slides">
-                    <section class="slide slide-two">
-                        <h1>Захватывающие сражения!</h1>
-                    </section>
-                    <input id="slide-3" type="radio" name="slides">
-                    <section class="slide slide-three">
-                        <h1>Гм панель - все что нужно всегда под рукой!</h1>
-                    </section>
+                    <iframe autoplay=1 width="430" height="245" src="https://www.youtube.com/embed/nz7FbTBmZ_M?controls=0&autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
             </section>
             <section id="forum">
@@ -226,28 +208,44 @@ function generateMainContent(articles, posts, languages) {
             </section>
         </div>
     `)
+
+    $.get(url + '/news/get/newsIds', function (data) {
+        if (data != null) {
+            data.forEach(element => { generateNewsButtons(element) });
+        }
+    });
 }
 
 
 function generateMainPage() {
     document.title = messages.title;
+    newsButtonNumber = 1;
 
     generateMenu();
     generateLogo();
 
     switch (lang) {
         case 'ru':
-            generateMainContent(genereteNews(), generatePosts(), generateLanguageSelectors('', 'checked', ''));
+            generateMainContent(generateNews(), generatePosts(), generateLanguageSelectors('', 'checked', ''));
             break;
         case 'ua':
-            generateMainContent(genereteNews(), generatePosts(), generateLanguageSelectors('checked', '', ''));
+            generateMainContent(generateNews(), generatePosts(), generateLanguageSelectors('checked', '', ''));
             break;
         case 'en':
-            generateMainContent(genereteNews(), generatePosts(), generateLanguageSelectors('', '', 'checked'));
+            generateMainContent(generateNews(), generatePosts(), generateLanguageSelectors('', '', 'checked'));
             break;
     }
 
     generateFooter();
+}
+
+
+function generateNewsButtons(id) {
+    $('#next_page ul').append(`
+        <li><a class="nextNews" id="${id}" href="#">${newsButtonNumber++}</a></li>
+    `);
+
+    $('#next_page ul li:first-child a').addClass('npActive');
 }
 
 
@@ -256,8 +254,7 @@ function generateFooter() {
         <section class="left">
             <div id="next_page">
                 <ul>
-                    <li><a href="">1</a></li>
-                    <li><a href="">→</a></li>
+                    
                 </ul>
             </div>
             <h1>© ${new Date().getFullYear()} Lineage2Server.com</h1>
@@ -303,6 +300,25 @@ $(document).ready(function () {
     }
 
     generateMainPage();
+
+    $.get(url + '/ls/getServers', function (data) {
+        if (data != null) {
+            data.forEach(element => {
+                $('#serverName').text(element.name);
+            });
+        }
+    })
+
+    $.get(url + '/gs/get/status', function (data) {
+        if (data != null) {
+            if (data.status === 'ON')
+                $('#status').text(data.status).css('color', '#00ff30');
+            else
+                $('#status').text(data.status);
+
+            $('#count').text(data.onlineCounter);
+        }
+    })
 })
 
 $(document).on('click', 'nav #main', function () {
@@ -605,6 +621,224 @@ $(document).on('click', 'nav #contact', function () {
     `)
 })
 
+$(document).on('click', 'a.readMore', function () {
+    function myFunction(value) {
+        let date = new Date(value.date);
+
+        $('#content .main').html(
+            `<div class="top">
+                    <div id="stat">
+                        <article>
+                            <h1>${value.title}</h1>
+                            <section>
+                                <table>
+                                    <tr>
+                                        <td id="accCount"><img src="data:image/png;base64,${value.image}">
+                                        ${date.toLocaleDateString()} ${date.toLocaleTimeString()}
+                                        </td>
+                                        <td id="countAll">
+                                            ${value.text}
+                                        </td>
+                                    </tr>
+                                </table>
+                            </section>
+                        </article>
+                    </div>
+            </div>`
+        );
+    };
+
+    $.get(url + '/news/get/' + $(this).attr('id'), function (data) {
+        if (data != null) {
+            myFunction(data);
+        }
+    });
+})
+
+$(document).on('click', '.nextNews', function () {
+    let id = $(this).attr('id');
+    generateNextNews(id, this);
+})
+
+$(document).on('click', 'button.login', function () {
+    grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
+        action: 'login'
+    }).then(function (token) {
+        if (token !== null) {
+            $.post(url + '/reCaptcha/validate', {
+                response: token
+            }).done(function (result) {
+                if (result.success && result.score > 0.5) {
+
+                    login = $("#inputLoginl3").val();
+                    let password = $("#inputPassword3").val();
+
+                    if (login === '' || password === '') {
+                        $('#lk_form form h1').css("color", "red").html(messages.fieldsCannotEmpty);
+                        return;
+                    }
+
+                    $('#lk_form form h1').css("color", "white").html(messages.waiting);
+
+                    var userLogin = {
+                        login: login,
+                        password: password
+                    };
+
+                    $.post(url + "/accounts/login", userLogin, function (data) {
+                        switch (data.status) {
+                            case 'Success':
+                                $('form').trigger('reset');
+                                showCabinetMenu();
+                                $('#lk_form form h1').css("color", "green");
+                                break;
+                            case 'Not exists':
+                                $('form').trigger('reset');
+                                $('#lk_form form h1').css("color", "red").html(messages.accountNotExists);
+                                break;
+                            case 'Incorrect password':
+                                $('form').trigger('reset');
+                                $('#lk_form form h1').css("color", "red").html(messages.incorrectPassword);
+                                break;
+                            default:
+                                $('form').trigger('reset');
+                                $('#lk_form form h1').css("color", "red").html(messages.somthingWrong);
+                        }
+                    });
+                } else {
+                    $('form').trigger('reset');
+                    $('#lk_form form h1').css("color", "red").html(messages.botsAction);
+                    return;
+                }
+            })
+        }
+    });
+});
+
+$(document).on('click', "button.register", function () {
+    grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
+        action: 'login'
+    }).then(function (token) {
+        if (token !== null) {
+            $.post(url + '/reCaptcha/validate', {
+                response: token
+            }).done(function (result) {
+                if (result.success && result.score > 0.5) {
+                    let login = $("#inputLoginl3").val();
+                    let email = $("#inputEmail3").val();
+                    let pass = $("#inputPassword3").val();
+                    let passSecond = $("#inputSecondPassword3").val();
+
+                    if (login === '' || email === '' || pass === '' || passSecond === '') {
+                        $('#lk_form form h1').css("color", "red").html(messages.fieldsCannotEmpty);
+                        return;
+                    }
+
+                    if (!(pass).match(passSecond)) {
+                        $('#lk_form form h1').css("color", "red").html(messages.passwordsNotMatch);
+                        return;
+                    }
+
+                    $('#lk_form form h1').css("color", "white").html(messages.waiting);
+
+                    var userRegistration = {
+                        login: login,
+                        email: email,
+                        password: pass,
+                        passwordSecond: passSecond
+                    };
+
+                    $.post(url + "/accounts/create", userRegistration,
+                        function (data) {
+                            switch (data.status) {
+                                case 'Success':
+                                    $('form').trigger('reset');
+                                    $('#lk_form form h1').css("color", "green").html(messages.accountCreated + '! ' + messages.checkEmail);
+                                    break;
+                                case 'No match':
+                                    $('#lk_form form h1').css("color", "orange").html(messages.passwordsNotMatch);
+                                    $('form').trigger('reset');
+                                    break;
+                                case 'Login exists':
+                                    $('#lk_form form h1').css("color", "yellow").html(messages.loginExists);
+                                    $('form').trigger('reset');
+                                    break;
+                                case 'Email exists':
+                                    $('#lk_form form h1').css("color", "red").html(messages.emailExists);
+                                    $('form').trigger('reset');
+                                    break;
+                                case 'Invalid email':
+                                    $('#lk_form form h1').css("color", "red").html(messages.incorrectEmail);
+                                    $('form').trigger('reset');
+                                    break;
+                            }
+                        });
+                } else {
+                    $('#lk_form form h1').css("color", "red").html(messages.botsAction);
+                    $('form').trigger('reset');
+                }
+            })
+        }
+    });
+})
+
+$(document).on('click', "button.restore", function () {
+    grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
+        action: 'login'
+    }).then(function (token) {
+        if (token !== null) {
+            $.post(url + '/reCaptcha/validate', {
+                response: token
+            }).done(function (result) {
+                if (result.success && result.score > 0.5) {
+                    let login = $("#inputLoginl3").val();
+                    let email = $("#inputEmail3").val();
+
+                    if (login === '' || email === '') {
+                        $('#lk_form form h1').css("color", "red").html(messages.fieldsCannotEmpty);
+                        return;
+                    }
+
+                    $('#lk_form form h1').css("color", "white").html(messages.waiting);
+
+                    var userRegistration = {
+                        login: login,
+                        email: email
+                    };
+
+                    $.post(url + "/accounts/restorePass", userRegistration,
+                        function (data) {
+                            switch (data.status) {
+                                case 'Success':
+                                    $('form').trigger('reset');
+                                    if (data.status == 'Success')
+                                        $('#lk_form form h1').css("color", "green").html(messages.passwordChanged + '! ' + messages.checkEmail);
+                                    break;
+                                case 'Invalid login':
+                                    $('#lk_form form h1').css("color", "yellow").html(messages.invalidLogin);
+                                    $('form').trigger('reset');
+                                    break;
+                                case 'Not exists':
+                                    $('#lk_form form h1').css("color", "yellow").html(messages.accountNotExists);
+                                    $('form').trigger('reset');
+                                    break;
+                                case 'Invalid data':
+                                    $('#lk_form form h1').css("color", "red").html(messages.somthingWrong);
+                                    $('form').trigger('reset');
+                                    break;
+                            }
+                        }
+                    );
+                } else {
+                    $('#lk_form form h1').css("color", "red").html(messages.botsAction);
+                    $('form').trigger('reset');
+                    return;
+                }
+            })
+        }
+    });
+});
+
 $(document).on('click', "button.changePass", function () {
     $("#lk_form form").html(
         '<h1>' + messages.passwordChanging + ' ' + login + '!</h1>' +
@@ -622,6 +856,57 @@ $(document).on('click', "button.changePass", function () {
     $('#content #right #lk_form form div input').css('height', '25px').css('width', '214px');
     $('#content #right #lk_form form button').css('width', '105px').css('transform', 'translateX(-32px)').css('margin-right', '2px').css('height', '20px').css('width', '105px');
     $('#content #right #lk_form form button.back').css('width', '97px')
+});
+
+$(document).on('click', "button.changePassword", function () {
+    let oldPassword = $("#oldPassword").val();
+    let newFirstPassword = $("#newFirstPassword").val();
+    let newSecondPassword = $("#newSecondPassword").val();
+
+    if (login === '' || oldPassword === '' || newFirstPassword === '' || newSecondPassword === '') {
+        $('#lk_form form h1').css("color", "red").html(messages.fieldsCannotEmpty);
+        return;
+    }
+
+    if (!(newFirstPassword).match(newSecondPassword)) {
+        $('#lk_form form h1').css("color", "red").html(messages.passwordsNotMatch);
+        return;
+    }
+
+    $('#lk_form form h1').css("color", "white").html(messages.waiting);
+
+    var userRegistration = {
+        login: login,
+        oldPassword: oldPassword,
+        newFirstPassword: newFirstPassword,
+        newSecondPassword: newSecondPassword
+    };
+
+    $.post(url + "/accounts/changePass", userRegistration,
+        function (data) {
+            switch (data.status) {
+                case 'Success':
+                    $('#lk_form form h1').css("color", "green").html(messages.passwordChanged);
+                    $('form').trigger('reset');
+                    break;
+
+                case 'Invalid pass':
+                    $('#lk_form form h1').css("color", "orange").html(messages.incorrerctOldPassword);
+                    $('form').trigger('reset');
+                    break;
+
+                case 'No match':
+                    $('#lk_form form h1').css("color", "orange").html(messages.passwordsNotMatch);
+                    $('form').trigger('reset');
+                    break;
+
+                case null:
+                    $('#lk_form form h1').css("color", "red").html(messages.somthingWrong);
+                    $('form').trigger('reset');
+                    break;
+            }
+        }
+    );
 });
 
 $(document).on('click', "button.exit", function () {
@@ -669,4 +954,63 @@ $(document).on('click', '#lang a#en', function () {
     generateMainPage();
 })
 
+$(document).on('click', 'button.sendMessage', function () {
+    grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
+        action: 'social'
+    }).then(function (token) {
+        if (token !== null) {
+            $.post(url + '/reCaptcha/validate', {
+                response: token
+            }).done(function (result) {
+                if (result.success && result.score > 0.5) {
+                    let login = $('div.message form input.name').val();
+                    let email = $('div.message form input.email').val();
+                    let message = $('div.message form textarea.message').val();
+
+                    if (login === '' || login == null) {
+                        showCantEmptyMessage('name');
+                        return;
+                    }
+
+                    if (email === '' || email == null) {
+                        showCantEmptyMessage('email');
+                        return;
+                    }
+
+                    if (message === '' || message == null) {
+                        showCantEmptyMessage('message');
+                        return;
+                    }
+
+                    let formData = {
+                        login: login,
+                        email: email,
+                        message: message
+                    };
+
+                    $.post(url + "/accounts/sendMess", formData,
+                        function (data) {
+                            $('#content div.message form').hide();
+
+                            switch (data.status) {
+                                case 'Success':
+                                    $('#content div.message').html(messages.messageSended).css("color", "green");
+                                    break;
+                                case 'Invalid login':
+                                    $('#content div.message').html(messages.invalidLogin).css("color", "orange");
+                                    break;
+                                case 'Not found':
+                                    $('#content div.message').html(messages.accountNotExists).css("color", "red");
+                                    break;
+                            }
+                        }
+                    );
+                } else {
+                    $('div.message form p.question').html(message.botsAction).css('color', 'red');
+                    return;
+                }
+            })
+        }
+    })
+});
 

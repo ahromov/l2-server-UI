@@ -627,6 +627,10 @@ article section a:active {
     font-weight: bold;
 }
 
+#slider .wrap{
+    text-align: center;
+}
+
 #forum .caption {
     display: block;
     width: 491px;
@@ -728,7 +732,7 @@ footer #next_page li a {
     font-family: "Book OS Style";
 }
 
-footer #next_page li a:hover {
+footer #next_page li a:hover, footer #next_page li a.npActive {
     background: url("../images/next_page_btn_active.png") no-repeat;
 }
 
