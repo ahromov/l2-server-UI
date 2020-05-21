@@ -57,7 +57,7 @@ var uaMessages = {
     ourCommunitys: 'Наші спільноти в соціальних мережах',
     contactsForm: 'Форма для зв`язку',
     fullName: 'Логін',
-    emailForFeedback: 'Е-мейл (для зворотного зв`язку) ',
+    emailForFeedback: 'Е-мейл (для зворотнього зв`язку) ',
     messagesText: 'Текст повідомлення',
     accounts: 'Акаунтів',
     characters: 'Персонажів',
