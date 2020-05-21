@@ -1,7 +1,7 @@
 var lang;
 var messages;
 var login;
-
+var loadTimeout = 200;
 
 function generateMenu() {
     $('nav').html(`
@@ -78,36 +78,37 @@ function generatePosts() {
 function generateNewsPage(pageNumber, ev) {
     $('#articles').html('');
 
-    setItemActive('#next_page ul li a', 'npActive', ev)
-
     function myFunction(value) {
         let date = new Date(value.date);
 
         $('#articles').append(`
-            <section>
-                <figure>
-                    <img src="data:image/png;base64,${value.image}">
-                    <div>
-                        <figcaption>
+                    <section>
+                        <figure>
+                            <img src="data:image/png;base64,${value.image}">
+                            <div>
+                            <figcaption>
                             <time datetime="${value.date}"><span>${date.getDate()}</span>/${date.getMonth() + 1}/${date.getFullYear()}</time>
                             <p><span>${messages.publishingIn}</span> ${date.toLocaleTimeString()}</p>
-                        </figcaption>
-                    </div>
-                    <a class="readMore" id="${value.id}" href="#">${messages.readMore}</a>
-                </figure>
-                <div id="news">                
-                    <h2>${value.title}</h2>
-                    <p>${value.text.substring(0, 200) + (value.text.length > 200 ? " ..." : "")}</p>
-                </div>
-            </section>
-        `);
+                            </figcaption>
+                            </div>
+                            <a class="readMore" id="${value.id}" href="#">${messages.readMore}</a>
+                        </figure>
+                        <div id="news">                
+                            <h2>${value.title}</h2>
+                            <p>${value.text.substring(0, 200) + (value.text.length > 200 ? " ..." : "")}</p>
+                        </div>
+                    </section>
+            `);
     };
+
 
     $.get(url + '/news/get/pages/' + pageNumber, function (data) {
         if (data != null) {
             data.forEach(element => { myFunction(element) });
         }
     });
+
+    setItemActive('#next_page ul li a', 'npActive', ev);
 }
 
 
@@ -305,7 +306,6 @@ function initDefaultLanguagesSettings() {
     }
 };
 
-
 $(document).ready(function () {
     initDefaultLanguagesSettings();
     generateMainPage();
@@ -314,116 +314,123 @@ $(document).ready(function () {
 })
 
 $(document).on('click', 'nav #main', function () {
-    generateMainPage();
+    setTimeout(function () {
+        generateMainPage();
+    }, loadTimeout);
 })
 
 $(document).on('click', 'nav #about', function () {
-    $('#content .main').html(`
-    <div class="top">
-        <div id="stat">
-            <article>
-                <h1>${messages.rates}</h1>
-                <section>
-                    <table id="rates">
-                        <tr>
-                            <th>DropChance:</th>
-                            <td>x 3</td>
-                        </tr>
-                        <tr>
-                            <th>SpoilChance:</th>
-                            <td>x 3</td>
-                        </tr>
-                        <tr>
-                            <th>RaidDropChance:</th>
-                            <td>x 1</td>
-                        </tr>
-                        <tr>
-                            <th>DropAdena:</th>
-                            <td>x 7</td>
-                        </tr>
-                        <tr>
-                            <th>RateXp:</th>
-                            <td>x 7</td>
-                        </tr>
-                        <tr>
-                            <th>RateSp:</th>
-                            <td>x 7</td>
-                        </tr>
-                        <tr>
-                            <th>RatePatyXp:</th>
-                            <td>x 2</td>
-                        </tr>
-                        <tr>
-                            <th>RatePatySp:</th>
-                            <td>x 2</td>
-                        </tr>
-                        <tr>
-                            <th>RateQuestRewardXP:</th>
-                            <td>x 7</td>
-                        </tr>
-                        <tr>
-                            <th>RateQuestRewardSP:</th>
-                            <td>x 7</td>
-                        </tr>
-                        <tr>
-                            <th>RateQuestRewardAdena:</th>
-                            <td>x 7</td>
-                        </tr>
-                        <tr>
-                            <th>RateQuestDropItem:</th>
-                            <td>x 7</td>
-                        </tr>
-                    </table>
-                </section>
-            </article>
-            <article>
-                <h1>${messages.selectIntoTop}:</h1>
-                <div class="top">
-                    <p>${messages.selectIntoTopDescription}</p>
-                </div>
-            </article>
-            <article>
-                <h1>${messages.common}:</h1>
-                <div class="top">
-                    <p>${messages.commonDescription}</p>
-                </div>
-            </article>
+    setTimeout(function () {
+        $('#content .main').html(`
+        <div class="top">
+            <div id="stat">
+                <article>
+                    <h1>${messages.rates}</h1>
+                    <section>
+                        <table id="rates">
+                            <tr>
+                                <th>DropChance:</th>
+                                <td>x 3</td>
+                            </tr>
+                            <tr>
+                                <th>SpoilChance:</th>
+                                <td>x 3</td>
+                            </tr>
+                            <tr>
+                                <th>RaidDropChance:</th>
+                                <td>x 1</td>
+                            </tr>
+                            <tr>
+                                <th>DropAdena:</th>
+                                <td>x 7</td>
+                            </tr>
+                            <tr>
+                                <th>RateXp:</th>
+                                <td>x 7</td>
+                            </tr>
+                            <tr>
+                                <th>RateSp:</th>
+                                <td>x 7</td>
+                            </tr>
+                            <tr>
+                                <th>RatePatyXp:</th>
+                                <td>x 2</td>
+                            </tr>
+                            <tr>
+                                <th>RatePatySp:</th>
+                                <td>x 2</td>
+                            </tr>
+                            <tr>
+                                <th>RateQuestRewardXP:</th>
+                                <td>x 7</td>
+                            </tr>
+                            <tr>
+                                <th>RateQuestRewardSP:</th>
+                                <td>x 7</td>
+                            </tr>
+                            <tr>
+                                <th>RateQuestRewardAdena:</th>
+                                <td>x 7</td>
+                            </tr>
+                            <tr>
+                                <th>RateQuestDropItem:</th>
+                                <td>x 7</td>
+                            </tr>
+                        </table>
+                    </section>
+                </article>
+                <article>
+                    <h1>${messages.selectIntoTop}:</h1>
+                    <div class="top">
+                        <p>${messages.selectIntoTopDescription}</p>
+                    </div>
+                </article>
+                <article>
+                    <h1>${messages.common}:</h1>
+                    <div class="top">
+                        <p>${messages.commonDescription}</p>
+                    </div>
+                </article>
+            </div>
         </div>
-    </div>
-    `)
+        `)
 
-    setItemActive('nav ul li a', 'navActive', 'nav #about');
-    generateBackButton();
+        setItemActive('nav ul li a', 'navActive', 'nav #about');
+        generateBackButton();
+    }, loadTimeout);
 })
 
 $(document).on('click', 'nav #reg', function () {
-    generateMainPage();
-    setItemActive('nav ul li a', 'navActive', 'nav #reg');
+    setTimeout(function () {
+        generateMainPage();
+        setItemActive('nav ul li a', 'navActive', 'nav #reg');
 
-    $("#lk_form form").html(
-        '<form>' +
-        '<h1>' + messages.registration + '</h1>' +
-        '<div>' +
-        '<label><span>' + messages.loginName + ':</span><input id="inputLoginl3" type="text"></label></div>' +
-        '<div>' +
-        '<label><span>' + messages.email + ':</span><input id="inputEmail3" type="email"></label></div>' +
-        '<div>' +
-        '<label><span>' + messages.password + ':</span><input id="inputPassword3" type="password"></label></div>' +
-        '<div>' +
-        '<label><span>' + messages.repeatePassword + ':</span><input id="inputSecondPassword3" type="password"></label></div>' +
-        '<button class="register" type="button">' + messages.send + '</button>'
-    );
+        $("#lk_form form").html(
+            '<form>' +
+            '<h1>' + messages.registration + '</h1>' +
+            '<div>' +
+            '<label><span>' + messages.loginName + ':</span><input id="inputLoginl3" type="text"></label></div>' +
+            '<div>' +
+            '<label><span>' + messages.email + ':</span><input id="inputEmail3" type="email"></label></div>' +
+            '<div>' +
+            '<label><span>' + messages.password + ':</span><input id="inputPassword3" type="password"></label></div>' +
+            '<div>' +
+            '<label><span>' + messages.repeatePassword + ':</span><input id="inputSecondPassword3" type="password"></label></div>' +
+            '<button class="register" type="button">' + messages.send + '</button>'
+        );
 
-    $('#content #right #lk_form form h1').css('font-size', '10px').css('margin-top', '-5px');
-    $('#content #right #lk_form form div').css('margin-top', '0px').css('margin-bottom', '2px');
-    $('#content #right #lk_form form div input').css('height', '20px');
-    $('#content #right #lk_form form div span').css('padding-top', '2px');
-    $('#content #right #lk_form form button').css('width', '134px').css('margin-right', '35px').css('height', '18px');
+        $('#content #right #lk_form form h1').css('font-size', '10px').css('margin-top', '-5px');
+        $('#content #right #lk_form form div').css('margin-top', '0px').css('margin-bottom', '2px');
+        $('#content #right #lk_form form div input').css('height', '20px');
+        $('#content #right #lk_form form div span').css('padding-top', '2px');
+        $('#content #right #lk_form form button').css('width', '134px').css('margin-right', '35px').css('height', '18px');
+    }, loadTimeout);
 })
 
 $(document).on('click', 'nav #stat', function () {
-    $('#content .main').html(
-        `<div class="top">
+    setTimeout(function () {
+        $('#content .main').html(
+            `<div class="top">
                 <div id="stat">
                     <article>
                         <h1>${messages.common}</h1>
@@ -437,8 +444,8 @@ $(document).on('click', 'nav #stat', function () {
                                     <th>${messages.gameMasters}:</th>
                                     <th>${messages.clans}:</th>
                                     <th>${messages.allys}:</th>
-                                </tr>
-                                <tr>
+                                    </tr>
+                                    <tr>
                                     <td id="accCount">0</td>
                                     <td id="countAll">0</td>
                                     <td id="countNobless">0</td>
@@ -446,106 +453,106 @@ $(document).on('click', 'nav #stat', function () {
                                     <td id="countGm">0</td>
                                     <td id="countClans">0</td>
                                     <td>0</td>
-                                </tr>
-                            </table>
-                        </section>
-                    </article>
-                    <article id="top10">
-                        <h1>${messages.top10chars}</h1>
-                        <section>
-                            <table>
-                                <tr>
+                                    </tr>
+                                    </table>
+                                    </section>
+                                    </article>
+                                    <article id="top10">
+                                    <h1>${messages.top10chars}</h1>
+                                    <section>
+                                    <table>
+                                    <tr>
                                     <th>${messages.charName}:</th>
                                     <th>${messages.charClass}:</th>
                                     <th>${messages.charSex}:</th>
                                     <th>${messages.clanName}:</th>
                                     <th>${messages.gameTime}:</th>
                                     <th>PvP/PK:</th>
-                                </tr>
-                            </table>
-                        </section>
-                    </article>
-                    <article id="clans">
-                        <h1>${messages.clans}</h1>
-                        <section>
-                            <table>
-                                <tr>
+                                    </tr>
+                                    </table>
+                                    </section>
+                                    </article>
+                                    <article id="clans">
+                                    <h1>${messages.clans}</h1>
+                                    <section>
+                                    <table>
+                                    <tr>
                                     <th>${messages.clanName}:</th>
                                     <th>${messages.lvl}</th>
                                     <th>${messages.leader}:</th>
                                     <th>${messages.reputation}:</th>
                                     <th>${messages.midLvl}:</th>
                                     <th>${messages.ally}:</th>
-                                </tr>
-                            </table>
-                        </section>
-                    </article>
-                    <article id="castles">
-                        <h1>${messages.castles}</h1>
-                        <section>
-                            <table>
-                                <tr>
+                                    </tr>
+                                    </table>
+                                    </section>
+                                    </article>
+                                    <article id="castles">
+                                    <h1>${messages.castles}</h1>
+                                    <section>
+                                    <table>
+                                    <tr>
                                     <th></th>
                                     <th>${messages.castleName}:</th>
                                     <th>${messages.owner}:</th>
                                     <th>${messages.tax}:</th>
                                     <th>${messages.treasure}:</th>
                                     <th>${messages.siegeDate}:</th>
-                                </tr>
-                            </table>
-                        </section>
-                    </article>
-                    <article id="forts">
-                        <h1>${messages.forts}</h1>
-                        <section>
-                            <table>
-                                <tr>
+                                    </tr>
+                                    </table>
+                                    </section>
+                                    </article>
+                                    <article id="forts">
+                                    <h1>${messages.forts}</h1>
+                                    <section>
+                                    <table>
+                                    <tr>
                                     <th></th>
                                     <th>${messages.fortName}:</th>
                                     <th>${messages.owner}:</th>
                                     <th>${messages.siegeDate}:</th>
-                                </tr>
-                            </table>
-                        </section>
-                    </article>
-                </div>
-            </div>`
-    )
+                                    </tr>
+                                    </table>
+                                    </section>
+                                    </article>
+                                    </div>
+                                    </div>`
+        )
 
-    setItemActive('nav ul li a', 'navActive', 'nav #stat');
-    generateBackButton();
+        setItemActive('nav ul li a', 'navActive', 'nav #stat');
+        generateBackButton();
 
-    $.get(url + '/clans/count/all', function (data) {
-        if (data != null) {
-            $('#accCount').html(data.count);
-        }
-    });
+        $.get(url + '/clans/count/all', function (data) {
+            if (data != null) {
+                $('#accCount').html(data.count);
+            }
+        });
 
-    $.get(url + '/characters/count/byType', function (data) {
-        if (data != null) {
-            $('#countAll').html(data.all);
-            $('#countNobless').html(data.nobles);
-            $('#countHeroes').html(data.heroes);
-            $('#countGm').html(data.gms);
-        }
-    });
+        $.get(url + '/characters/count/byType', function (data) {
+            if (data != null) {
+                $('#countAll').html(data.all);
+                $('#countNobless').html(data.nobles);
+                $('#countHeroes').html(data.heroes);
+                $('#countGm').html(data.gms);
+            }
+        });
 
-    $.get(url + '/clans/get/all', function (data) {
-        if (data != null) {
-            data.forEach(element => {
-                $('#content #stat #clans table').append(
-                    '<tr>' +
-                    '<td>' + element.name + '</td>' +
-                    '<td >' + element.level + '</td>' +
-                    '<td >' + element.leader.charName + '</td>' +
-                    '<td >' + element.reputation + '</td>' +
-                    '<td >' + element.middLevel + '</td>' +
-                    '<td >' + element.alyName + '</td>' +
-                    '</tr>'
-                );
-            });
-        }
-    });
+        $.get(url + '/clans/get/all', function (data) {
+            if (data != null) {
+                data.forEach(element => {
+                    $('#content #stat #clans table').append(
+                        '<tr>' +
+                        '<td>' + element.name + '</td>' +
+                        '<td >' + element.level + '</td>' +
+                        '<td >' + element.leader.charName + '</td>' +
+                        '<td >' + element.reputation + '</td>' +
+                        '<td >' + element.middLevel + '</td>' +
+                        '<td >' + element.alyName + '</td>' +
+                        '</tr>'
+                    );
+                });
+            }
+        });
 
     $.get(url + '/characters/get/top10', function (data) {
         if (data != null) {
@@ -564,63 +571,66 @@ $(document).on('click', 'nav #stat', function () {
         }
     });
 
-    $.get(url + '/castles/get/all', function (data) {
-        if (data != null) {
-            data.forEach(element => {
-                $('#content #stat #castles table').append(
-                    '<tr>' +
-                    '<td><img src="images/castles/' + element.id + '.jpg"</td>' +
-                    '<td>' + element.name + '</td>' +
-                    '<td >' + (element.clan == null ? element.clan : element.clan.name) + '</td>' +
-                    '<td >' + element.taxPercent + '%</td>' +
-                    '<td >' + element.treasury + '</td>' +
-                    '<td >' + new Date(element.siegeDate).toLocaleDateString() + ' ' + new Date(element.siegeDate).toLocaleTimeString() + '</td>' +
-                    '</tr>'
-                );
-            });
-        }
-    });
+        $.get(url + '/castles/get/all', function (data) {
+            if (data != null) {
+                data.forEach(element => {
+                    $('#content #stat #castles table').append(
+                        '<tr>' +
+                        '<td><img src="images/castles/' + element.id + '.jpg"</td>' +
+                        '<td>' + element.name + '</td>' +
+                        '<td >' + (element.clan == null ? element.clan : element.clan.name) + '</td>' +
+                        '<td >' + element.taxPercent + '%</td>' +
+                        '<td >' + element.treasury + '</td>' +
+                        '<td >' + new Date(element.siegeDate).toLocaleDateString() + ' ' + new Date(element.siegeDate).toLocaleTimeString() + '</td>' +
+                        '</tr>'
+                    );
+                });
+            }
+        });
 
-    $.get(url + '/forts/get/all', function (data) {
-        if (data != null) {
-            data.forEach(element => {
-                $('#content #stat #forts table').append(
-                    '<tr>' +
-                    '<td><img src="images/forts/' + element.id + '.jpg"</td>' +
-                    '<td>' + element.name + '</td>' +
-                    '<td>' + (element.clan == null ? element.clan : element.clan.name) + '</td>' +
-                    '<td>' + element.siegeDate + '</td>' +
-                    '</tr>'
-                );
-            });
-        }
-    });
+        $.get(url + '/forts/get/all', function (data) {
+            if (data != null) {
+                data.forEach(element => {
+                    $('#content #stat #forts table').append(
+                        '<tr>' +
+                        '<td><img src="images/forts/' + element.id + '.jpg"</td>' +
+                        '<td>' + element.name + '</td>' +
+                        '<td>' + (element.clan == null ? element.clan : element.clan.name) + '</td>' +
+                        '<td>' + element.siegeDate + '</td>' +
+                        '</tr>'
+                    );
+                });
+            }
+        });
+    }, loadTimeout);
 })
 
 $(document).on('click', 'nav #contact', function () {
-    $('#content .main').html(`
-        <div class="top">
-            <div id="stat">
-                <article>
-                    <h1>${messages.contactsForm}</h1>
-                    <section>
-                        <p>${messages.mesageCanOnlyRegisteredUsers}</p>
-                        <div class="message">
+    setTimeout(function () {
+        $('#content .main').html(`
+                            <div class="top">
+                            <div id="stat">
+                            <article>
+                            <h1>${messages.contactsForm}</h1>
+                            <section>
+                            <p>${messages.mesageCanOnlyRegisteredUsers}</p>
+                            <div class="message">
                             <form>
-                                <label>${messages.fullName}: <input type="text" class="name"><p class="name"></p></label>
-                                <label>${messages.emailForFeedback}: <input type="email" class="email"><p class="email"></p></label>
-                                <label>${messages.messagesText}: <textarea class="message"></textarea><p class="message"></p></label>
-                                <button class="sendMessage" type="button">${messages.send}</button>
+                            <label>${messages.fullName}: <input type="text" class="name"><p class="name"></p></label>
+                            <label>${messages.emailForFeedback}: <input type="email" class="email"><p class="email"></p></label>
+                            <label>${messages.messagesText}: <textarea class="message"></textarea><p class="message"></p></label>
+                            <button class="sendMessage" type="button">${messages.send}</button>
                             </form>
-                        </div>
-                    </section>
-                </article>
-            </div>
-        </div>
-    `)
+                            </div>
+                            </section>
+                            </article>
+                            </div>
+                            </div>
+                            `)
 
-    setItemActive('nav ul li a', 'navActive', 'nav #contact');
-    generateBackButton();
+        setItemActive('nav ul li a', 'navActive', 'nav #contact');
+        generateBackButton();
+    }, loadTimeout);
 })
 
 $(document).on('click', 'a.readMore', function () {
@@ -666,7 +676,7 @@ $(document).on('click', '.newsBack', function () {
 $(document).on('click', '.nextNews', function () {
     let id = $(this).attr('id');
     generateNewsPage(id, this);
-})
+});
 
 $(document).on('click', 'button.login', function () {
     grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
@@ -962,6 +972,10 @@ $(document).on('click', '#lang a#en', function () {
     generateMainPage();
 })
 
+function cantEmpty(data) {
+	$('div.message form  p.' + data).html(messages.fieldsCannotEmpty).css('color', 'red');
+}
+
 $(document).on('click', 'button.sendMessage', function () {
     grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
         action: 'social'
@@ -976,17 +990,17 @@ $(document).on('click', 'button.sendMessage', function () {
                     let message = $('div.message form textarea.message').val();
 
                     if (login === '' || login == null) {
-                        showCantEmptyMessage('name');
+                    	cantEmpty('name');
                         return;
                     }
 
                     if (email === '' || email == null) {
-                        showCantEmptyMessage('email');
+                    	cantEmpty('email');
                         return;
                     }
 
                     if (message === '' || message == null) {
-                        showCantEmptyMessage('message');
+                    	cantEmpty('message');
                         return;
                     }
 
@@ -1021,4 +1035,3 @@ $(document).on('click', 'button.sendMessage', function () {
         }
     })
 });
-
