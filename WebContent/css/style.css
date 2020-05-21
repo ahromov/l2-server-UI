@@ -74,7 +74,7 @@ header {
 #logo p {
     font-size: 14px;
     font-family: "Cambria Math";
-    color: #fff119;
+    color: #ffd40d;
     line-height: 0.1;
     text-align: center;
 }
@@ -99,7 +99,7 @@ nav ul li {
     text-align: center;
 }
 
-nav ul li a:hover:before {
+nav ul li a.navActive:before {
     display: block;
     content: "";
     height: 7px;
@@ -109,13 +109,13 @@ nav ul li a:hover:before {
     margin-bottom: 10px;
 }
 
-nav ul li a:hover:after {
+nav ul li a.navActive:after {
     display: block;
     content: "";
     height: 7px;
     background: url("../images/alink_marker_bottom.png") no-repeat;
     background-position: center;
-    margin-top: 16px;
+    margin-top: 13px;
 }
 
 nav ul li a {
@@ -123,10 +123,10 @@ nav ul li a {
     color: white;
     text-decoration: none;
     cursor: pointer;
-    transition: all 0.5s ease-in-out;
 }
 
-nav ul li a:hover {
+nav ul li a:hover, nav ul li.checked a, nav ul li a.navActive, footer #next_page li a.newsBack, footer #next_page li a.npActive {
+    font-weight: bolder;
     color: #ffd40d;
 }
 
@@ -147,10 +147,6 @@ nav ul li.checked a:after {
     background: url("../images/alink_marker_bottom.png") no-repeat;
     background-position: center;
     margin-top: 16px;
-}
-
-nav ul li.checked a {
-    color: #ffd40d;
 }
 
 .main_37 {
@@ -225,8 +221,14 @@ nav ul li.checked a {
     text-align: center;
 }
 
+#content #stat section p {
+    color: #ffa05f;
+}
+
 #content #stat table th {
+    font-weight: normal;
     color: orange;
+    background-color: #5b2123;
 }
 
 #content #stat table#rates {
@@ -250,6 +252,9 @@ nav ul li.checked a {
 
 #content #stat table td {
     text-align: center;
+    background-color: rgb(72, 43, 38);
+    /* text-align: justify; */
+
 }
 
 #content #left, #content #right {
@@ -315,7 +320,7 @@ article section div.message form input, article section div.message form textare
     box-sizing: border-box;
     padding-left: 10px;
     padding-right: 10px;
-    border-radius: 10px;
+    border-radius: 3px;
 }
 
 article section div.message form textarea {
@@ -502,7 +507,6 @@ article section a:active {
     float: left;
     text-align: center;
     padding-top: 5px;
-    transition: 0.5s ease-in-out;
 }
 
 #content #right #lk_form form div input {
@@ -732,8 +736,12 @@ footer #next_page li a {
     font-family: "Book OS Style";
 }
 
-footer #next_page li a:hover, footer #next_page li a.npActive {
+footer #next_page li a:hover, footer #next_page li a.npActive, footer #next_page li a.newsBack {
     background: url("../images/next_page_btn_active.png") no-repeat;
+}
+
+footer #next_page li a.npActive{
+    color: #ffd40d;
 }
 
 footer h1, footer p {

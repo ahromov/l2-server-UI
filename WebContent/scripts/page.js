@@ -1,10 +1,7 @@
-var url = 'http://localhost:8080';
-var serverName = 'LineageII server';
-var developerName = 'LaJDev';
 var lang;
 var messages;
 var login;
-let newsButtonNumber = 1;
+
 
 function generateMenu() {
     $('nav').html(`
@@ -78,10 +75,10 @@ function generatePosts() {
 }
 
 
-function generateNews(pageNumber, ev) {
+function generateNewsPage(pageNumber, ev) {
     $('#articles').html('');
-    $('#next_page ul li a').removeClass('npActive');
-    $(ev).addClass('npActive');
+
+    setItemActive('#next_page ul li a', 'npActive', ev)
 
     function myFunction(value) {
         let date = new Date(value.date);
@@ -103,7 +100,7 @@ function generateNews(pageNumber, ev) {
                     <p>${value.text.substring(0, 200) + (value.text.length > 200 ? " ..." : "")}</p>
                 </div>
             </section>
-        `)
+        `);
     };
 
     $.get(url + '/news/get/pages/' + pageNumber, function (data) {
@@ -115,17 +112,17 @@ function generateNews(pageNumber, ev) {
 
 
 function generateLanguageSelectors(checkedUa, checkedRu, checkedEn) {
-    block = `<ul>
+    return `<ul>
                 <li class="${checkedUa}"><a id="ua" href="#">UA</a></li>
                 <li class="${checkedRu}"><a id="ru" href="#">RU</a></li>
                 <li class="${checkedEn}"><a id="en" href="#">EN</a></li>
-            </ul>`
-
-    return block;
+            </ul>`;
 }
 
 
-function generateMainContent(articles, posts, languages) {
+function generateMainContent(posts, languages) {
+    let playIndex = Math.floor(Math.random() * videosIds.length);
+
     $('#content .main').html(`
         <div id="left">
         <article>
@@ -162,7 +159,7 @@ function generateMainContent(articles, posts, languages) {
             </div>
             <section id="slider">
                 <div class="wrap">
-                    <iframe autoplay=1 width="430" height="245" src="https://www.youtube.com/embed/nz7FbTBmZ_M?controls=0&autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <iframe autoplay=1 width="430" height="245" src="https://www.youtube.com/embed/${videosIds[playIndex]}?controls=0&autoplay=1" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                 </div>
             </section>
             <section id="forum">
@@ -188,33 +185,41 @@ function generateMainContent(articles, posts, languages) {
 
 function generateMainPage() {
     document.title = messages.title;
-    newsButtonNumber = 1;
 
     generateMenu();
+    setItemActive('nav ul li a', 'navActive', 'nav #main');
     generateLogo();
 
     switch (lang) {
         case 'ru':
-            generateMainContent(generateNews(0, null), generatePosts(), generateLanguageSelectors('', 'checked', ''));
+            generateMainContent(generatePosts(), generateLanguageSelectors('', 'checked', ''));
             break;
         case 'ua':
-            generateMainContent(generateNews(0, null), generatePosts(), generateLanguageSelectors('checked', '', ''));
+            generateMainContent(generatePosts(), generateLanguageSelectors('checked', '', ''));
             break;
         case 'en':
-            generateMainContent(generateNews(0, null), generatePosts(), generateLanguageSelectors('', '', 'checked'));
+            generateMainContent(generatePosts(), generateLanguageSelectors('', '', 'checked'));
             break;
     }
 
+    generateNewsPage(0, null);
     generateFooter();
 }
 
 
 function generateNewsPagesButtons(id) {
     $('#next_page ul').append(`
-        <li><a class="nextNews" id="${id}" href="#">${newsButtonNumber++}</a></li>
+        <li><a class="nextNews" id="${id}" href="#">${id + 1}</a></li>
     `);
 
     $('#next_page ul li:first-child a').addClass('npActive');
+}
+
+
+function generateBackButton() {
+    $('#next_page ul').html(`
+        <li><a class="newsBack" href="#"><<</a></li>
+    `);
 }
 
 
@@ -251,7 +256,38 @@ function generateFooter() {
 }
 
 
-$(document).ready(function () {
+function setItemActive(elementRemove, className, elamentActive) {
+    $(elementRemove).removeClass(className);
+    $(elamentActive).addClass(className);
+}
+
+
+function getRegisteredServerName() {
+    $.get(url + '/ls/getServers', function (data) {
+        if (data != null) {
+            data.forEach(element => {
+                $('#serverName').text(element.name);
+            });
+        }
+    })
+}
+
+
+function getServerStatus() {
+    $.get(url + '/gs/get/status', function (data) {
+        if (data != null) {
+            if (data.status === 'ON')
+                $('#status').text(data.status).css('color', '#00ff30');
+            else
+                $('#status').text(data.status);
+
+            $('#count').text(data.onlineCounter);
+        }
+    })
+}
+
+
+function initDefaultLanguagesSettings() {
     if ($.cookie('language') != null)
         lang = $.cookie('language');
     else lang = 'ru';
@@ -267,27 +303,14 @@ $(document).ready(function () {
             messages = enMessages;
             break;
     }
+};
 
+
+$(document).ready(function () {
+    initDefaultLanguagesSettings();
     generateMainPage();
-
-    $.get(url + '/ls/getServers', function (data) {
-        if (data != null) {
-            data.forEach(element => {
-                $('#serverName').text(element.name);
-            });
-        }
-    })
-
-    $.get(url + '/gs/get/status', function (data) {
-        if (data != null) {
-            if (data.status === 'ON')
-                $('#status').text(data.status).css('color', '#00ff30');
-            else
-                $('#status').text(data.status);
-
-            $('#count').text(data.onlineCounter);
-        }
-    })
+    getRegisteredServerName();
+    getServerStatus();
 })
 
 $(document).on('click', 'nav #main', function () {
@@ -368,10 +391,14 @@ $(document).on('click', 'nav #about', function () {
         </div>
     </div>
     `)
+
+    setItemActive('nav ul li a', 'navActive', 'nav #about');
+    generateBackButton();
 })
 
 $(document).on('click', 'nav #reg', function () {
     generateMainPage();
+    setItemActive('nav ul li a', 'navActive', 'nav #reg');
 
     $("#lk_form form").html(
         '<form>' +
@@ -485,6 +512,9 @@ $(document).on('click', 'nav #stat', function () {
             </div>`
     )
 
+    setItemActive('nav ul li a', 'navActive', 'nav #stat');
+    generateBackButton();
+
     $.get(url + '/clans/count/all', function (data) {
         if (data != null) {
             $('#accCount').html(data.count);
@@ -588,6 +618,9 @@ $(document).on('click', 'nav #contact', function () {
             </div>
         </div>
     `)
+
+    setItemActive('nav ul li a', 'navActive', 'nav #contact');
+    generateBackButton();
 })
 
 $(document).on('click', 'a.readMore', function () {
@@ -623,9 +656,7 @@ $(document).on('click', 'a.readMore', function () {
         }
     });
 
-    $('#next_page ul').html(`
-        <li><a class="newsBack" href="#"><<</a></li>
-    `);
+    generateBackButton();
 })
 
 $(document).on('click', '.newsBack', function () {
@@ -634,7 +665,7 @@ $(document).on('click', '.newsBack', function () {
 
 $(document).on('click', '.nextNews', function () {
     let id = $(this).attr('id');
-    generateNews(id, this);
+    generateNewsPage(id, this);
 })
 
 $(document).on('click', 'button.login', function () {
