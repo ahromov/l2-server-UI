@@ -78,40 +78,7 @@ function generatePosts() {
 }
 
 
-function generateNews() {
-    function myFunction(value) {
-        let date = new Date(value.date);
-
-        $('#articles').append(`
-            <section>
-                <figure>
-                    <img src="data:image/png;base64,${value.image}">
-                    <div>
-                        <figcaption>
-                            <time datetime="${value.date}"><span>${date.getDate()}</span>/${date.getMonth()}/${date.getFullYear()}</time>
-                            <p><span>${messages.publishingIn}</span> ${date.toLocaleTimeString()}</p>
-                        </figcaption>
-                    </div>
-                    <a class="readMore" id="${value.id}" href="#">${messages.readMore}</a>
-                </figure>
-                <div id="news">                
-                    <h2>${value.title}</h2>
-                    <p>${value.text.substring(0, 200) + (value.text.length > 200 ? " ..." : "")}</p>
-                </div>
-            </section>
-        `)
-    };
-
-    $.get(url + '/news/get/lastThree', function (data) {
-        if (data != null) {
-            data.forEach(element => { myFunction(element) });
-        }
-    });
-}
-
-
-function generateNextNews(firstNewsId, ev) {
-
+function generateNews(pageNumber, ev) {
     $('#articles').html('');
     $('#next_page ul li a').removeClass('npActive');
     $(ev).addClass('npActive');
@@ -125,7 +92,7 @@ function generateNextNews(firstNewsId, ev) {
                     <img src="data:image/png;base64,${value.image}">
                     <div>
                         <figcaption>
-                            <time datetime="${value.date}"><span>${date.getDate()}</span>/${date.getMonth()}/${date.getFullYear()}</time>
+                            <time datetime="${value.date}"><span>${date.getDate()}</span>/${date.getMonth() + 1}/${date.getFullYear()}</time>
                             <p><span>${messages.publishingIn}</span> ${date.toLocaleTimeString()}</p>
                         </figcaption>
                     </div>
@@ -139,7 +106,7 @@ function generateNextNews(firstNewsId, ev) {
         `)
     };
 
-    $.get(url + '/news/get/nextNews/' + firstNewsId, function (data) {
+    $.get(url + '/news/get/pages/' + pageNumber, function (data) {
         if (data != null) {
             data.forEach(element => { myFunction(element) });
         }
@@ -209,9 +176,11 @@ function generateMainContent(articles, posts, languages) {
         </div>
     `)
 
-    $.get(url + '/news/get/newsIds', function (data) {
-        if (data != null) {
-            data.forEach(element => { generateNewsButtons(element) });
+    $.get(url + '/news/get/pages', function (data) {
+        if (data != 0) {
+            for (let i = 0; i < data; i++) {
+                generateNewsPagesButtons(i);
+            }
         }
     });
 }
@@ -226,13 +195,13 @@ function generateMainPage() {
 
     switch (lang) {
         case 'ru':
-            generateMainContent(generateNews(), generatePosts(), generateLanguageSelectors('', 'checked', ''));
+            generateMainContent(generateNews(0, null), generatePosts(), generateLanguageSelectors('', 'checked', ''));
             break;
         case 'ua':
-            generateMainContent(generateNews(), generatePosts(), generateLanguageSelectors('checked', '', ''));
+            generateMainContent(generateNews(0, null), generatePosts(), generateLanguageSelectors('checked', '', ''));
             break;
         case 'en':
-            generateMainContent(generateNews(), generatePosts(), generateLanguageSelectors('', '', 'checked'));
+            generateMainContent(generateNews(0, null), generatePosts(), generateLanguageSelectors('', '', 'checked'));
             break;
     }
 
@@ -240,7 +209,7 @@ function generateMainPage() {
 }
 
 
-function generateNewsButtons(id) {
+function generateNewsPagesButtons(id) {
     $('#next_page ul').append(`
         <li><a class="nextNews" id="${id}" href="#">${newsButtonNumber++}</a></li>
     `);
@@ -653,11 +622,19 @@ $(document).on('click', 'a.readMore', function () {
             myFunction(data);
         }
     });
+
+    $('#next_page ul').html(`
+        <li><a class="newsBack" href="#"><<</a></li>
+    `);
+})
+
+$(document).on('click', '.newsBack', function () {
+    generateMainPage();
 })
 
 $(document).on('click', '.nextNews', function () {
     let id = $(this).attr('id');
-    generateNextNews(id, this);
+    generateNews(id, this);
 })
 
 $(document).on('click', 'button.login', function () {
