@@ -106,7 +106,7 @@ nav ul li a.navActive:before {
     background: url("../images/alink_marker_top.png") no-repeat;
     background-position: center;
     margin-top: -22px;
-    margin-bottom: 10px;
+    margin-bottom: 12px;
 }
 
 nav ul li a.navActive:after {
@@ -115,7 +115,7 @@ nav ul li a.navActive:after {
     height: 7px;
     background: url("../images/alink_marker_bottom.png") no-repeat;
     background-position: center;
-    margin-top: 13px;
+    margin-top: 12px;
 }
 
 nav ul li a {
@@ -125,7 +125,12 @@ nav ul li a {
     cursor: pointer;
 }
 
-nav ul li a:hover, nav ul li.checked a, nav ul li a.navActive, footer #next_page li a.newsBack, footer #next_page li a.npActive {
+nav ul li a:hover,
+nav ul li.checked a,
+nav ul li a.navActive,
+footer #next_page li a.newsBack,
+footer #next_page li e4a.homeBack,
+footer #next_page li a.npActive {
     font-weight: bolder;
     color: #ffd40d;
 }
@@ -183,19 +188,21 @@ nav ul li.checked a:after {
     font-family: "Minion Pro";
 }
 
-#content {
+main {
     border-radius: 15px;
     position: relative;
     width: 981px;
     margin: 0 auto;
     margin-top: -300px;
+    opacity: 0;
+    transition: all 1s linear;
 }
 
-#content #stat {
+#stat {
     padding-top: 20px;
 }
 
-#content #stat h1 {
+#stat h1 {
     font-size: 16px;
     background: url(../images/menu_bg.png) no-repeat;
     /* height: 54px; */
@@ -204,7 +211,7 @@ nav ul li.checked a:after {
     box-sizing: border-box;
 }
 
-#content #stat table {
+#stat table {
     width: 800px;
     margin: 0 auto;
     border: 1px solid rgb(214, 234, 247, 0.3);
@@ -214,56 +221,60 @@ nav ul li.checked a:after {
     color: rgb(214, 234, 247, 0.3)
 }
 
-#content #stat section {
+#stat section {
     width: 100%;
     background: none;
     height: auto;
     text-align: center;
 }
 
-#content #stat section p {
+#stat section p {
     color: #ffa05f;
 }
 
-#content #stat table th {
+#stat table th {
     font-weight: normal;
     color: orange;
     background-color: #5b2123;
 }
 
-#content #stat table#rates {
+#stat table#rates {
     width: 330px;
 }
 
-#content #stat table#rates th {
+#stat table#rates th {
     width: 70%;
 }
 
-#content #stat div.top {
+#stat div.top {
     margin: 0 auto;
     width: 70%;
     color: rgb(214, 234, 247, 0.3);
 }
 
-#content #stat div.top a {
+#stat div.top a {
     text-decoration: none;
     color: yellow;
 }
 
-#content #stat table td {
+#stat table td {
     text-align: center;
     background-color: rgb(72, 43, 38);
     /* text-align: justify; */
-
 }
 
-#content #left, #content #right {
+#left,
+#right {
     width: 490px;
     display: inline-block;
 }
 
-#content #left {
+#left {
     float: left;
+}
+
+#articles {
+    transition: all 0.5s ease-out;
 }
 
 article h1 {
@@ -309,7 +320,8 @@ article section div.message form input {
     text-align: center;
 }
 
-article section div.message form input, article section div.message form textarea {
+article section div.message form input,
+article section div.message form textarea {
     display: block;
     width: 100%;
     border: 1px solid rgb(214, 234, 247, 0.3);
@@ -465,11 +477,11 @@ article section a:active {
     box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.75), inset 0px 3px 5px 0px rgba(0, 0, 0, 0.75);
 }
 
-#content #right {
+#right {
     float: right;
 }
 
-#content #right #lk_form {
+#right #lk_form {
     background: url("../images/lk_form_bg.png") no-repeat;
     width: 397px;
     height: 201px;
@@ -481,7 +493,7 @@ article section a:active {
     text-align: right;
 }
 
-#content #right #lk_form form h1 {
+#right #lk_form form h1 {
     display: block;
     width: 100%;
     margin: 0 auto;
@@ -491,7 +503,7 @@ article section a:active {
     transition: 0.5s ease-in-out;
 }
 
-#content #right #lk_form form div {
+#right #lk_form form div {
     background-image: -moz-linear-gradient( 90deg, rgb(58, 31, 23) 0%, rgb(96, 47, 35) 100%);
     background-image: -webkit-linear-gradient( 90deg, rgb(58, 31, 23) 0%, rgb(96, 47, 35) 100%);
     background-image: -ms-linear-gradient( 90deg, rgb(58, 31, 23) 0%, rgb(96, 47, 35) 100%);
@@ -501,7 +513,7 @@ article section a:active {
     margin-top: 3px;
 }
 
-#content #right #lk_form form div span {
+#right #lk_form form div span {
     font-weight: bold;
     width: 100px;
     float: left;
@@ -509,7 +521,7 @@ article section a:active {
     padding-top: 5px;
 }
 
-#content #right #lk_form form div input {
+#right #lk_form form div input {
     border-style: solid;
     border-width: 1px;
     border-color: rgb(214, 234, 247, 0.3);
@@ -526,11 +538,11 @@ article section a:active {
     text-align: center;
 }
 
-#content #right #lk_form form div input#g-recaptcha-response {
+#right #lk_form form div input#g-recaptcha-response {
     width: 113px;
 }
 
-#content #right #lk_form form button {
+#right #lk_form form button {
     border: none;
     background-image: -moz-linear-gradient( 90deg, rgb(58, 31, 23) 0%, rgb(157, 76, 56) 100%);
     background-image: -webkit-linear-gradient( 90deg, rgb(58, 31, 23) 0%, rgb(157, 76, 56) 100%);
@@ -542,7 +554,7 @@ article section a:active {
     cursor: pointer;
 }
 
-#content #right #lk_form #formBoard {
+#right #lk_form #formBoard {
     background-image: url("../images/remember_bg.png");
     margin: 0 auto;
     width: 168px;
@@ -556,7 +568,7 @@ article section a:active {
     margin-left: 113px;
 }
 
-#content #right #lk_form #formBoard span {
+#right #lk_form #formBoard span {
     display: block;
     position: absolute;
     margin-left: 8px;
@@ -565,7 +577,7 @@ article section a:active {
     text-align: center;
 }
 
-#content #right #lk_form #formBoard a {
+#right #lk_form #formBoard a {
     display: block;
     border-radius: 9px;
     background-image: -moz-linear-gradient( 90deg, rgb(52, 13, 5) 0%, rgb(63, 16, 6) 100%);
@@ -584,14 +596,14 @@ article section a:active {
     cursor: pointer;
 }
 
-#content #right #lang {
+#right #lang {
     float: right;
     width: 93px;
     position: absolute;
     margin-left: 386px;
 }
 
-#content #right #lang ul {
+#right #lang ul {
     list-style: none;
     margin-left: 0px;
     width: 96px;
@@ -599,7 +611,7 @@ article section a:active {
     margin: 0;
 }
 
-#content #right #lang li {
+#right #lang li {
     display: inline-block;
     font-size: 12px;
     background: url("../images/lang_bg.png") rgb(63, 16, 6) no-repeat;
@@ -608,30 +620,30 @@ article section a:active {
     text-align: center;
 }
 
-#content #right #lang li a {
+#right #lang li a {
     text-decoration: none;
     color: #ffa05f;
 }
 
-#content #right #lang li:hover {
+#right #lang li:hover {
     background: url("../images/lang_bg_checked.png") no-repeat;
 }
 
-#content #right #lang li:hover a {
+#right #lang li:hover a {
     color: black;
     font-weight: bold;
 }
 
-#content #right #lang li.checked {
+#right #lang li.checked {
     background: url("../images/lang_bg_checked.png") no-repeat;
 }
 
-#content #right #lang li.checked a {
+#right #lang li.checked a {
     color: black;
     font-weight: bold;
 }
 
-#slider .wrap{
+#slider .wrap {
     text-align: center;
 }
 
@@ -704,7 +716,7 @@ footer section.left {
     border-radius: 0 15px 0 0;
 }
 
-#content div.main {
+main {
     display: flex;
     justify-content: center;
     background: url("../images/article_bg.jpg") repeat-y;
@@ -736,15 +748,18 @@ footer #next_page li a {
     font-family: "Book OS Style";
 }
 
-footer #next_page li a:hover, footer #next_page li a.npActive, footer #next_page li a.newsBack {
+footer #next_page li a:hover,
+footer #next_page li a.npActive,
+footer #next_page li a.newsBack {
     background: url("../images/next_page_btn_active.png") no-repeat;
 }
 
-footer #next_page li a.npActive{
+footer #next_page li a.npActive {
     color: #ffd40d;
 }
 
-footer h1, footer p {
+footer h1,
+footer p {
     margin-left: 15px;
 }
 
@@ -824,4 +839,14 @@ footer #social .social_list ul li div {
     padding-left: 9px;
     padding-top: 9px;
     font-size: 11px;
+}
+
+#logo,
+nav,
+#lk_form form,
+div.message form {
+    transition: all 1s linear;
+    -webkit-transition: all 1s linear;
+    -o-transition: all 1s linear;
+    transition: all 1s linear;
 }

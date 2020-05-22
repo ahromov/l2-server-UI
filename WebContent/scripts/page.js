@@ -1,14 +1,15 @@
 var lang;
 var messages;
 var login;
-var loadTimeout = 200;
+var loadTimeout = 1000;
+
 
 function generateMenu() {
     $('nav').html(`
         <ul>
-            <li><a href="#" id="main">${messages.general}</a></li>
+            <li><a href="#" id="home">${messages.general}</a></li>
             <li><a href="#" id="about">${messages.aboutServer}</a></li>
-            <li><a id="reg">${messages.registration}</a></li>
+            <li><a href="#" id="reg">${messages.registration}</a></li>
             <li><a target="_blank" href="https://drive.google.com/open?id=1a9jqbmIrBIJxJzH0ADN5LaAdtMbB_zKo" id="files">${messages.files}</a></li>
             <li><a href="#" id="stat">${messages.statistic}</a></li>
             <li><a href="#" id="contact">${messages.contact}</a></li>
@@ -56,7 +57,7 @@ function showCabinetMenu() {
         '<button type="button" class="exit">' + messages.exit + '</button></<button>'
     );
 
-    $('#content #right #lk_form form button').css('transform', 'translateX(-32px)').css('width', '333px');
+    $('#right #lk_form form button').css('transform', 'translateX(-32px)').css('width', '333px');
 }
 
 
@@ -75,8 +76,10 @@ function generatePosts() {
 }
 
 
-function generateNewsPage(pageNumber, ev) {
+function generateNewsPage(pageId) {
     $('#articles').html('');
+    $('#articles').css({ transform: 'translateX(100px)' });
+
 
     function myFunction(value) {
         let date = new Date(value.date);
@@ -98,17 +101,29 @@ function generateNewsPage(pageNumber, ev) {
                             <p>${value.text.substring(0, 200) + (value.text.length > 200 ? " ..." : "")}</p>
                         </div>
                     </section>
-            `);
+                `).css({ transform: 'translateY(0px)' });
     };
 
 
-    $.get(url + '/news/get/pages/' + pageNumber, function (data) {
+    if (pageId == null)
+        pageId = 0;
+
+    $.get(url + '/news/get/pages/' + pageId, function(data) {
         if (data != null) {
             data.forEach(element => { myFunction(element) });
         }
     });
 
-    setItemActive('#next_page ul li a', 'npActive', ev);
+    setButtonActive('a.nextNewsPage', 'npActive', '#next_page ul li a[id="' + pageId + '"]');
+}
+
+
+function generateNewsPagesButtons(id) {
+    $('#next_page ul').append(`
+        <li><a class="nextNewsPage" id="${id}" href="#">${id + 1}</a></li>
+    `);
+
+    $('#next_page ul li:first-child a').addClass('npActive');
 }
 
 
@@ -121,10 +136,10 @@ function generateLanguageSelectors(checkedUa, checkedRu, checkedEn) {
 }
 
 
-function generateMainContent(posts, languages) {
+function generateMainContent(posts, languagesSelectors) {
     let playIndex = Math.floor(Math.random() * videosIds.length);
 
-    $('#content .main').html(`
+    $('main').html(`
         <div id="left">
         <article>
             <h1>${messages.news}</h1>
@@ -155,7 +170,7 @@ function generateMainContent(posts, languages) {
                     </div>
                 </section>
                 <section id="lang">
-                    ${languages}
+                    ${languagesSelectors}
                 </section>
             </div>
             <section id="slider">
@@ -172,9 +187,9 @@ function generateMainContent(posts, languages) {
                 </ul>
             </section>
         </div>
-    `)
+    `).css({ opacity: 9 });
 
-    $.get(url + '/news/get/pages', function (data) {
+    $.get(url + '/news/get/pages', function(data) {
         if (data != 0) {
             for (let i = 0; i < data; i++) {
                 generateNewsPagesButtons(i);
@@ -184,12 +199,8 @@ function generateMainContent(posts, languages) {
 }
 
 
-function generateMainPage() {
-    document.title = messages.title;
-
-    generateMenu();
-    setItemActive('nav ul li a', 'navActive', 'nav #main');
-    generateLogo();
+function generateMain(newsPageId) {
+    setButtonActive('nav ul li a', 'navActive', 'nav #home');
 
     switch (lang) {
         case 'ru':
@@ -203,24 +214,20 @@ function generateMainPage() {
             break;
     }
 
-    generateNewsPage(0, null);
-    generateFooter();
+    generateNewsPage(newsPageId);
 }
 
 
-function generateNewsPagesButtons(id) {
-    $('#next_page ul').append(`
-        <li><a class="nextNews" id="${id}" href="#">${id + 1}</a></li>
-    `);
-
-    $('#next_page ul li:first-child a').addClass('npActive');
-}
-
-
-function generateBackButton() {
-    $('#next_page ul').html(`
-        <li><a class="newsBack" href="#"><<</a></li>
-    `);
+function generateBackButton(id) {
+    if (id != null) {
+        $('#next_page ul').html(`
+            <li><a class="newsBack" id="${id}" href="#"><<</a></li>
+        `);
+    } else {
+        $('#next_page ul').html(`
+            <li><a class="homeBack" href="#"><<</a></li>
+        `);
+    }
 }
 
 
@@ -257,14 +264,14 @@ function generateFooter() {
 }
 
 
-function setItemActive(elementRemove, className, elamentActive) {
+function setButtonActive(elementRemove, className, elementActive) {
     $(elementRemove).removeClass(className);
-    $(elamentActive).addClass(className);
+    $(elementActive).addClass(className);
 }
 
 
 function getRegisteredServerName() {
-    $.get(url + '/ls/getServers', function (data) {
+    $.get(url + '/ls/getServers', function(data) {
         if (data != null) {
             data.forEach(element => {
                 $('#serverName').text(element.name);
@@ -275,7 +282,7 @@ function getRegisteredServerName() {
 
 
 function getServerStatus() {
-    $.get(url + '/gs/get/status', function (data) {
+    $.get(url + '/gs/get/status', function(data) {
         if (data != null) {
             if (data.status === 'ON')
                 $('#status').text(data.status).css('color', '#00ff30');
@@ -306,22 +313,47 @@ function initDefaultLanguagesSettings() {
     }
 };
 
-$(document).ready(function () {
+
+function generateMainPage(newsPageId) {
+    document.title = messages.title;
+    generateMenu();
+    generateLogo();
+    generateMain(newsPageId);
+    generateFooter();
+}
+
+
+function cantEmpty(data) {
+    $('div.message form  p.' + data).html(messages.fieldsCannotEmpty).css('color', 'red');
+}
+
+
+function initAll() {
     initDefaultLanguagesSettings();
-    generateMainPage();
+    generateMainPage(0);
+}
+
+
+$(document).ready(function() {
+    initAll();
     getRegisteredServerName();
     getServerStatus();
 })
 
-$(document).on('click', 'nav #main', function () {
-    setTimeout(function () {
+$(document).on('click', 'nav #home', function() {
+    $('nav').css({ opacity: 0 });
+    $('main').css({ opacity: 0 });
+    setTimeout(function() {
+        $('nav').css({ opacity: 9 });
         generateMainPage();
     }, loadTimeout);
 })
 
-$(document).on('click', 'nav #about', function () {
-    setTimeout(function () {
-        $('#content .main').html(`
+$(document).on('click', 'nav #about', function() {
+    $('nav').css({ opacity: 0 });
+    $('main').css({ opacity: 0 });
+    setTimeout(function() {
+        $('main').html(`
         <div class="top">
             <div id="stat">
                 <article>
@@ -393,17 +425,21 @@ $(document).on('click', 'nav #about', function () {
                 </article>
             </div>
         </div>
-        `)
+        `).css({ opacity: 9 });
 
-        setItemActive('nav ul li a', 'navActive', 'nav #about');
-        generateBackButton();
+        setButtonActive('nav ul li a', 'navActive', 'nav #about');
+        $('nav').css({ opacity: 9 });
+        generateBackButton(null);
     }, loadTimeout);
 })
 
-$(document).on('click', 'nav #reg', function () {
-    setTimeout(function () {
+$(document).on('click', 'nav #reg', function() {
+    $('nav').css({ opacity: 0 });
+    $('main').css({ opacity: 0 });
+    setTimeout(function() {
+        $('nav').css({ opacity: 9 });
         generateMainPage();
-        setItemActive('nav ul li a', 'navActive', 'nav #reg');
+        setButtonActive('nav ul li a', 'navActive', 'nav #reg');
 
         $("#lk_form form").html(
             '<form>' +
@@ -419,17 +455,19 @@ $(document).on('click', 'nav #reg', function () {
             '<button class="register" type="button">' + messages.send + '</button>'
         );
 
-        $('#content #right #lk_form form h1').css('font-size', '10px').css('margin-top', '-5px');
-        $('#content #right #lk_form form div').css('margin-top', '0px').css('margin-bottom', '2px');
-        $('#content #right #lk_form form div input').css('height', '20px');
-        $('#content #right #lk_form form div span').css('padding-top', '2px');
-        $('#content #right #lk_form form button').css('width', '134px').css('margin-right', '35px').css('height', '18px');
+        $('#lk_form form h1').css('font-size', '10px').css('margin-top', '-5px');
+        $('#lk_form form div').css('margin-top', '0px').css('margin-bottom', '2px');
+        $('#lk_form form div input').css('height', '20px');
+        $('#lk_form form div span').css('padding-top', '2px');
+        $('#lk_form form button').css('width', '134px').css('margin-right', '35px').css('height', '18px');
     }, loadTimeout);
 })
 
-$(document).on('click', 'nav #stat', function () {
-    setTimeout(function () {
-        $('#content .main').html(
+$(document).on('click', 'nav #stat', function() {
+    $('nav').css({ opacity: 0 });
+    $('main').css({ opacity: 0 });
+    setTimeout(function() {
+        $('main').html(
             `<div class="top">
                 <div id="stat">
                     <article>
@@ -517,18 +555,19 @@ $(document).on('click', 'nav #stat', function () {
                                     </article>
                                     </div>
                                     </div>`
-        )
+        ).css({ opacity: 9 });
 
-        setItemActive('nav ul li a', 'navActive', 'nav #stat');
+        $('nav').css({ opacity: 9 });
+        setButtonActive('nav ul li a', 'navActive', 'nav #stat');
         generateBackButton();
 
-        $.get(url + '/clans/count/all', function (data) {
+        $.get(url + '/clans/count/all', function(data) {
             if (data != null) {
                 $('#accCount').html(data.count);
             }
         });
 
-        $.get(url + '/characters/count/byType', function (data) {
+        $.get(url + '/characters/count/byType', function(data) {
             if (data != null) {
                 $('#countAll').html(data.all);
                 $('#countNobless').html(data.nobles);
@@ -537,10 +576,10 @@ $(document).on('click', 'nav #stat', function () {
             }
         });
 
-        $.get(url + '/clans/get/all', function (data) {
+        $.get(url + '/clans/get/all', function(data) {
             if (data != null) {
                 data.forEach(element => {
-                    $('#content #stat #clans table').append(
+                    $('#stat #clans table').append(
                         '<tr>' +
                         '<td>' + element.name + '</td>' +
                         '<td >' + element.level + '</td>' +
@@ -554,27 +593,27 @@ $(document).on('click', 'nav #stat', function () {
             }
         });
 
-    $.get(url + '/characters/get/top10', function (data) {
-        if (data != null) {
-            data.forEach(element => {
-                $('#content #stat #top10 table').append(
-                    `<tr>
-                    <td>` + element.playerName + `</td>
-                    <td >` + element.playerClass + `</td>
-                    <td >` + element.playerGender + `</td>
-                    <td >` + element.playersClan + `</td>
-                    <td >` + element.playersOnlineTime + ` ч.</td>
-                    <td >` + element.playersPvpKills + '/' + element.playersPkKills + `</td>
-                    </tr>`
-                );
-            });
-        }
-    });
-
-        $.get(url + '/castles/get/all', function (data) {
+        $.get(url + '/characters/get/top10', function(data) {
             if (data != null) {
                 data.forEach(element => {
-                    $('#content #stat #castles table').append(
+                    $('#stat #top10 table').append(
+                        `<tr>
+                            <td>` + element.playerName + `</td>
+                            <td >` + element.playerClass + `</td>
+                            <td >` + element.playerGender + `</td>
+                            <td >` + element.playersClan + `</td>
+                            <td >` + element.playersOnlineTime + ` ч.</td>
+                            <td >` + element.playersPvpKills + '/' + element.playersPkKills + `</td>
+                            </tr>`
+                    );
+                });
+            }
+        });
+
+        $.get(url + '/castles/get/all', function(data) {
+            if (data != null) {
+                data.forEach(element => {
+                    $('#stat #castles table').append(
                         '<tr>' +
                         '<td><img src="images/castles/' + element.id + '.jpg"</td>' +
                         '<td>' + element.name + '</td>' +
@@ -588,10 +627,10 @@ $(document).on('click', 'nav #stat', function () {
             }
         });
 
-        $.get(url + '/forts/get/all', function (data) {
+        $.get(url + '/forts/get/all', function(data) {
             if (data != null) {
                 data.forEach(element => {
-                    $('#content #stat #forts table').append(
+                    $('#stat #forts table').append(
                         '<tr>' +
                         '<td><img src="images/forts/' + element.id + '.jpg"</td>' +
                         '<td>' + element.name + '</td>' +
@@ -605,9 +644,11 @@ $(document).on('click', 'nav #stat', function () {
     }, loadTimeout);
 })
 
-$(document).on('click', 'nav #contact', function () {
-    setTimeout(function () {
-        $('#content .main').html(`
+$(document).on('click', 'nav #contact', function() {
+    $('nav').css({ opacity: 0 });
+    $('main').css({ opacity: 0 });
+    setTimeout(function() {
+        $('main').html(`
                             <div class="top">
                             <div id="stat">
                             <article>
@@ -626,66 +667,92 @@ $(document).on('click', 'nav #contact', function () {
                             </article>
                             </div>
                             </div>
-                            `)
+                            `).css({ opacity: 9 });
 
-        setItemActive('nav ul li a', 'navActive', 'nav #contact');
+        $('nav').css({ opacity: 9 });
+        setButtonActive('nav ul li a', 'navActive', 'nav #contact');
         generateBackButton();
     }, loadTimeout);
 })
 
-$(document).on('click', 'a.readMore', function () {
-    function myFunction(value) {
-        let date = new Date(value.date);
+$(document).on('click', 'a.readMore', function() {
+    $('main').css({ opacity: 0 });
+    let newsId = $(this).attr('id');
+    let pageId = $('.nextNewsPage.npActive').attr('id');
 
-        $('#content .main').html(
-            `<div class="top">
-                    <div id="stat">
-                        <article>
-                            <h1>${value.title}</h1>
-                            <section>
-                                <table>
-                                    <tr>
-                                        <td id="accCount"><img src="data:image/png;base64,${value.image}">
-                                        ${date.toLocaleDateString()} ${date.toLocaleTimeString()}
-                                        </td>
-                                        <td id="countAll">
-                                            ${value.text}
-                                        </td>
-                                    </tr>
-                                </table>
-                            </section>
-                        </article>
-                    </div>
+    setTimeout(function() {
+        function myFunction(value) {
+            let date = new Date(value.date);
+
+            $('main').html(
+                `<div class="top">
+            <div id="stat">
+            <article>
+            <h1>${value.title}</h1>
+            <section>
+            <table>
+            <tr>
+            <td id="accCount"><img src="data:image/png;base64,${value.image}">
+            ${date.toLocaleDateString()} ${date.toLocaleTimeString()}
+            </td>
+            <td id="countAll">
+            ${value.text}
+            </td>
+            </tr>
+            </table>
+            </section>
+            </article>
+            </div>
             </div>`
-        );
-    };
+            );
+        };
 
-    $.get(url + '/news/get/' + $(this).attr('id'), function (data) {
-        if (data != null) {
-            myFunction(data);
-        }
-    });
+        $.get(url + '/news/get/' + newsId, function(data) {
+            if (data != null) {
+                myFunction(data);
+            }
+        });
 
-    generateBackButton();
+        generateBackButton(pageId);
+
+        $('main').css({ opacity: 9 });
+    }, loadTimeout);
 })
 
-$(document).on('click', '.newsBack', function () {
-    generateMainPage();
+$(document).on('click', '.newsBack', function() {
+    let newsPageId = $(this).attr('id');
+    $('main').css({ opacity: 0 });
+    $(this).css({ display: 'none' });
+    setTimeout(function() {
+        generateMainPage(newsPageId);
+    }, loadTimeout);
 })
 
-$(document).on('click', '.nextNews', function () {
+$(document).on('click', '.homeBack', function() {
+    $('main').css({ opacity: 0 });
+    $(this).css({ display: 'none' });
+    setTimeout(function() {
+        generateMainPage(null);
+    }, loadTimeout);
+})
+
+$(document).on('click', '.nextNewsPage', function() {
+    $('#articles').css({ opacity: 0 });
     let id = $(this).attr('id');
-    generateNewsPage(id, this);
+    setTimeout(function() {
+        generateNewsPage(id);
+        $('#articles').css({ opacity: 9 });
+    }, loadTimeout);
 });
 
-$(document).on('click', 'button.login', function () {
+$(document).on('click', 'button.login', function() {
     grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
         action: 'login'
-    }).then(function (token) {
+    }).then(function(token) {
         if (token !== null) {
             $.post(url + '/reCaptcha/validate', {
                 response: token
-            }).done(function (result) {
+            }).done(function(result) {
                 if (result.success && result.score > 0.5) {
 
                     login = $("#inputLoginl3").val();
@@ -703,25 +770,29 @@ $(document).on('click', 'button.login', function () {
                         password: password
                     };
 
-                    $.post(url + "/accounts/login", userLogin, function (data) {
-                        switch (data.status) {
-                            case 'Success':
-                                $('form').trigger('reset');
-                                showCabinetMenu();
-                                $('#lk_form form h1').css("color", "green");
-                                break;
-                            case 'Not exists':
-                                $('form').trigger('reset');
-                                $('#lk_form form h1').css("color", "red").html(messages.accountNotExists);
-                                break;
-                            case 'Incorrect password':
-                                $('form').trigger('reset');
-                                $('#lk_form form h1').css("color", "red").html(messages.incorrectPassword);
-                                break;
-                            default:
-                                $('form').trigger('reset');
-                                $('#lk_form form h1').css("color", "red").html(messages.somthingWrong);
-                        }
+                    $.post(url + "/accounts/login", userLogin, function(data) {
+                        $('#lk_form form').css({ opacity: 0 });
+                        setTimeout(function() {
+                            switch (data.status) {
+                                case 'Success':
+                                    $('form').trigger('reset');
+                                    showCabinetMenu();
+                                    $('#lk_form form h1').css("color", "green");
+                                    break;
+                                case 'Not exists':
+                                    $('form').trigger('reset');
+                                    $('#lk_form form h1').css("color", "red").html(messages.accountNotExists);
+                                    break;
+                                case 'Incorrect password':
+                                    $('form').trigger('reset');
+                                    $('#lk_form form h1').css("color", "red").html(messages.incorrectPassword);
+                                    break;
+                                default:
+                                    $('form').trigger('reset');
+                                    $('#lk_form form h1').css("color", "red").html(messages.somthingWrong);
+                            }
+                            $('#lk_form form').css({ opacity: 9 });
+                        }, loadTimeout);
                     });
                 } else {
                     $('form').trigger('reset');
@@ -733,14 +804,14 @@ $(document).on('click', 'button.login', function () {
     });
 });
 
-$(document).on('click', "button.register", function () {
+$(document).on('click', "button.register", function() {
     grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
         action: 'login'
-    }).then(function (token) {
+    }).then(function(token) {
         if (token !== null) {
             $.post(url + '/reCaptcha/validate', {
                 response: token
-            }).done(function (result) {
+            }).done(function(result) {
                 if (result.success && result.score > 0.5) {
                     let login = $("#inputLoginl3").val();
                     let email = $("#inputEmail3").val();
@@ -767,29 +838,33 @@ $(document).on('click', "button.register", function () {
                     };
 
                     $.post(url + "/accounts/create", userRegistration,
-                        function (data) {
-                            switch (data.status) {
-                                case 'Success':
-                                    $('form').trigger('reset');
-                                    $('#lk_form form h1').css("color", "green").html(messages.accountCreated + '! ' + messages.checkEmail);
-                                    break;
-                                case 'No match':
-                                    $('#lk_form form h1').css("color", "orange").html(messages.passwordsNotMatch);
-                                    $('form').trigger('reset');
-                                    break;
-                                case 'Login exists':
-                                    $('#lk_form form h1').css("color", "yellow").html(messages.loginExists);
-                                    $('form').trigger('reset');
-                                    break;
-                                case 'Email exists':
-                                    $('#lk_form form h1').css("color", "red").html(messages.emailExists);
-                                    $('form').trigger('reset');
-                                    break;
-                                case 'Invalid email':
-                                    $('#lk_form form h1').css("color", "red").html(messages.incorrectEmail);
-                                    $('form').trigger('reset');
-                                    break;
-                            }
+                        function(data) {
+                            $('#lk_form form').css({ opacity: 0 });
+                            setTimeout(function() {
+                                switch (data.status) {
+                                    case 'Success':
+                                        $('form').trigger('reset');
+                                        $('#lk_form form h1').css("color", "green").html(messages.accountCreated + '! ' + messages.checkEmail);
+                                        break;
+                                    case 'No match':
+                                        $('#lk_form form h1').css("color", "orange").html(messages.passwordsNotMatch);
+                                        $('form').trigger('reset');
+                                        break;
+                                    case 'Login exists':
+                                        $('#lk_form form h1').css("color", "yellow").html(messages.loginExists);
+                                        $('form').trigger('reset');
+                                        break;
+                                    case 'Email exists':
+                                        $('#lk_form form h1').css("color", "red").html(messages.emailExists);
+                                        $('form').trigger('reset');
+                                        break;
+                                    case 'Invalid email':
+                                        $('#lk_form form h1').css("color", "red").html(messages.incorrectEmail);
+                                        $('form').trigger('reset');
+                                        break;
+                                }
+                                $('#lk_form form').css({ opacity: 9 });
+                            }, loadTimeout);
                         });
                 } else {
                     $('#lk_form form h1').css("color", "red").html(messages.botsAction);
@@ -800,14 +875,14 @@ $(document).on('click', "button.register", function () {
     });
 })
 
-$(document).on('click', "button.restore", function () {
+$(document).on('click', "button.restore", function() {
     grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
         action: 'login'
-    }).then(function (token) {
+    }).then(function(token) {
         if (token !== null) {
             $.post(url + '/reCaptcha/validate', {
                 response: token
-            }).done(function (result) {
+            }).done(function(result) {
                 if (result.success && result.score > 0.5) {
                     let login = $("#inputLoginl3").val();
                     let email = $("#inputEmail3").val();
@@ -825,26 +900,30 @@ $(document).on('click', "button.restore", function () {
                     };
 
                     $.post(url + "/accounts/restorePass", userRegistration,
-                        function (data) {
-                            switch (data.status) {
-                                case 'Success':
-                                    $('form').trigger('reset');
-                                    if (data.status == 'Success')
-                                        $('#lk_form form h1').css("color", "green").html(messages.passwordChanged + '! ' + messages.checkEmail);
-                                    break;
-                                case 'Invalid login':
-                                    $('#lk_form form h1').css("color", "yellow").html(messages.invalidLogin);
-                                    $('form').trigger('reset');
-                                    break;
-                                case 'Not exists':
-                                    $('#lk_form form h1').css("color", "yellow").html(messages.accountNotExists);
-                                    $('form').trigger('reset');
-                                    break;
-                                case 'Invalid data':
-                                    $('#lk_form form h1').css("color", "red").html(messages.somthingWrong);
-                                    $('form').trigger('reset');
-                                    break;
-                            }
+                        function(data) {
+                            $('#lk_form form').css({ opacity: 0 });
+                            setTimeout(function() {
+                                switch (data.status) {
+                                    case 'Success':
+                                        $('form').trigger('reset');
+                                        if (data.status == 'Success')
+                                            $('#lk_form form h1').css("color", "green").html(messages.passwordChanged + '! ' + messages.checkEmail);
+                                        break;
+                                    case 'Invalid login':
+                                        $('#lk_form form h1').css("color", "yellow").html(messages.invalidLogin);
+                                        $('form').trigger('reset');
+                                        break;
+                                    case 'Not exists':
+                                        $('#lk_form form h1').css("color", "yellow").html(messages.accountNotExists);
+                                        $('form').trigger('reset');
+                                        break;
+                                    case 'Invalid data':
+                                        $('#lk_form form h1').css("color", "red").html(messages.somthingWrong);
+                                        $('form').trigger('reset');
+                                        break;
+                                }
+                                $('#lk_form form').css({ opacity: 9 });
+                            }, loadTimeout);
                         }
                     );
                 } else {
@@ -857,26 +936,30 @@ $(document).on('click', "button.restore", function () {
     });
 });
 
-$(document).on('click', "button.changePass", function () {
-    $("#lk_form form").html(
-        '<h1>' + messages.passwordChanging + ' ' + login + '!</h1>' +
-        '<div>' +
-        '<label><span>' + messages.oldPassword + ':</span><input id="oldPassword" type="password"></label></div>' +
-        '<div>' +
-        '<label><span>' + messages.newPassword + ':</span><input id="newFirstPassword" type="password"></label></div>' +
-        '<div>' +
-        '<label><span>' + messages.repeatePassword + ':</span><input id="newSecondPassword"" type="password"></label></div>' +
-        '<button class="back" type="button" onclick="showCabinetMenu()"><< ' + messages.back + '</button><button class="changePassword" type="button">' + messages.change + '</button>'
-    );
+$(document).on('click', "button.changePass", function() {
+    $('#lk_form form').css({ opacity: 0 });
+    setTimeout(function() {
+        $("#lk_form form").html(
+            '<h1>' + messages.passwordChanging + ' ' + login + '!</h1>' +
+            '<div>' +
+            '<label><span>' + messages.oldPassword + ':</span><input id="oldPassword" type="password"></label></div>' +
+            '<div>' +
+            '<label><span>' + messages.newPassword + ':</span><input id="newFirstPassword" type="password"></label></div>' +
+            '<div>' +
+            '<label><span>' + messages.repeatePassword + ':</span><input id="newSecondPassword"" type="password"></label></div>' +
+            '<button class="back" type="button" onclick="showCabinetMenu()"><< ' + messages.back + '</button><button class="changePassword" type="button">' + messages.change + '</button>'
+        );
 
-    $('#content #right #lk_form form h1').css('font-size', '10px').css('margin-top', '-5px');
-    $('#content #right #lk_form form div span').css('width', '138px');
-    $('#content #right #lk_form form div input').css('height', '25px').css('width', '214px');
-    $('#content #right #lk_form form button').css('width', '105px').css('transform', 'translateX(-32px)').css('margin-right', '2px').css('height', '20px').css('width', '105px');
-    $('#content #right #lk_form form button.back').css('width', '97px')
+        $('#right #lk_form form h1').css('font-size', '10px').css('margin-top', '-5px');
+        $('#right #lk_form form div span').css('width', '138px');
+        $('#right #lk_form form div input').css('height', '25px').css('width', '214px');
+        $('#right #lk_form form button').css('width', '105px').css('transform', 'translateX(-32px)').css('margin-right', '2px').css('height', '20px').css('width', '105px');
+        $('#right #lk_form form button.back').css('width', '97px');
+        $('#lk_form form').css({ opacity: 9 });
+    }, loadTimeout);
 });
 
-$(document).on('click', "button.changePassword", function () {
+$(document).on('click', "button.changePassword", function() {
     let oldPassword = $("#oldPassword").val();
     let newFirstPassword = $("#newFirstPassword").val();
     let newSecondPassword = $("#newSecondPassword").val();
@@ -901,106 +984,136 @@ $(document).on('click', "button.changePassword", function () {
     };
 
     $.post(url + "/accounts/changePass", userRegistration,
-        function (data) {
-            switch (data.status) {
-                case 'Success':
-                    $('#lk_form form h1').css("color", "green").html(messages.passwordChanged);
-                    $('form').trigger('reset');
-                    break;
+        function(data) {
+            $('#lk_form form').css({ opacity: 0 });
+            setTimeout(function() {
+                switch (data.status) {
+                    case 'Success':
+                        $('#lk_form form h1').css("color", "green").html(messages.passwordChanged);
+                        $('form').trigger('reset');
+                        break;
 
-                case 'Invalid pass':
-                    $('#lk_form form h1').css("color", "orange").html(messages.incorrerctOldPassword);
-                    $('form').trigger('reset');
-                    break;
+                    case 'Invalid pass':
+                        $('#lk_form form h1').css("color", "orange").html(messages.incorrerctOldPassword);
+                        $('form').trigger('reset');
+                        break;
 
-                case 'No match':
-                    $('#lk_form form h1').css("color", "orange").html(messages.passwordsNotMatch);
-                    $('form').trigger('reset');
-                    break;
+                    case 'No match':
+                        $('#lk_form form h1').css("color", "orange").html(messages.passwordsNotMatch);
+                        $('form').trigger('reset');
+                        break;
 
-                case null:
-                    $('#lk_form form h1').css("color", "red").html(messages.somthingWrong);
-                    $('form').trigger('reset');
-                    break;
-            }
+                    case null:
+                        $('#lk_form form h1').css("color", "red").html(messages.somthingWrong);
+                        $('form').trigger('reset');
+                        break;
+                }
+                $('#lk_form form').css({ opacity: 9 });
+            }, loadTimeout);
         }
     );
 });
 
-$(document).on('click', "button.exit", function () {
-    login = null;
-    showLoginForm();
+$(document).on('click', "button.exit", function() {
+    $('#lk_form form').css({ opacity: 0 });
+    setTimeout(function() {
+        login = null;
+        showLoginForm();
+        $('#lk_form form').css({ opacity: 9 });
+    }, loadTimeout);
 });
 
-$(document).on('click', "a.forgot", function () {
-    $("#lk_form form").html(
-        '<form>' +
-        '<h1>' + messages.passwordChanging + '</h1>' +
-        '<div>' +
-        '<label><span>' + messages.loginName + ':</span><input id="inputLoginl3" type="text"></label></div>' +
-        '<div>' +
-        '<label><span>' + messages.email + ':</span><input id="inputEmail3" type="email"></label></div>' +
-        '<button class="restore" type="button">' + messages.change + '</button>'
-    );
+$(document).on('click', "a.forgot", function() {
+    $('#lk_form form').css({ opacity: 0 });
+    setTimeout(function() {
+        $("#lk_form form").html(
+            '<form>' +
+            '<h1>' + messages.passwordChanging + '</h1>' +
+            '<div>' +
+            '<label><span>' + messages.loginName + ':</span><input id="inputLoginl3" type="text"></label></div>' +
+            '<div>' +
+            '<label><span>' + messages.email + ':</span><input id="inputEmail3" type="email"></label></div>' +
+            '<button class="restore" type="button">' + messages.change + '</button>'
+        );
 
-    $("button[type='button']").removeClass().addClass('restore');
-    $('#content #right #lk_form form button').css({
-        'width': '134px',
-        'margin-right': '35px',
-        'margin-top': '5px'
-    });
+        $("button[type='button']").removeClass().addClass('restore');
+        $('#right #lk_form form button').css({
+            'width': '134px',
+            'margin-right': '35px',
+            'margin-top': '5px'
+        });
+        $('#lk_form form').css({ opacity: 9 });
+    }, loadTimeout);
 })
 
-$(document).on('click', '#lang a#ua', function () {
-    lang = 'ua';
-    messages = uaMessages;
-    $.cookie('language', lang);
-    generateMainPage();
+$(document).on('click', '#lang a#ua', function() {
+    $('nav').css({ opacity: 0 });
+    $('#logo').css({ opacity: 0 });
+    $('main').css({ opacity: 0 });
+    setTimeout(function() {
+        lang = 'ua';
+        messages = uaMessages;
+        $.cookie('language', lang);
+        $('nav').css({ opacity: 9 });
+        $('#logo').css({ opacity: 9 });
+        generateMainPage();
+    }, loadTimeout);
 })
 
-$(document).on('click', '#lang a#ru', function () {
-    lang = 'ru';
-    messages = ruMessages;
-    $.cookie('language', lang);
-    generateMainPage();
+$(document).on('click', '#lang a#ru', function() {
+    $('nav').css({ opacity: 0 });
+    $('#logo').css({ opacity: 0 });
+    $('main').css({ opacity: 0 });
+    setTimeout(function() {
+        lang = 'ru';
+        messages = ruMessages;
+        $.cookie('language', lang);
+        $('nav').css({ opacity: 9 });
+        $('#logo').css({ opacity: 9 });
+        generateMainPage();
+    }, loadTimeout);
 })
 
-$(document).on('click', '#lang a#en', function () {
-    lang = 'en';
-    messages = enMessages;
-    $.cookie('language', lang);
-    generateMainPage();
+$(document).on('click', '#lang a#en', function() {
+    $('nav').css({ opacity: 0 });
+    $('#logo').css({ opacity: 0 });
+    $('main').css({ opacity: 0 });
+    setTimeout(function() {
+        lang = 'en';
+        messages = enMessages;
+        $.cookie('language', lang);
+        $('nav').css({ opacity: 9 });
+        $('#logo').css({ opacity: 9 });
+        generateMainPage();
+    }, loadTimeout);
 })
 
-function cantEmpty(data) {
-	$('div.message form  p.' + data).html(messages.fieldsCannotEmpty).css('color', 'red');
-}
 
-$(document).on('click', 'button.sendMessage', function () {
+$(document).on('click', 'button.sendMessage', function() {
     grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
         action: 'social'
-    }).then(function (token) {
+    }).then(function(token) {
         if (token !== null) {
             $.post(url + '/reCaptcha/validate', {
                 response: token
-            }).done(function (result) {
+            }).done(function(result) {
                 if (result.success && result.score > 0.5) {
                     let login = $('div.message form input.name').val();
                     let email = $('div.message form input.email').val();
                     let message = $('div.message form textarea.message').val();
 
                     if (login === '' || login == null) {
-                    	cantEmpty('name');
+                        cantEmpty('name');
                         return;
                     }
 
                     if (email === '' || email == null) {
-                    	cantEmpty('email');
+                        cantEmpty('email');
                         return;
                     }
 
                     if (message === '' || message == null) {
-                    	cantEmpty('message');
+                        cantEmpty('message');
                         return;
                     }
 
@@ -1011,20 +1124,22 @@ $(document).on('click', 'button.sendMessage', function () {
                     };
 
                     $.post(url + "/accounts/sendMess", formData,
-                        function (data) {
-                            $('#content div.message form').hide();
-
-                            switch (data.status) {
-                                case 'Success':
-                                    $('#content div.message').html(messages.messageSended).css("color", "green");
-                                    break;
-                                case 'Invalid login':
-                                    $('#content div.message').html(messages.invalidLogin).css("color", "orange");
-                                    break;
-                                case 'Not found':
-                                    $('#content div.message').html(messages.accountNotExists).css("color", "red");
-                                    break;
-                            }
+                        function(data) {
+                            $('main').css({ opacity: 0 });
+                            setTimeout(function() {
+                                switch (data.status) {
+                                    case 'Success':
+                                        $('main div.message').html(messages.messageSended).css("color", "green");
+                                        break;
+                                    case 'Invalid login':
+                                        $('main div.message').html(messages.invalidLogin).css("color", "orange");
+                                        break;
+                                    case 'Not found':
+                                        $('main div.message').html(messages.accountNotExists).css("color", "red");
+                                        break;
+                                }
+                                $('main').css({ opacity: 9 });
+                            }, loadTimeout);
                         }
                     );
                 } else {
