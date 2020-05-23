@@ -94,7 +94,7 @@ function generateNewsPage(pageId) {
                             <p><span>${messages.publishingIn}</span> ${date.toLocaleTimeString()}</p>
                             </figcaption>
                             </div>
-                            <a class="readMore" id="${value.id}" href="#">${messages.readMore}</a>
+                            <a class="readMore" id="${value.id}" type="button">${messages.readMore}</a>
                         </figure>
                         <div id="news">                
                             <h2>${value.title}</h2>
@@ -122,7 +122,7 @@ function generateNewsPage(pageId) {
 
 function generateNewsPagesButtons(id) {
     $('#next_page ul').append(`
-        <li><a class="nextNewsPage" id="${id}" href="#">${id + 1}</a></li>
+        <li><a class="nextNewsPage" id="${id}" type="button">${id + 1}</a></li>
     `);
 
     $('#next_page ul li:first-child a').addClass('npActive');
@@ -343,25 +343,25 @@ function initAll() {
 }
 
 
-$(document).ready(function() {
+$(document).ready(function () {
     initAll();
     getRegisteredServerName();
     getServerStatus();
 })
 
-$(document).on('click', 'nav #home', function() {
+$(document).on('click', 'nav #home', function () {
     $('nav').css({ opacity: 0 });
     $('main').css({ opacity: 0 });
-    setTimeout(function() {
-        $('nav').css({ opacity: 9 });
+    setTimeout(function () {
         generateMainPage();
+        $('nav').css({ opacity: 9 });
     }, loadTimeout);
 })
 
-$(document).on('click', 'nav #about', function() {
+$(document).on('click', 'nav #about', function () {
     $('nav').css({ opacity: 0 });
     $('main').css({ opacity: 0 });
-    setTimeout(function() {
+    setTimeout(function () {
         $('main').html(`
         <div class="top">
             <div id="stat">
@@ -442,10 +442,10 @@ $(document).on('click', 'nav #about', function() {
     }, loadTimeout);
 })
 
-$(document).on('click', 'nav #reg', function() {
+$(document).on('click', 'nav #reg', function () {
     $('nav').css({ opacity: 0 });
     $('main').css({ opacity: 0 });
-    setTimeout(function() {
+    setTimeout(function () {
         $('nav').css({ opacity: 9 });
         generateMainPage();
         setButtonActive('nav ul li a', 'navActive', 'nav #reg');
@@ -472,10 +472,10 @@ $(document).on('click', 'nav #reg', function() {
     }, loadTimeout);
 })
 
-$(document).on('click', 'nav #stat', function() {
+$(document).on('click', 'nav #stat', function () {
     $('nav').css({ opacity: 0 });
     $('main').css({ opacity: 0 });
-    setTimeout(function() {
+    setTimeout(function () {
         $('main').html(
             `<div class="top">
                 <div id="stat">
@@ -668,10 +668,10 @@ $(document).on('click', 'nav #stat', function() {
     }, loadTimeout);
 })
 
-$(document).on('click', 'nav #contact', function() {
+$(document).on('click', 'nav #contact', function () {
     $('nav').css({ opacity: 0 });
     $('main').css({ opacity: 0 });
-    setTimeout(function() {
+    setTimeout(function () {
         $('main').html(`
                             <div class="top">
                             <div id="stat">
@@ -699,36 +699,36 @@ $(document).on('click', 'nav #contact', function() {
     }, loadTimeout);
 })
 
-$(document).on('click', 'a.readMore', function() {
-    $('main').css({ opacity: 0 });
+$(document).on('click', 'a.readMore', function () {
+    $('#articles').css({ opacity: 0 });
     let newsId = $(this).attr('id');
-    let pageId = $('.nextNewsPage.npActive').attr('id');
+    let pageId = $('.npActive').attr('id');
 
-    setTimeout(function() {
+    setTimeout(function () {
         function myFunction(value) {
             let date = new Date(value.date);
 
-            $('main').html(
-                `<div class="top">
-            <div id="stat">
-            <article>
-            <h1>${value.title}</h1>
-            <section>
-            <table>
-            <tr>
-            <td id="accCount"><img src="data:image/png;base64,${value.image}">
-            ${date.toLocaleDateString()} ${date.toLocaleTimeString()}
-            </td>
-            <td id="countAll">
-            ${value.text}
-            </td>
-            </tr>
-            </table>
-            </section>
-            </article>
-            </div>
-            </div>`
-            );
+            $('#articles').html(`
+                <section>
+                    <figure>
+                        <img src="data:image/png;base64,${value.image}">
+                        <div>
+                        <figcaption>
+                        <time datetime="${value.date}"><span>${date.getDate()}</span>/${date.getMonth() + 1}/${date.getFullYear()}</time>
+                        <p><span>${messages.publishingIn}</span> ${date.toLocaleTimeString()}</p>
+                        </figcaption>
+                        </div>
+                        <a class="readMore" id="${value.id}" href="#">${messages.readMore}</a>
+                    </figure>
+                    <div id="news">                
+                        <h2>${value.title}</h2>
+                        <p>${value.text}</p>
+                    </div>
+                </section>
+            `);
+
+            $('#articles section').css({ background: 'none' });
+            $('a.readMore').css({ display: 'none' });
         };
 
         fetch(url + '/news/get/' + newsId)
@@ -739,40 +739,41 @@ $(document).on('click', 'a.readMore', function() {
                 }
             });
 
-        generateBackButton(pageId);
+        // generateBackButton(pageId);
 
-        $('main').css({ opacity: 9 });
+        $('#articles').css({ opacity: 9 });
     }, loadTimeout);
 })
 
-$(document).on('click', '.newsBack', function() {
+$(document).on('click', '.newsBack', function () {
     let newsPageId = $(this).attr('id');
-    $('main').css({ opacity: 0 });
+    $('#articles').css({ opacity: 0 });
     $(this).css({ display: 'none' });
-    setTimeout(function() {
-        generateMainPage(newsPageId);
+    setTimeout(function () {
+        generateNewsPage(newsPageId);
+        $('#articles').css({ opacity: 9 });
     }, loadTimeout);
 })
 
-$(document).on('click', '.homeBack', function() {
+$(document).on('click', '.homeBack', function () {
     $('main').css({ opacity: 0 });
     $(this).css({ display: 'none' });
-    setTimeout(function() {
+    setTimeout(function () {
         generateMainPage(null);
     }, loadTimeout);
 })
 
-$(document).on('click', '.nextNewsPage', function() {
+$(document).on('click', '.nextNewsPage', function () {
     $('#articles').css({ opacity: 0 });
     let id = $(this).attr('id');
-    setTimeout(function() {
+    setTimeout(function () {
         generateNewsPage(id);
         $('#articles').css({ opacity: 9 });
     }, loadTimeout);
 });
 
-async function fetchData(method, urlparam, data) {
-    return await fetch(urlparam, {
+async function fetchData(method, url, data) {
+    return await fetch(url, {
         method: method,
         headers: {
             'Content-Type': 'application/json'
@@ -781,10 +782,10 @@ async function fetchData(method, urlparam, data) {
     });
 }
 
-$(document).on('click', 'button.login', function() {
+$(document).on('click', 'button.login', function () {
     grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
         action: 'login'
-    }).then(function(token) {
+    }).then(function (token) {
         if (token !== null) {
             fetchData('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
                 .then((result) => {
@@ -808,7 +809,7 @@ $(document).on('click', 'button.login', function() {
                             .then((data) => {
                                 $('#lk_form form').css({ opacity: 0 });
                                 let status = data.status;
-                                setTimeout(function() {
+                                setTimeout(function () {
                                     switch (status) {
                                         case 'Success':
                                             $('form').trigger('reset');
@@ -840,10 +841,10 @@ $(document).on('click', 'button.login', function() {
     });
 });
 
-$(document).on('click', "button.register", function() {
+$(document).on('click', "button.register", function () {
     grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
         action: 'login'
-    }).then(function(token) {
+    }).then(function (token) {
         if (token !== null) {
             fetchData('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
                 .then((result) => {
@@ -875,7 +876,7 @@ $(document).on('click', "button.register", function() {
                         fetchData('POST', url + '/accounts/create', data).then(response => response.json())
                             .then((result) => {
                                 $('#lk_form form').css({ opacity: 0 });
-                                setTimeout(function() {
+                                setTimeout(function () {
                                     switch (result.status) {
                                         case 'Success':
                                             $('form').trigger('reset');
@@ -910,10 +911,10 @@ $(document).on('click', "button.register", function() {
     });
 })
 
-$(document).on('click', "button.restore", function() {
+$(document).on('click', "button.restore", function () {
     grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
         action: 'login'
-    }).then(function(token) {
+    }).then(function (token) {
         if (token !== null) {
             fetchData('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
                 .then((result) => {
@@ -936,7 +937,7 @@ $(document).on('click', "button.restore", function() {
                         fetchData('POST', url + '/accounts/restorePass', userData).then(response => response.json())
                             .then((result) => {
                                 $('#lk_form form').css({ opacity: 0 });
-                                setTimeout(function() {
+                                setTimeout(function () {
                                     switch (result.status) {
                                         case 'Success':
                                             $('form').trigger('reset');
@@ -969,9 +970,9 @@ $(document).on('click', "button.restore", function() {
     });
 });
 
-$(document).on('click', "button.changePass", function() {
+$(document).on('click', "button.changePass", function () {
     $('#lk_form form').css({ opacity: 0 });
-    setTimeout(function() {
+    setTimeout(function () {
         $("#lk_form form").html(
             '<h1>' + messages.passwordChanging + ' ' + login + '!</h1>' +
             '<div>' +
@@ -992,7 +993,7 @@ $(document).on('click', "button.changePass", function() {
     }, loadTimeout);
 });
 
-$(document).on('click', "button.changePassword", function() {
+$(document).on('click', "button.changePassword", function () {
     let oldPassword = $("#oldPassword").val();
     let newFirstPassword = $("#newFirstPassword").val();
     let newSecondPassword = $("#newSecondPassword").val();
@@ -1019,7 +1020,7 @@ $(document).on('click', "button.changePassword", function() {
     fetchData('POST', url + '/accounts/changePass', userRegistration).then(response => response.json())
         .then((result) => {
             $('#lk_form form').css({ opacity: 0 });
-            setTimeout(function() {
+            setTimeout(function () {
                 switch (result.status) {
                     case 'Success':
                         $('#lk_form form h1').css("color", "green").html(messages.passwordChanged);
@@ -1046,18 +1047,18 @@ $(document).on('click', "button.changePassword", function() {
         });
 });
 
-$(document).on('click', "button.exit", function() {
+$(document).on('click', "button.exit", function () {
     $('#lk_form form').css({ opacity: 0 });
-    setTimeout(function() {
+    setTimeout(function () {
         login = null;
         showLoginForm();
         $('#lk_form form').css({ opacity: 9 });
     }, loadTimeout);
 });
 
-$(document).on('click', "a.forgot", function() {
+$(document).on('click', "a.forgot", function () {
     $('#lk_form form').css({ opacity: 0 });
-    setTimeout(function() {
+    setTimeout(function () {
         $("#lk_form form").html(
             '<form>' +
             '<h1>' + messages.passwordChanging + '</h1>' +
@@ -1078,11 +1079,11 @@ $(document).on('click', "a.forgot", function() {
     }, loadTimeout);
 })
 
-$(document).on('click', '#lang a#ua', function() {
+$(document).on('click', '#lang a#ua', function () {
     $('nav').css({ opacity: 0 });
     $('#logo').css({ opacity: 0 });
     $('main').css({ opacity: 0 });
-    setTimeout(function() {
+    setTimeout(function () {
         lang = 'ua';
         messages = uaMessages;
         $.cookie('language', lang);
@@ -1092,11 +1093,11 @@ $(document).on('click', '#lang a#ua', function() {
     }, loadTimeout);
 })
 
-$(document).on('click', '#lang a#ru', function() {
+$(document).on('click', '#lang a#ru', function () {
     $('nav').css({ opacity: 0 });
     $('#logo').css({ opacity: 0 });
     $('main').css({ opacity: 0 });
-    setTimeout(function() {
+    setTimeout(function () {
         lang = 'ru';
         messages = ruMessages;
         $.cookie('language', lang);
@@ -1106,11 +1107,11 @@ $(document).on('click', '#lang a#ru', function() {
     }, loadTimeout);
 })
 
-$(document).on('click', '#lang a#en', function() {
+$(document).on('click', '#lang a#en', function () {
     $('nav').css({ opacity: 0 });
     $('#logo').css({ opacity: 0 });
     $('main').css({ opacity: 0 });
-    setTimeout(function() {
+    setTimeout(function () {
         lang = 'en';
         messages = enMessages;
         $.cookie('language', lang);
@@ -1120,10 +1121,10 @@ $(document).on('click', '#lang a#en', function() {
     }, loadTimeout);
 })
 
-$(document).on('click', 'button.sendMessage', function() {
+$(document).on('click', 'button.sendMessage', function () {
     grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
         action: 'social'
-    }).then(function(token) {
+    }).then(function (token) {
         if (token !== null) {
             fetchData('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
                 .then((result) => {
@@ -1156,7 +1157,7 @@ $(document).on('click', 'button.sendMessage', function() {
                         fetchData('POST', url + "/accounts/sendMess", userData).then(response => response.json())
                             .then((data) => {
                                 $('main').css({ opacity: 0 });
-                                setTimeout(function() {
+                                setTimeout(function () {
                                     switch (data.status) {
                                         case 'Success':
                                             $('main div.message').html(messages.messageSended).css("color", "green");
