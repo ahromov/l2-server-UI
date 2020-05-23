@@ -108,11 +108,13 @@ function generateNewsPage(pageId) {
     if (pageId == null)
         pageId = 0;
 
-    $.get(url + '/news/get/pages/' + pageId, function(data) {
-        if (data != null) {
-            data.forEach(element => { myFunction(element) });
-        }
-    });
+    fetch(url + '/news/get/pages/' + pageId)
+        .then(response => response.json())
+        .then(data => {
+            if (data != null) {
+                data.forEach(element => { myFunction(element) });
+            }
+        });
 
     setButtonActive('a.nextNewsPage', 'npActive', '#next_page ul li a[id="' + pageId + '"]');
 }
@@ -189,13 +191,16 @@ function generateMainContent(posts, languagesSelectors) {
         </div>
     `).css({ opacity: 9 });
 
-    $.get(url + '/news/get/pages', function(data) {
-        if (data != 0) {
-            for (let i = 0; i < data; i++) {
-                generateNewsPagesButtons(i);
+    fetch(url + '/news/get/pages')
+        .then(response => response.json())
+        .then(data => {
+            if (data != 0) {
+                for (let i = 0; i < data; i++) {
+                    generateNewsPagesButtons(i);
+                }
             }
-        }
-    });
+        });
+
 }
 
 
@@ -271,27 +276,31 @@ function setButtonActive(elementRemove, className, elementActive) {
 
 
 function getRegisteredServerName() {
-    $.get(url + '/ls/getServers', function(data) {
-        if (data != null) {
-            data.forEach(element => {
-                $('#serverName').text(element.name);
-            });
-        }
-    })
+    fetch(url + '/ls/getServers')
+        .then(response => response.json())
+        .then(data => {
+            if (data != null) {
+                data.forEach(element => {
+                    $('#serverName').text(element.name);
+                });
+            }
+        });
 }
 
 
 function getServerStatus() {
-    $.get(url + '/gs/get/status', function(data) {
-        if (data != null) {
-            if (data.status === 'ON')
-                $('#status').text(data.status).css('color', '#00ff30');
-            else
-                $('#status').text(data.status);
+    fetch(url + '/gs/get/status')
+        .then(response => response.json())
+        .then(data => {
+            if (data != null) {
+                if (data.status === 'ON')
+                    $('#status').text(data.status).css('color', '#00ff30');
+                else
+                    $('#status').text(data.status);
 
-            $('#count').text(data.onlineCounter);
-        }
-    })
+                $('#count').text(data.onlineCounter);
+            }
+        });
 }
 
 
@@ -561,43 +570,53 @@ $(document).on('click', 'nav #stat', function() {
         setButtonActive('nav ul li a', 'navActive', 'nav #stat');
         generateBackButton();
 
-        $.get(url + '/clans/count/all', function(data) {
-            if (data != null) {
-                $('#accCount').html(data.count);
-            }
-        });
+        fetch(url + '/clans/count/all')
+            .then(response => response.json())
+            .then(data => {
+                if (data != null) {
+                    $('#accCount').html(data.count);
+                }
+            });
 
-        $.get(url + '/characters/count/byType', function(data) {
-            if (data != null) {
-                $('#countAll').html(data.all);
-                $('#countNobless').html(data.nobles);
-                $('#countHeroes').html(data.heroes);
-                $('#countGm').html(data.gms);
-            }
-        });
+        fetch(url + '/characters/count/byType')
+            .then(response => response.json())
+            .then(data => {
+                if (data != null) {
+                    $('#countAll').html(data.all);
+                    $('#countNobless').html(data.nobles);
+                    $('#countHeroes').html(data.heroes);
+                    $('#countGm').html(data.gms);
+                }
+            });
 
-        $.get(url + '/clans/get/all', function(data) {
-            if (data != null) {
-                data.forEach(element => {
-                    $('#stat #clans table').append(
-                        '<tr>' +
-                        '<td>' + element.name + '</td>' +
-                        '<td >' + element.level + '</td>' +
-                        '<td >' + element.leader.charName + '</td>' +
-                        '<td >' + element.reputation + '</td>' +
-                        '<td >' + element.middLevel + '</td>' +
-                        '<td >' + element.alyName + '</td>' +
-                        '</tr>'
-                    );
-                });
-            }
-        });
 
-        $.get(url + '/characters/get/top10', function(data) {
-            if (data != null) {
-                data.forEach(element => {
-                    $('#stat #top10 table').append(
-                        `<tr>
+        fetch(url + '/clans/get/all')
+            .then(response => response.json())
+            .then(data => {
+                if (data != null) {
+                    data.forEach(element => {
+                        $('#stat #clans table').append(
+                            '<tr>' +
+                            '<td>' + element.name + '</td>' +
+                            '<td >' + element.level + '</td>' +
+                            '<td >' + element.leader.charName + '</td>' +
+                            '<td >' + element.reputation + '</td>' +
+                            '<td >' + element.middLevel + '</td>' +
+                            '<td >' + element.alyName + '</td>' +
+                            '</tr>'
+                        );
+                    });
+                }
+            });
+
+
+        fetch(url + '/characters/get/top10')
+            .then(response => response.json())
+            .then(data => {
+                if (data != null) {
+                    data.forEach(element => {
+                        $('#stat #top10 table').append(
+                            `<tr>
                             <td>` + element.playerName + `</td>
                             <td >` + element.playerClass + `</td>
                             <td >` + element.playerGender + `</td>
@@ -605,42 +624,47 @@ $(document).on('click', 'nav #stat', function() {
                             <td >` + element.playersOnlineTime + ` ч.</td>
                             <td >` + element.playersPvpKills + '/' + element.playersPkKills + `</td>
                             </tr>`
-                    );
-                });
-            }
-        });
+                        );
+                    });
+                }
+            });
 
-        $.get(url + '/castles/get/all', function(data) {
-            if (data != null) {
-                data.forEach(element => {
-                    $('#stat #castles table').append(
-                        '<tr>' +
-                        '<td><img src="images/castles/' + element.id + '.jpg"</td>' +
-                        '<td>' + element.name + '</td>' +
-                        '<td >' + (element.clan == null ? element.clan : element.clan.name) + '</td>' +
-                        '<td >' + element.taxPercent + '%</td>' +
-                        '<td >' + element.treasury + '</td>' +
-                        '<td >' + new Date(element.siegeDate).toLocaleDateString() + ' ' + new Date(element.siegeDate).toLocaleTimeString() + '</td>' +
-                        '</tr>'
-                    );
-                });
-            }
-        });
 
-        $.get(url + '/forts/get/all', function(data) {
-            if (data != null) {
-                data.forEach(element => {
-                    $('#stat #forts table').append(
-                        '<tr>' +
-                        '<td><img src="images/forts/' + element.id + '.jpg"</td>' +
-                        '<td>' + element.name + '</td>' +
-                        '<td>' + (element.clan == null ? element.clan : element.clan.name) + '</td>' +
-                        '<td>' + element.siegeDate + '</td>' +
-                        '</tr>'
-                    );
-                });
-            }
-        });
+        fetch(url + '/castles/get/all')
+            .then(response => response.json())
+            .then(data => {
+                if (data != null) {
+                    data.forEach(element => {
+                        $('#stat #castles table').append(
+                            '<tr>' +
+                            '<td><img src="images/castles/' + element.id + '.jpg"</td>' +
+                            '<td>' + element.name + '</td>' +
+                            '<td >' + (element.clan == null ? element.clan : element.clan.name) + '</td>' +
+                            '<td >' + element.taxPercent + '%</td>' +
+                            '<td >' + element.treasury + '</td>' +
+                            '<td >' + new Date(element.siegeDate).toLocaleDateString() + ' ' + new Date(element.siegeDate).toLocaleTimeString() + '</td>' +
+                            '</tr>'
+                        );
+                    });
+                }
+            });
+
+        fetch(url + '/forts/get/all')
+            .then(response => response.json())
+            .then(data => {
+                if (data != null) {
+                    data.forEach(element => {
+                        $('#stat #forts table').append(
+                            '<tr>' +
+                            '<td><img src="images/forts/' + element.id + '.jpg"</td>' +
+                            '<td>' + element.name + '</td>' +
+                            '<td>' + (element.clan == null ? element.clan : element.clan.name) + '</td>' +
+                            '<td>' + element.siegeDate + '</td>' +
+                            '</tr>'
+                        );
+                    });
+                }
+            });
     }, loadTimeout);
 })
 
@@ -707,11 +731,13 @@ $(document).on('click', 'a.readMore', function() {
             );
         };
 
-        $.get(url + '/news/get/' + newsId, function(data) {
-            if (data != null) {
-                myFunction(data);
-            }
-        });
+        fetch(url + '/news/get/' + newsId)
+            .then(response => response.json())
+            .then(data => {
+                if (data != null) {
+                    myFunction(data);
+                }
+            });
 
         generateBackButton(pageId);
 
@@ -745,61 +771,71 @@ $(document).on('click', '.nextNewsPage', function() {
     }, loadTimeout);
 });
 
+async function fetchData(method, urlparam, data) {
+    return await fetch(urlparam, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+}
+
 $(document).on('click', 'button.login', function() {
     grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
         action: 'login'
     }).then(function(token) {
         if (token !== null) {
-            $.post(url + '/reCaptcha/validate', {
-                response: token
-            }).done(function(result) {
-                if (result.success && result.score > 0.5) {
+            fetchData('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
+                .then((result) => {
+                    if (result.success && result.score > 0.5) {
+                        login = $("#inputLoginl3").val();
+                        let password = $("#inputPassword3").val();
 
-                    login = $("#inputLoginl3").val();
-                    let password = $("#inputPassword3").val();
+                        if (login === '' || password === '') {
+                            $('#lk_form form h1').css("color", "red").html(messages.fieldsCannotEmpty);
+                            return;
+                        }
 
-                    if (login === '' || password === '') {
-                        $('#lk_form form h1').css("color", "red").html(messages.fieldsCannotEmpty);
+                        $('#lk_form form h1').css("color", "white").html(messages.waiting);
+
+                        let user = {
+                            login: login,
+                            password: password
+                        };
+
+                        fetchData('POST', url + "/accounts/login", user).then(response => response.json())
+                            .then((data) => {
+                                $('#lk_form form').css({ opacity: 0 });
+                                let status = data.status;
+                                setTimeout(function() {
+                                    switch (status) {
+                                        case 'Success':
+                                            $('form').trigger('reset');
+                                            showCabinetMenu();
+                                            $('#lk_form form h1').css("color", "green");
+                                            break;
+                                        case 'Not exists':
+                                            $('form').trigger('reset');
+                                            $('#lk_form form h1').css("color", "red").html(messages.accountNotExists);
+                                            break;
+                                        case 'Incorrect password':
+                                            $('form').trigger('reset');
+                                            $('#lk_form form h1').css("color", "red").html(messages.incorrectPassword);
+                                            break;
+                                        default:
+                                            $('form').trigger('reset');
+                                            $('#lk_form form h1').css("color", "red").html(messages.somthingWrong);
+                                    }
+                                    $('#lk_form form').css({ opacity: 9 });
+                                }, loadTimeout);
+                            });
+                    } else {
+                        $('form').trigger('reset');
+                        $('#lk_form form h1').css("color", "red").html(messages.botsAction);
                         return;
                     }
-
-                    $('#lk_form form h1').css("color", "white").html(messages.waiting);
-
-                    var userLogin = {
-                        login: login,
-                        password: password
-                    };
-
-                    $.post(url + "/accounts/login", userLogin, function(data) {
-                        $('#lk_form form').css({ opacity: 0 });
-                        setTimeout(function() {
-                            switch (data.status) {
-                                case 'Success':
-                                    $('form').trigger('reset');
-                                    showCabinetMenu();
-                                    $('#lk_form form h1').css("color", "green");
-                                    break;
-                                case 'Not exists':
-                                    $('form').trigger('reset');
-                                    $('#lk_form form h1').css("color", "red").html(messages.accountNotExists);
-                                    break;
-                                case 'Incorrect password':
-                                    $('form').trigger('reset');
-                                    $('#lk_form form h1').css("color", "red").html(messages.incorrectPassword);
-                                    break;
-                                default:
-                                    $('form').trigger('reset');
-                                    $('#lk_form form h1').css("color", "red").html(messages.somthingWrong);
-                            }
-                            $('#lk_form form').css({ opacity: 9 });
-                        }, loadTimeout);
-                    });
-                } else {
-                    $('form').trigger('reset');
-                    $('#lk_form form h1').css("color", "red").html(messages.botsAction);
-                    return;
-                }
-            })
+                });
         }
     });
 });
@@ -809,68 +845,67 @@ $(document).on('click', "button.register", function() {
         action: 'login'
     }).then(function(token) {
         if (token !== null) {
-            $.post(url + '/reCaptcha/validate', {
-                response: token
-            }).done(function(result) {
-                if (result.success && result.score > 0.5) {
-                    let login = $("#inputLoginl3").val();
-                    let email = $("#inputEmail3").val();
-                    let pass = $("#inputPassword3").val();
-                    let passSecond = $("#inputSecondPassword3").val();
+            fetchData('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
+                .then((result) => {
+                    if (result.success && result.score > 0.5) {
+                        let login = $("#inputLoginl3").val();
+                        let email = $("#inputEmail3").val();
+                        let pass = $("#inputPassword3").val();
+                        let passSecond = $("#inputSecondPassword3").val();
 
-                    if (login === '' || email === '' || pass === '' || passSecond === '') {
-                        $('#lk_form form h1').css("color", "red").html(messages.fieldsCannotEmpty);
-                        return;
+                        if (login === '' || email === '' || pass === '' || passSecond === '') {
+                            $('#lk_form form h1').css("color", "red").html(messages.fieldsCannotEmpty);
+                            return;
+                        }
+
+                        if (!(pass).match(passSecond)) {
+                            $('#lk_form form h1').css("color", "red").html(messages.passwordsNotMatch);
+                            return;
+                        }
+
+                        $('#lk_form form h1').css("color", "white").html(messages.waiting);
+
+                        var data = {
+                            login: login,
+                            email: email,
+                            password: pass,
+                            passwordSecond: passSecond
+                        };
+
+                        fetchData('POST', url + '/accounts/create', data).then(response => response.json())
+                            .then((result) => {
+                                $('#lk_form form').css({ opacity: 0 });
+                                setTimeout(function() {
+                                    switch (result.status) {
+                                        case 'Success':
+                                            $('form').trigger('reset');
+                                            $('#lk_form form h1').css("color", "green").html(messages.accountCreated + '! ' + messages.checkEmail);
+                                            break;
+                                        case 'No match':
+                                            $('#lk_form form h1').css("color", "orange").html(messages.passwordsNotMatch);
+                                            $('form').trigger('reset');
+                                            break;
+                                        case 'Login exists':
+                                            $('#lk_form form h1').css("color", "yellow").html(messages.loginExists);
+                                            $('form').trigger('reset');
+                                            break;
+                                        case 'Email exists':
+                                            $('#lk_form form h1').css("color", "red").html(messages.emailExists);
+                                            $('form').trigger('reset');
+                                            break;
+                                        case 'Invalid email':
+                                            $('#lk_form form h1').css("color", "red").html(messages.incorrectEmail);
+                                            $('form').trigger('reset');
+                                            break;
+                                    }
+                                    $('#lk_form form').css({ opacity: 9 });
+                                }, loadTimeout);
+                            });
+                    } else {
+                        $('#lk_form form h1').css("color", "red").html(messages.botsAction);
+                        $('form').trigger('reset');
                     }
-
-                    if (!(pass).match(passSecond)) {
-                        $('#lk_form form h1').css("color", "red").html(messages.passwordsNotMatch);
-                        return;
-                    }
-
-                    $('#lk_form form h1').css("color", "white").html(messages.waiting);
-
-                    var userRegistration = {
-                        login: login,
-                        email: email,
-                        password: pass,
-                        passwordSecond: passSecond
-                    };
-
-                    $.post(url + "/accounts/create", userRegistration,
-                        function(data) {
-                            $('#lk_form form').css({ opacity: 0 });
-                            setTimeout(function() {
-                                switch (data.status) {
-                                    case 'Success':
-                                        $('form').trigger('reset');
-                                        $('#lk_form form h1').css("color", "green").html(messages.accountCreated + '! ' + messages.checkEmail);
-                                        break;
-                                    case 'No match':
-                                        $('#lk_form form h1').css("color", "orange").html(messages.passwordsNotMatch);
-                                        $('form').trigger('reset');
-                                        break;
-                                    case 'Login exists':
-                                        $('#lk_form form h1').css("color", "yellow").html(messages.loginExists);
-                                        $('form').trigger('reset');
-                                        break;
-                                    case 'Email exists':
-                                        $('#lk_form form h1').css("color", "red").html(messages.emailExists);
-                                        $('form').trigger('reset');
-                                        break;
-                                    case 'Invalid email':
-                                        $('#lk_form form h1').css("color", "red").html(messages.incorrectEmail);
-                                        $('form').trigger('reset');
-                                        break;
-                                }
-                                $('#lk_form form').css({ opacity: 9 });
-                            }, loadTimeout);
-                        });
-                } else {
-                    $('#lk_form form h1').css("color", "red").html(messages.botsAction);
-                    $('form').trigger('reset');
-                }
-            })
+                })
         }
     });
 })
@@ -880,58 +915,56 @@ $(document).on('click', "button.restore", function() {
         action: 'login'
     }).then(function(token) {
         if (token !== null) {
-            $.post(url + '/reCaptcha/validate', {
-                response: token
-            }).done(function(result) {
-                if (result.success && result.score > 0.5) {
-                    let login = $("#inputLoginl3").val();
-                    let email = $("#inputEmail3").val();
+            fetchData('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
+                .then((result) => {
+                    if (result.success && result.score > 0.5) {
+                        let login = $("#inputLoginl3").val();
+                        let email = $("#inputEmail3").val();
 
-                    if (login === '' || email === '') {
-                        $('#lk_form form h1').css("color", "red").html(messages.fieldsCannotEmpty);
+                        if (login === '' || email === '') {
+                            $('#lk_form form h1').css("color", "red").html(messages.fieldsCannotEmpty);
+                            return;
+                        }
+
+                        $('#lk_form form h1').css("color", "white").html(messages.waiting);
+
+                        var userData = {
+                            login: login,
+                            email: email
+                        };
+
+                        fetchData('POST', url + '/accounts/restorePass', userData).then(response => response.json())
+                            .then((result) => {
+                                $('#lk_form form').css({ opacity: 0 });
+                                setTimeout(function() {
+                                    switch (result.status) {
+                                        case 'Success':
+                                            $('form').trigger('reset');
+                                            if (result.status == 'Success')
+                                                $('#lk_form form h1').css("color", "green").html(messages.passwordChanged + '! ' + messages.checkEmail);
+                                            break;
+                                        case 'Invalid login':
+                                            $('#lk_form form h1').css("color", "yellow").html(messages.invalidLogin);
+                                            $('form').trigger('reset');
+                                            break;
+                                        case 'Not exists':
+                                            $('#lk_form form h1').css("color", "yellow").html(messages.accountNotExists);
+                                            $('form').trigger('reset');
+                                            break;
+                                        case 'Invalid data':
+                                            $('#lk_form form h1').css("color", "red").html(messages.somthingWrong);
+                                            $('form').trigger('reset');
+                                            break;
+                                    }
+                                    $('#lk_form form').css({ opacity: 9 });
+                                }, loadTimeout);
+                            });
+                    } else {
+                        $('#lk_form form h1').css("color", "red").html(messages.botsAction);
+                        $('form').trigger('reset');
                         return;
                     }
-
-                    $('#lk_form form h1').css("color", "white").html(messages.waiting);
-
-                    var userRegistration = {
-                        login: login,
-                        email: email
-                    };
-
-                    $.post(url + "/accounts/restorePass", userRegistration,
-                        function(data) {
-                            $('#lk_form form').css({ opacity: 0 });
-                            setTimeout(function() {
-                                switch (data.status) {
-                                    case 'Success':
-                                        $('form').trigger('reset');
-                                        if (data.status == 'Success')
-                                            $('#lk_form form h1').css("color", "green").html(messages.passwordChanged + '! ' + messages.checkEmail);
-                                        break;
-                                    case 'Invalid login':
-                                        $('#lk_form form h1').css("color", "yellow").html(messages.invalidLogin);
-                                        $('form').trigger('reset');
-                                        break;
-                                    case 'Not exists':
-                                        $('#lk_form form h1').css("color", "yellow").html(messages.accountNotExists);
-                                        $('form').trigger('reset');
-                                        break;
-                                    case 'Invalid data':
-                                        $('#lk_form form h1').css("color", "red").html(messages.somthingWrong);
-                                        $('form').trigger('reset');
-                                        break;
-                                }
-                                $('#lk_form form').css({ opacity: 9 });
-                            }, loadTimeout);
-                        }
-                    );
-                } else {
-                    $('#lk_form form h1').css("color", "red").html(messages.botsAction);
-                    $('form').trigger('reset');
-                    return;
-                }
-            })
+                })
         }
     });
 });
@@ -983,11 +1016,11 @@ $(document).on('click', "button.changePassword", function() {
         newSecondPassword: newSecondPassword
     };
 
-    $.post(url + "/accounts/changePass", userRegistration,
-        function(data) {
+    fetchData('POST', url + '/accounts/changePass', userRegistration).then(response => response.json())
+        .then((result) => {
             $('#lk_form form').css({ opacity: 0 });
             setTimeout(function() {
-                switch (data.status) {
+                switch (result.status) {
                     case 'Success':
                         $('#lk_form form h1').css("color", "green").html(messages.passwordChanged);
                         $('form').trigger('reset');
@@ -1010,8 +1043,7 @@ $(document).on('click', "button.changePassword", function() {
                 }
                 $('#lk_form form').css({ opacity: 9 });
             }, loadTimeout);
-        }
-    );
+        });
 });
 
 $(document).on('click', "button.exit", function() {
@@ -1088,65 +1120,62 @@ $(document).on('click', '#lang a#en', function() {
     }, loadTimeout);
 })
 
-
 $(document).on('click', 'button.sendMessage', function() {
     grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
         action: 'social'
     }).then(function(token) {
         if (token !== null) {
-            $.post(url + '/reCaptcha/validate', {
-                response: token
-            }).done(function(result) {
-                if (result.success && result.score > 0.5) {
-                    let login = $('div.message form input.name').val();
-                    let email = $('div.message form input.email').val();
-                    let message = $('div.message form textarea.message').val();
+            fetchData('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
+                .then((result) => {
+                    if (result.success && result.score > 0.5) {
+                        let login = $('div.message form input.name').val();
+                        let email = $('div.message form input.email').val();
+                        let message = $('div.message form textarea.message').val();
 
-                    if (login === '' || login == null) {
-                        cantEmpty('name');
-                        return;
-                    }
-
-                    if (email === '' || email == null) {
-                        cantEmpty('email');
-                        return;
-                    }
-
-                    if (message === '' || message == null) {
-                        cantEmpty('message');
-                        return;
-                    }
-
-                    let formData = {
-                        login: login,
-                        email: email,
-                        message: message
-                    };
-
-                    $.post(url + "/accounts/sendMess", formData,
-                        function(data) {
-                            $('main').css({ opacity: 0 });
-                            setTimeout(function() {
-                                switch (data.status) {
-                                    case 'Success':
-                                        $('main div.message').html(messages.messageSended).css("color", "green");
-                                        break;
-                                    case 'Invalid login':
-                                        $('main div.message').html(messages.invalidLogin).css("color", "orange");
-                                        break;
-                                    case 'Not found':
-                                        $('main div.message').html(messages.accountNotExists).css("color", "red");
-                                        break;
-                                }
-                                $('main').css({ opacity: 9 });
-                            }, loadTimeout);
+                        if (login === '' || login == null) {
+                            cantEmpty('name');
+                            return;
                         }
-                    );
-                } else {
-                    $('div.message form p.question').html(message.botsAction).css('color', 'red');
-                    return;
-                }
-            })
+
+                        if (email === '' || email == null) {
+                            cantEmpty('email');
+                            return;
+                        }
+
+                        if (message === '' || message == null) {
+                            cantEmpty('message');
+                            return;
+                        }
+
+                        let userData = {
+                            login: login,
+                            email: email,
+                            message: message
+                        };
+
+                        fetchData('POST', url + "/accounts/sendMess", userData).then(response => response.json())
+                            .then((data) => {
+                                $('main').css({ opacity: 0 });
+                                setTimeout(function() {
+                                    switch (data.status) {
+                                        case 'Success':
+                                            $('main div.message').html(messages.messageSended).css("color", "green");
+                                            break;
+                                        case 'Invalid login':
+                                            $('main div.message').html(messages.invalidLogin).css("color", "orange");
+                                            break;
+                                        case 'Not found':
+                                            $('main div.message').html(messages.accountNotExists).css("color", "red");
+                                            break;
+                                    }
+                                    $('main').css({ opacity: 9 });
+                                }, loadTimeout);
+                            });
+                    } else {
+                        $('div.message form p.question').html(message.botsAction).css('color', 'red');
+                        return;
+                    }
+                })
         }
     })
 });
