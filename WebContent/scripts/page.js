@@ -13,7 +13,7 @@ function generateMenu() {
             <li><a target="_blank" href="https://drive.google.com/open?id=1a9jqbmIrBIJxJzH0ADN5LaAdtMbB_zKo" id="files">${messages.files}</a></li>
             <li><a href="#" id="stat">${messages.statistic}</a></li>
             <li><a href="#" id="contact">${messages.contact}</a></li>
-            <li><a href="./forum/" id="forum">${messages.forum}</a></li>
+            <li><a target="_blank" href="${urlForum}" id="forum">${messages.forum}</a></li>
         </ul>
     `);
 }
@@ -60,17 +60,26 @@ function showCabinetMenu() {
 
 
 function generatePosts() {
-    let posts = '';
+    $('#forum .posts').html('');
+    $('#forum .posts').css({ transform: 'translateX(-30px)' });
 
-    for (i = 0; i < 5; i++) {
-        posts += `
-        <li>
-            <h2>Баг на олимпе. Когда будет исправле... // 17:28 •
-            Insider</h2>
-        </li>`
-    }
+    function myFunction(value) {
+        let date = new Date(value.date);
 
-    return posts;
+        $('#forum .posts').append(`
+             <li>
+                 <h2><a target="_blank" href="${urlForum}/viewtopic.php?f=${value.forumId}&t=${value.topicId}">${value.subject}</a> // ${date.toLocaleTimeString()} • ${value.poster.username}</h2>
+             </li>`).css({ transform: 'translateY(0px)' });
+    };
+
+    fetch(url + '/forums/get/posts/last5')
+        .then(response => response.json())
+        .then(data => {
+            if (data != null) {
+                data.forEach(element => { myFunction(element) });
+            }
+        });
+
 }
 
 
@@ -136,7 +145,7 @@ function generateLanguageSelectors(checkedUa, checkedRu, checkedEn) {
 }
 
 
-function generateMainContent(posts, languagesSelectors) {
+function generateMainContent(languagesSelectors) {
     let playIndex = Math.floor(Math.random() * videosIds.length);
 
     $('main').html(`
@@ -167,7 +176,7 @@ function generateMainContent(posts, languagesSelectors) {
                     <h1>${messages.forumMessages}</h1>
                 </div>
                 <ul class="posts">
-                    ${posts}
+                    
                 </ul>
             </section>
         </div>
@@ -195,17 +204,18 @@ function generateMain(newsPageId) {
 
     switch (lang) {
         case 'ru':
-            generateMainContent(generatePosts(), generateLanguageSelectors('', 'checked', ''));
+            generateMainContent(generateLanguageSelectors('', 'checked', ''));
             break;
         case 'ua':
-            generateMainContent(generatePosts(), generateLanguageSelectors('checked', '', ''));
+            generateMainContent(generateLanguageSelectors('checked', '', ''));
             break;
         case 'en':
-            generateMainContent(generatePosts(), generateLanguageSelectors('', '', 'checked'));
+            generateMainContent(generateLanguageSelectors('', '', 'checked'));
             break;
     }
 
     generateNewsPage(newsPageId);
+    generatePosts();
 }
 
 

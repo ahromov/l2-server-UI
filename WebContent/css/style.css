@@ -846,9 +846,23 @@ footer #social .social_list ul li div {
 #logo,
 nav,
 #lk_form form,
-div.message form {
+div.message form,
+#forum .posts {
     /* transition: all 1s linear;
     -webkit-transition: all 1s linear;
     -o-transition: all 1s linear; */
     transition: all 1s linear;
+}
+
+nav ul a,
+.posts a {
+    /* font-size: unset; */
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.5s linear;
+}
+
+nav ul a:hover,
+.posts a:hover {
+    color: #ffa05f;
 }
