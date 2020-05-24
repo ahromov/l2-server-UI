@@ -28,36 +28,34 @@ function generateLogo() {
 
 
 function showLoginForm() {
-    $("#lk_form form").html(
-        `<form>
-		<h1>${messages.personalCabinet}</h1>
-		<div>
-			<label><span class="login">${messages.loginName}:</span><input id="inputLoginl3"
-					type="text"></label>
-		</div>
-		<div>
-			<label><span class="password">${messages.password}:</span><input id="inputPassword3"
-					type="password"></label>
-		</div>
-		<div>
-			<button class="login" type="button">${messages.enter}</button>
-		</div>
+    $("#lk_form").html(`
+        <form>
+            <h1>${messages.personalCabinet}</h1>
+            <div id="formInputs">
+                <div><span class="login">${messages.loginName}:</span><input id="inputLoginl3" type="text"></div>
+                <div><span class="password">${messages.password}:</span><input id="inputPassword3" type="password"></div>
+            </div>
+            <div>
+                <button class="login" type="button">${messages.enter}</button>
+            </div>
 		</form>
 		<div id="formBoard">
 			<span>${messages.forgotPassword}</span> <a class="forgot">? >></a>
-		</div>`
-    );
+        </div>
+    `);
 }
 
 
 function showCabinetMenu() {
-    $("#lk_form form").html(
-        '<h1>' + messages.welcome + ', ' + login + '!</h1>' +
-        '<button type="button" class="changePass">' + messages.passwordChanging + '</button>' +
-        '<button type="button" class="exit">' + messages.exit + '</button></<button>'
-    );
+    let formSelector = '#lk_form form';
 
-    $('#right #lk_form form button').css('transform', 'translateX(-32px)').css('width', '333px');
+    $(formSelector).html(`
+        <h1>${messages.welcome}  ${login}!</h1>
+        <button type="button" class="changePass">${messages.passwordChanging}</button>
+        <button type="button" class="exit">${messages.exit}</button></<button>
+    `);
+
+    $(formSelector + ' button').css('width', '159px');
 }
 
 
@@ -143,33 +141,17 @@ function generateMainContent(posts, languagesSelectors) {
 
     $('main').html(`
         <div id="left">
-        <article>
-            <h1>${messages.news}</h1>
-            <div id="articles">
+            <article>
+                <h1>${messages.news}</h1>
+                <div id="articles">
 
-            </div>
-        </article>
+                </div>
+            </article>
         </div>
         <div id="right">
             <div>
                 <section id="lk_form">
-                    <form>
-                        <h1>${messages.personalCabinet}</h1>
-                        <div>
-                            <label><span class="login">${messages.loginName}:</span><input id="inputLoginl3"
-                                    type="text"></label>
-                        </div>
-                        <div>
-                            <label><span class="password">${messages.password}:</span><input id="inputPassword3"
-                                    type="password"></label>
-                        </div>
-                        <div>
-                            <button class="login" type="button">${messages.enter}</button>
-                        </div>
-                    </form>
-                    <div id="formBoard">
-                        <span>${messages.forgotPassword}</span> <a class="forgot">? >></a>
-                    </div>
+                    
                 </section>
                 <section id="lang">
                     ${languagesSelectors}
@@ -189,7 +171,11 @@ function generateMainContent(posts, languagesSelectors) {
                 </ul>
             </section>
         </div>
-    `).css({ opacity: 9 });
+    `);
+
+    showLoginForm();
+
+    elementFadeShow('main');
 
     fetch(url + '/news/get/pages')
         .then(response => response.json())
@@ -224,12 +210,14 @@ function generateMain(newsPageId) {
 
 
 function generateBackButton(id) {
+    let slelector = '#next_page ul';
+
     if (id != null) {
-        $('#next_page ul').html(`
+        $(slelector).html(`
             <li><a class="newsBack" id="${id}" href="#"><<</a></li>
         `);
     } else {
-        $('#next_page ul').html(`
+        $(slelector).html(`
             <li><a class="homeBack" href="#"><<</a></li>
         `);
     }
@@ -239,18 +227,12 @@ function generateBackButton(id) {
 function generateFooter() {
     $('footer').html(`
         <section class="left">
-            <div id="next_page">
-                <ul>
-                    
-                </ul>
-            </div>
+            <div id="next_page"><ul></ul></div>
             <h1>© ${new Date().getFullYear()} Lineage2Server.com</h1>
             <p>${messages.license}</p>
-            </section>
-            <section id="social" class="right">
-            <div class="title">
-                <h1>${messages.ourCommunitys}:</h1>
-            </div>
+        </section>
+        <section id="social" class="right">
+            <div class="title"><h1>${messages.ourCommunitys}:</h1></div>
             <div class="l2logo"></div>
             <div class="social_list">
                 <ul>
@@ -320,7 +302,7 @@ function initDefaultLanguagesSettings() {
             messages = enMessages;
             break;
     }
-};
+}
 
 
 function generateMainPage(newsPageId) {
@@ -337,145 +319,215 @@ function cantEmpty(data) {
 }
 
 
+function setFormHeaderStatus(status, color) {
+    $('#lk_form form h1').html(status).css("color", color);
+}
+
+function setFormsInfoMessage(message) {
+    $('#lk_form form #formInputs').html(`
+        <div class="infoMessage">
+            ${message}
+        </div>
+    `).css('text-align', 'center');
+}
+
+
+function elementFadeHide(elSelector) {
+    $(elSelector).css({ opacity: 0 });
+}
+
+
+function elementFadeShow(elSelector) {
+    $(elSelector).css({ opacity: 9 });
+};
+
+
+function checkSubmit(e) {
+    if (e && e.keyCode == 13) {
+        $('form button[type="button"]').focus();
+    }
+}
+
+
 function initAll() {
     initDefaultLanguagesSettings();
     generateMainPage(0);
 }
 
 
-$(document).ready(function () {
+async function send(method, url, data) {
+    return await fetch(url, {
+        method: method,
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    });
+}
+
+
+$(document).ready(function() {
     initAll();
     getRegisteredServerName();
     getServerStatus();
 })
 
-$(document).on('click', 'nav #home', function () {
-    $('nav').css({ opacity: 0 });
-    $('main').css({ opacity: 0 });
-    setTimeout(function () {
+$(document).on('click', 'nav #home', function() {
+    let navSelector = 'nav';
+    let mainSelector = 'main';
+
+    elementFadeHide(navSelector);
+    elementFadeHide(mainSelector);
+
+    setTimeout(function() {
+        elementFadeShow(navSelector);
         generateMainPage();
-        $('nav').css({ opacity: 9 });
     }, loadTimeout);
 })
 
-$(document).on('click', 'nav #about', function () {
-    $('nav').css({ opacity: 0 });
-    $('main').css({ opacity: 0 });
-    setTimeout(function () {
-        $('main').html(`
-        <div class="top">
-            <div id="stat">
-                <article>
-                    <h1>${messages.rates}</h1>
-                    <section>
-                        <table id="rates">
-                            <tr>
-                                <th>DropChance:</th>
-                                <td>x 3</td>
-                            </tr>
-                            <tr>
-                                <th>SpoilChance:</th>
-                                <td>x 3</td>
-                            </tr>
-                            <tr>
-                                <th>RaidDropChance:</th>
-                                <td>x 1</td>
-                            </tr>
-                            <tr>
-                                <th>DropAdena:</th>
-                                <td>x 7</td>
-                            </tr>
-                            <tr>
-                                <th>RateXp:</th>
-                                <td>x 7</td>
-                            </tr>
-                            <tr>
-                                <th>RateSp:</th>
-                                <td>x 7</td>
-                            </tr>
-                            <tr>
-                                <th>RatePatyXp:</th>
-                                <td>x 2</td>
-                            </tr>
-                            <tr>
-                                <th>RatePatySp:</th>
-                                <td>x 2</td>
-                            </tr>
-                            <tr>
-                                <th>RateQuestRewardXP:</th>
-                                <td>x 7</td>
-                            </tr>
-                            <tr>
-                                <th>RateQuestRewardSP:</th>
-                                <td>x 7</td>
-                            </tr>
-                            <tr>
-                                <th>RateQuestRewardAdena:</th>
-                                <td>x 7</td>
-                            </tr>
-                            <tr>
-                                <th>RateQuestDropItem:</th>
-                                <td>x 7</td>
-                            </tr>
-                        </table>
-                    </section>
-                </article>
-                <article>
-                    <h1>${messages.selectIntoTop}:</h1>
-                    <div class="top">
-                        <p>${messages.selectIntoTopDescription}</p>
-                    </div>
-                </article>
-                <article>
-                    <h1>${messages.common}:</h1>
-                    <div class="top">
-                        <p>${messages.commonDescription}</p>
-                    </div>
-                </article>
+$(document).on('click', 'nav #about', function() {
+    let navSelector = 'nav';
+    let mainSelector = 'main';
+
+    elementFadeHide(navSelector);
+    elementFadeHide(mainSelector);
+
+    setTimeout(function() {
+        $(mainSelector).html(`
+            <div class="top">
+                <div id="stat">
+                    <article>
+                        <h1>${messages.rates}</h1>
+                        <section>
+                            <table id="rates">
+                                <tr>
+                                    <th>DropChance:</th>
+                                    <td>x 3</td>
+                                </tr>
+                                <tr>
+                                    <th>SpoilChance:</th>
+                                    <td>x 3</td>
+                                </tr>
+                                <tr>
+                                    <th>RaidDropChance:</th>
+                                    <td>x 1</td>
+                                </tr>
+                                <tr>
+                                    <th>DropAdena:</th>
+                                    <td>x 7</td>
+                                </tr>
+                                <tr>
+                                    <th>RateXp:</th>
+                                    <td>x 7</td>
+                                </tr>
+                                <tr>
+                                    <th>RateSp:</th>
+                                    <td>x 7</td>
+                                </tr>
+                                <tr>
+                                    <th>RatePatyXp:</th>
+                                    <td>x 2</td>
+                                </tr>
+                                <tr>
+                                    <th>RatePatySp:</th>
+                                    <td>x 2</td>
+                                </tr>
+                                <tr>
+                                    <th>RateQuestRewardXP:</th>
+                                    <td>x 7</td>
+                                </tr>
+                                <tr>
+                                    <th>RateQuestRewardSP:</th>
+                                    <td>x 7</td>
+                                </tr>
+                                <tr>
+                                    <th>RateQuestRewardAdena:</th>
+                                    <td>x 7</td>
+                                </tr>
+                                <tr>
+                                    <th>RateQuestDropItem:</th>
+                                    <td>x 7</td>
+                                </tr>
+                            </table>
+                        </section>
+                    </article>
+                    <article>
+                        <h1>${messages.selectIntoTop}:</h1>
+                        <div class="top">
+                            <p>${messages.selectIntoTopDescription}</p>
+                        </div>
+                    </article>
+                    <article>
+                        <h1>${messages.common}:</h1>
+                        <div class="top">
+                            <p>${messages.commonDescription}</p>
+                        </div>
+                    </article>
+                </div>
             </div>
-        </div>
-        `).css({ opacity: 9 });
+        `);
 
         setButtonActive('nav ul li a', 'navActive', 'nav #about');
-        $('nav').css({ opacity: 9 });
+
+        elementFadeShow(navSelector);
+        elementFadeShow(mainSelector);
         generateBackButton(null);
     }, loadTimeout);
 })
 
-$(document).on('click', 'nav #reg', function () {
-    $('nav').css({ opacity: 0 });
-    $('main').css({ opacity: 0 });
-    setTimeout(function () {
-        $('nav').css({ opacity: 9 });
+$(document).on('click', 'nav #reg', function() {
+    let formSelector = "#lk_form form";
+    let navSelector = 'nav';
+    let mainSelector = 'main';
+
+    elementFadeHide(navSelector);
+    elementFadeHide(mainSelector);
+
+    setTimeout(function() {
+        elementFadeShow(navSelector);
         generateMainPage();
         setButtonActive('nav ul li a', 'navActive', 'nav #reg');
 
-        $("#lk_form form").html(
-            '<form>' +
-            '<h1>' + messages.registration + '</h1>' +
-            '<div>' +
-            '<label><span>' + messages.loginName + ':</span><input id="inputLoginl3" type="text"></label></div>' +
-            '<div>' +
-            '<label><span>' + messages.email + ':</span><input id="inputEmail3" type="email"></label></div>' +
-            '<div>' +
-            '<label><span>' + messages.password + ':</span><input id="inputPassword3" type="password"></label></div>' +
-            '<div>' +
-            '<label><span>' + messages.repeatePassword + ':</span><input id="inputSecondPassword3" type="password"></label></div>' +
-            '<button class="register" type="button">' + messages.send + '</button>'
-        );
+        $(formSelector).html(`
+            <form> 
+            <h1>${messages.registration}</h1><div id="formInputs">
+            <div><span>${messages.loginName}:</span><input id="inputLoginl3" type="text"></div>
+            <div><span>${messages.email}:</span><input id="inputEmail3" type="email"></div>
+            <div><span>${messages.password}:</span><input id="inputPassword3" type="password"></div>
+            <div><span>${messages.repeatePassword}:</span><input id="inputSecondPassword3" type="password"></div></div> 
+            <button class="register" type="button">${messages.send}</button>
+        `);
 
-        $('#lk_form form h1').css('font-size', '10px').css('margin-top', '-5px');
-        $('#lk_form form div').css('margin-top', '0px').css('margin-bottom', '2px');
-        $('#lk_form form div input').css('height', '20px');
-        $('#lk_form form div span').css('padding-top', '2px');
-        $('#lk_form form button').css('width', '134px').css('margin-right', '35px').css('height', '18px');
+        $(formSelector + ' h1').css({
+            'font-size': '10px',
+            'margin-top': '-5px'
+        });
+
+        $(formSelector + ' div').css({
+            'margin-top': '0px',
+            'margin-bottom': '2px'
+        });
+
+        $(formSelector + ' div input').css('height', '20px');
+
+        $(formSelector + ' div span').css('padding-top', '2px');
+
+        $(formSelector + ' button').css({
+            'width': '134px',
+            'margin-right': '35px',
+            'height': '18px',
+            'margin-top': '0px'
+        });
     }, loadTimeout);
 })
 
-$(document).on('click', 'nav #stat', function () {
-    $('nav').css({ opacity: 0 });
-    $('main').css({ opacity: 0 });
-    setTimeout(function () {
+$(document).on('click', 'nav #stat', function() {
+    let navSelector = 'nav';
+    let mainSelector = 'main';
+
+    elementFadeHide(navSelector);
+    elementFadeHide(mainSelector);
+    setTimeout(function() {
         $('main').html(
             `<div class="top">
                 <div id="stat">
@@ -491,8 +543,8 @@ $(document).on('click', 'nav #stat', function () {
                                     <th>${messages.gameMasters}:</th>
                                     <th>${messages.clans}:</th>
                                     <th>${messages.allys}:</th>
-                                    </tr>
-                                    <tr>
+                                </tr>
+                                <tr>
                                     <td id="accCount">0</td>
                                     <td id="countAll">0</td>
                                     <td id="countNobless">0</td>
@@ -500,74 +552,77 @@ $(document).on('click', 'nav #stat', function () {
                                     <td id="countGm">0</td>
                                     <td id="countClans">0</td>
                                     <td>0</td>
-                                    </tr>
-                                    </table>
-                                    </section>
-                                    </article>
-                                    <article id="top10">
-                                    <h1>${messages.top10chars}</h1>
-                                    <section>
-                                    <table>
-                                    <tr>
+                                </tr>
+                            </table>
+                        </section>
+                    </article>
+                    <article id="top10">
+                        <h1>${messages.top10chars}</h1>
+                        <section>
+                            <table>
+                                <tr>
                                     <th>${messages.charName}:</th>
                                     <th>${messages.charClass}:</th>
                                     <th>${messages.charSex}:</th>
                                     <th>${messages.clanName}:</th>
                                     <th>${messages.gameTime}:</th>
                                     <th>PvP/PK:</th>
-                                    </tr>
-                                    </table>
-                                    </section>
-                                    </article>
-                                    <article id="clans">
-                                    <h1>${messages.clans}</h1>
-                                    <section>
-                                    <table>
-                                    <tr>
+                                </tr>
+                            </table>
+                        </section>
+                    </article>
+                    <article id="clans">
+                        <h1>${messages.clans}</h1>
+                        <section>
+                            <table>
+                                <tr>
                                     <th>${messages.clanName}:</th>
                                     <th>${messages.lvl}</th>
                                     <th>${messages.leader}:</th>
                                     <th>${messages.reputation}:</th>
                                     <th>${messages.midLvl}:</th>
                                     <th>${messages.ally}:</th>
-                                    </tr>
-                                    </table>
-                                    </section>
-                                    </article>
-                                    <article id="castles">
-                                    <h1>${messages.castles}</h1>
-                                    <section>
-                                    <table>
-                                    <tr>
+                                </tr>
+                            </table>
+                        </section>
+                    </article>
+                    <article id="castles">
+                        <h1>${messages.castles}</h1>
+                        <section>
+                            <table>
+                                <tr>
                                     <th></th>
                                     <th>${messages.castleName}:</th>
                                     <th>${messages.owner}:</th>
                                     <th>${messages.tax}:</th>
                                     <th>${messages.treasure}:</th>
                                     <th>${messages.siegeDate}:</th>
-                                    </tr>
-                                    </table>
-                                    </section>
-                                    </article>
-                                    <article id="forts">
-                                    <h1>${messages.forts}</h1>
-                                    <section>
-                                    <table>
-                                    <tr>
+                                </tr>
+                            </table>
+                        </section>
+                    </article>
+                    <article id="forts">
+                        <h1>${messages.forts}</h1>
+                        <section>
+                            <table>
+                                <tr>
                                     <th></th>
                                     <th>${messages.fortName}:</th>
                                     <th>${messages.owner}:</th>
                                     <th>${messages.siegeDate}:</th>
-                                    </tr>
-                                    </table>
-                                    </section>
-                                    </article>
-                                    </div>
-                                    </div>`
-        ).css({ opacity: 9 });
+                                </tr>
+                            </table>
+                        </section>
+                    </article>
+            </div>
+        </div>
+        `);
 
-        $('nav').css({ opacity: 9 });
+        elementFadeShow(navSelector);
+        elementFadeShow(mainSelector);
+
         setButtonActive('nav ul li a', 'navActive', 'nav #stat');
+
         generateBackButton();
 
         fetch(url + '/clans/count/all')
@@ -668,55 +723,61 @@ $(document).on('click', 'nav #stat', function () {
     }, loadTimeout);
 })
 
-$(document).on('click', 'nav #contact', function () {
-    $('nav').css({ opacity: 0 });
-    $('main').css({ opacity: 0 });
-    setTimeout(function () {
+$(document).on('click', 'nav #contact', function() {
+    let navSelector = 'nav';
+    let mainSelector = 'main';
+
+    elementFadeHide(navSelector);
+    elementFadeHide(mainSelector);
+    setTimeout(function() {
         $('main').html(`
-                            <div class="top">
-                            <div id="stat">
-                            <article>
-                            <h1>${messages.contactsForm}</h1>
-                            <section>
+            <div class="top">
+                <div id="stat">
+                    <article>
+                        <h1>${messages.contactsForm}</h1>
+                        <section>
                             <p>${messages.mesageCanOnlyRegisteredUsers}</p>
                             <div class="message">
-                            <form>
-                            <label>${messages.fullName}: <input type="text" class="name"><p class="name"></p></label>
-                            <label>${messages.emailForFeedback}: <input type="email" class="email"><p class="email"></p></label>
-                            <label>${messages.messagesText}: <textarea class="message"></textarea><p class="message"></p></label>
-                            <button class="sendMessage" type="button">${messages.send}</button>
-                            </form>
+                                <form>
+                                    <label>${messages.fullName}: <input type="text" class="name"><p class="name"></p></label>
+                                    <label>${messages.emailForFeedback}: <input type="email" class="email"><p class="email"></p></label>
+                                    <label>${messages.messagesText}: <textarea class="message"></textarea><p class="message"></p></label>
+                                    <button class="sendMessage" type="button">${messages.send}</button>
+                                </form>
                             </div>
-                            </section>
-                            </article>
-                            </div>
-                            </div>
-                            `).css({ opacity: 9 });
+                        </section>
+                    </article>
+                </div>
+            </div>
+        `);
 
-        $('nav').css({ opacity: 9 });
+        elementFadeShow(navSelector);
+        elementFadeShow(mainSelector);
         setButtonActive('nav ul li a', 'navActive', 'nav #contact');
         generateBackButton();
     }, loadTimeout);
 })
 
-$(document).on('click', 'a.readMore', function () {
-    $('#articles').css({ opacity: 0 });
-    let newsId = $(this).attr('id');
-    let pageId = $('.npActive').attr('id');
+$(document).on('click', 'a.readMore', function() {
+    let articlesSelector = '#articles';
 
-    setTimeout(function () {
+    elementFadeHide(articlesSelector);
+
+    let newsId = $(this).attr('id');
+
+    setTimeout(function() {
         function myFunction(value) {
             let date = new Date(value.date);
 
-            $('#articles').html(`
+            $(articlesSelector).html(`
                 <section>
                     <figure>
                         <img src="data:image/png;base64,${value.image}">
                         <div>
-                        <figcaption>
-                        <time datetime="${value.date}"><span>${date.getDate()}</span>/${date.getMonth() + 1}/${date.getFullYear()}</time>
-                        <p><span>${messages.publishingIn}</span> ${date.toLocaleTimeString()}</p>
-                        </figcaption>
+                            <figcaption>
+                                <time datetime="${value.date}"><span>${date.getDate()}</span>/${date.getMonth() + 1}/${date.getFullYear()}</time>
+                                <p><span>${messages.publishingIn}</span> ${date.toLocaleTimeString()}</p>
+                            </figcaption>
                         </div>
                         <a class="readMore" id="${value.id}" href="#">${messages.readMore}</a>
                     </figure>
@@ -727,7 +788,7 @@ $(document).on('click', 'a.readMore', function () {
                 </section>
             `);
 
-            $('#articles section').css({ background: 'none' });
+            $(articlesSelector + ' section').css({ background: 'none' });
             $('a.readMore').css({ display: 'none' });
         };
 
@@ -739,171 +800,161 @@ $(document).on('click', 'a.readMore', function () {
                 }
             });
 
-        // generateBackButton(pageId);
-
-        $('#articles').css({ opacity: 9 });
+        elementFadeShow(articlesSelector);
     }, loadTimeout);
 })
 
-$(document).on('click', '.newsBack', function () {
-    let newsPageId = $(this).attr('id');
-    $('#articles').css({ opacity: 0 });
-    $(this).css({ display: 'none' });
-    setTimeout(function () {
-        generateNewsPage(newsPageId);
-        $('#articles').css({ opacity: 9 });
-    }, loadTimeout);
-})
+$(document).on('click', '.homeBack', function() {
+    let mainSelector = 'main';
 
-$(document).on('click', '.homeBack', function () {
-    $('main').css({ opacity: 0 });
+    elementFadeHide(mainSelector);
+
     $(this).css({ display: 'none' });
-    setTimeout(function () {
+    setTimeout(function() {
         generateMainPage(null);
     }, loadTimeout);
 })
 
-$(document).on('click', '.nextNewsPage', function () {
+$(document).on('click', '.nextNewsPage', function() {
     $('#articles').css({ opacity: 0 });
     let id = $(this).attr('id');
-    setTimeout(function () {
+    setTimeout(function() {
         generateNewsPage(id);
         $('#articles').css({ opacity: 9 });
     }, loadTimeout);
-});
+})
 
-async function fetchData(method, url, data) {
-    return await fetch(url, {
-        method: method,
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    });
-}
-
-$(document).on('click', 'button.login', function () {
+$(document).on('click', 'button.login', function() {
     grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
         action: 'login'
-    }).then(function (token) {
+    }).then(function(token) {
         if (token !== null) {
-            fetchData('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
+            send('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
                 .then((result) => {
                     if (result.success && result.score > 0.5) {
+                        let formSelector = '#lk_form form';
+
                         login = $("#inputLoginl3").val();
                         let password = $("#inputPassword3").val();
 
                         if (login === '' || password === '') {
-                            $('#lk_form form h1').css("color", "red").html(messages.fieldsCannotEmpty);
+                            setFormHeaderStatus(messages.fieldsCannotEmpty, 'red');
                             return;
                         }
 
-                        $('#lk_form form h1').css("color", "white").html(messages.waiting);
+                        setFormHeaderStatus(messages.waiting, 'inherit');
 
-                        let user = {
+                        let userData = {
                             login: login,
                             password: password
                         };
 
-                        fetchData('POST', url + "/accounts/login", user).then(response => response.json())
+                        send('POST', url + "/accounts/login", userData).then(response => response.json())
                             .then((data) => {
-                                $('#lk_form form').css({ opacity: 0 });
+                                elementFadeHide('#lk_form form');
+
                                 let status = data.status;
-                                setTimeout(function () {
+
+                                setTimeout(function() {
                                     switch (status) {
                                         case 'Success':
                                             $('form').trigger('reset');
                                             showCabinetMenu();
-                                            $('#lk_form form h1').css("color", "green");
+                                            $(formSelector + 'h1').css("color", "green");
                                             break;
                                         case 'Not exists':
                                             $('form').trigger('reset');
-                                            $('#lk_form form h1').css("color", "red").html(messages.accountNotExists);
+                                            setFormHeaderStatus(messages.accountNotExists, 'orange');
                                             break;
                                         case 'Incorrect password':
                                             $('form').trigger('reset');
-                                            $('#lk_form form h1').css("color", "red").html(messages.incorrectPassword);
+                                            setFormHeaderStatus(messages.incorrectPassword, 'red');
                                             break;
                                         default:
                                             $('form').trigger('reset');
-                                            $('#lk_form form h1').css("color", "red").html(messages.somthingWrong);
+                                            setFormHeaderStatus(messages.somthingWrong, 'red');
                                     }
-                                    $('#lk_form form').css({ opacity: 9 });
+
+                                    elementFadeShow('#lk_form form');
                                 }, loadTimeout);
                             });
                     } else {
                         $('form').trigger('reset');
-                        $('#lk_form form h1').css("color", "red").html(messages.botsAction);
+                        setFormHeaderStatus(messages.botsAction, 'red');
                         return;
                     }
                 });
         }
     });
-});
+})
 
-$(document).on('click', "button.register", function () {
+$(document).on('click', "button.register", function() {
     grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
         action: 'login'
-    }).then(function (token) {
+    }).then(function(token) {
         if (token !== null) {
-            fetchData('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
+            send('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
                 .then((result) => {
                     if (result.success && result.score > 0.5) {
+                        let formSelector = '#lk_form form';
+
                         let login = $("#inputLoginl3").val();
                         let email = $("#inputEmail3").val();
                         let pass = $("#inputPassword3").val();
                         let passSecond = $("#inputSecondPassword3").val();
 
                         if (login === '' || email === '' || pass === '' || passSecond === '') {
-                            $('#lk_form form h1').css("color", "red").html(messages.fieldsCannotEmpty);
+                            setFormHeaderStatus(messages.fieldsCannotEmpty, 'red');
                             return;
                         }
 
                         if (!(pass).match(passSecond)) {
-                            $('#lk_form form h1').css("color", "red").html(messages.passwordsNotMatch);
+                            setFormHeaderStatus(messages.passwordsNotMatch, 'orange');
                             return;
                         }
 
-                        $('#lk_form form h1').css("color", "white").html(messages.waiting);
+                        $(formSelector + 'h1').css("color", "white").html(messages.waiting);
 
-                        var data = {
+                        var userData = {
                             login: login,
                             email: email,
                             password: pass,
                             passwordSecond: passSecond
                         };
 
-                        fetchData('POST', url + '/accounts/create', data).then(response => response.json())
+                        send('POST', url + '/accounts/create', userData).then(response => response.json())
                             .then((result) => {
-                                $('#lk_form form').css({ opacity: 0 });
-                                setTimeout(function () {
+                                elementFadeHide('#lk_form form');
+
+                                setTimeout(function() {
                                     switch (result.status) {
                                         case 'Success':
                                             $('form').trigger('reset');
-                                            $('#lk_form form h1').css("color", "green").html(messages.accountCreated + '! ' + messages.checkEmail);
+                                            setFormHeaderStatus(messages.accountCreated + '! ' + messages.checkEmail, 'green');
                                             break;
                                         case 'No match':
-                                            $('#lk_form form h1').css("color", "orange").html(messages.passwordsNotMatch);
+                                            setFormHeaderStatus(messages.passwordsNotMatch, 'orange');
                                             $('form').trigger('reset');
                                             break;
                                         case 'Login exists':
-                                            $('#lk_form form h1').css("color", "yellow").html(messages.loginExists);
+                                            setFormHeaderStatus(messages.loginExists, 'yellow');
                                             $('form').trigger('reset');
                                             break;
                                         case 'Email exists':
-                                            $('#lk_form form h1').css("color", "red").html(messages.emailExists);
+                                            setFormHeaderStatus(messages.emailExists, 'red');
                                             $('form').trigger('reset');
                                             break;
                                         case 'Invalid email':
-                                            $('#lk_form form h1').css("color", "red").html(messages.incorrectEmail);
+                                            setFormHeaderStatus(messages.incorrectEmail, 'red');
                                             $('form').trigger('reset');
                                             break;
                                     }
-                                    $('#lk_form form').css({ opacity: 9 });
+
+                                    elementFadeShow('#lk_form form');
                                 }, loadTimeout);
                             });
                     } else {
-                        $('#lk_form form h1').css("color", "red").html(messages.botsAction);
+                        setFormHeaderStatus(messages.botsAction, 'red');
                         $('form').trigger('reset');
                     }
                 })
@@ -911,222 +962,267 @@ $(document).on('click', "button.register", function () {
     });
 })
 
-$(document).on('click', "button.restore", function () {
+$(document).on('click', "button.restore", function() {
     grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
         action: 'login'
-    }).then(function (token) {
+    }).then(function(token) {
         if (token !== null) {
-            fetchData('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
+            send('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
                 .then((result) => {
                     if (result.success && result.score > 0.5) {
                         let login = $("#inputLoginl3").val();
                         let email = $("#inputEmail3").val();
 
                         if (login === '' || email === '') {
-                            $('#lk_form form h1').css("color", "red").html(messages.fieldsCannotEmpty);
+                            setFormHeaderStatus(messages.fieldsCannotEmpty, "red");
                             return;
                         }
 
-                        $('#lk_form form h1').css("color", "white").html(messages.waiting);
+                        setFormHeaderStatus(messages.waiting, 'inherit');
 
                         var userData = {
                             login: login,
                             email: email
                         };
 
-                        fetchData('POST', url + '/accounts/restorePass', userData).then(response => response.json())
+                        send('POST', url + '/accounts/restorePass', userData).then(response => response.json())
                             .then((result) => {
-                                $('#lk_form form').css({ opacity: 0 });
-                                setTimeout(function () {
+                                $('#lk_form form').addClass('fadeHidde');
+
+                                setTimeout(function() {
                                     switch (result.status) {
                                         case 'Success':
                                             $('form').trigger('reset');
-                                            if (result.status == 'Success')
-                                                $('#lk_form form h1').css("color", "green").html(messages.passwordChanged + '! ' + messages.checkEmail);
+                                            if (result.status == 'Success') {
+                                                setFormHeaderStatus(result.status, "green");
+                                                setFormsInfoMessage(messages.passwordChanged + '! ' + messages.checkEmail);
+                                            }
                                             break;
                                         case 'Invalid login':
-                                            $('#lk_form form h1').css("color", "yellow").html(messages.invalidLogin);
+                                            setFormHeaderStatus(messages.invalidLogin, 'yellow');
                                             $('form').trigger('reset');
                                             break;
                                         case 'Not exists':
-                                            $('#lk_form form h1').css("color", "yellow").html(messages.accountNotExists);
+                                            setFormHeaderStatus(messages.accountNotExists, 'orange');
                                             $('form').trigger('reset');
                                             break;
                                         case 'Invalid data':
-                                            $('#lk_form form h1').css("color", "red").html(messages.somthingWrong);
+                                            setFormHeaderStatus(messages.somthingWrong, 'red');
                                             $('form').trigger('reset');
                                             break;
                                     }
-                                    $('#lk_form form').css({ opacity: 9 });
+
+                                    $('#lk_form form').removeClass('fadeHidde');
                                 }, loadTimeout);
                             });
                     } else {
-                        $('#lk_form form h1').css("color", "red").html(messages.botsAction);
+                        setFormHeaderStatus(messages.botsAction, 'red');
                         $('form').trigger('reset');
                         return;
                     }
                 })
         }
     });
-});
+})
 
-$(document).on('click', "button.changePass", function () {
-    $('#lk_form form').css({ opacity: 0 });
-    setTimeout(function () {
-        $("#lk_form form").html(
-            '<h1>' + messages.passwordChanging + ' ' + login + '!</h1>' +
-            '<div>' +
-            '<label><span>' + messages.oldPassword + ':</span><input id="oldPassword" type="password"></label></div>' +
-            '<div>' +
-            '<label><span>' + messages.newPassword + ':</span><input id="newFirstPassword" type="password"></label></div>' +
-            '<div>' +
-            '<label><span>' + messages.repeatePassword + ':</span><input id="newSecondPassword"" type="password"></label></div>' +
-            '<button class="back" type="button" onclick="showCabinetMenu()"><< ' + messages.back + '</button><button class="changePassword" type="button">' + messages.change + '</button>'
-        );
+$(document).on('click', "button.changePass", function() {
+    let formSelector = '#lk_form form';
 
-        $('#right #lk_form form h1').css('font-size', '10px').css('margin-top', '-5px');
-        $('#right #lk_form form div span').css('width', '138px');
-        $('#right #lk_form form div input').css('height', '25px').css('width', '214px');
-        $('#right #lk_form form button').css('width', '105px').css('transform', 'translateX(-32px)').css('margin-right', '2px').css('height', '20px').css('width', '105px');
-        $('#right #lk_form form button.back').css('width', '97px');
-        $('#lk_form form').css({ opacity: 9 });
+    elementFadeHide(formSelector);
+
+    setTimeout(function() {
+        $(formSelector).html(` 
+            <h1>${messages.passwordChanging} ${login}!</h1>
+            <div id="formInputs">
+                <div><span>${messages.oldPassword}:</span><input id="oldPassword" type="password"></div>
+                <div><span>${messages.newPassword}:</span><input id="newFirstPassword" type="password"></div>
+                <div><span>${messages.repeatePassword}:</span><input id="newSecondPassword"" type="password"></div>
+            </div>
+            <button class="back" type="button"><< ${messages.back}</button>
+            <button class="changePassword" type="button">${messages.change}</button>
+        `);
+
+        $(formSelector + ' h1').css('font-size', '10px').css('margin-top', '-5px');
+        $(formSelector + ' div span').css('width', '138px');
+        $(formSelector + ' div input').css('height', '25px').css('width', '214px');
+        $(formSelector + ' button').css('width', '105px').css('transform', 'translateX(-32px)').css('margin-right', '2px').css('height', '20px').css('width', '105px');
+        $(formSelector + ' button.back').css('width', '97px');
+
+        elementFadeShow(formSelector);
     }, loadTimeout);
-});
+})
 
-$(document).on('click', "button.changePassword", function () {
+$(document).on('click', "button.changePassword", function() {
     let oldPassword = $("#oldPassword").val();
     let newFirstPassword = $("#newFirstPassword").val();
     let newSecondPassword = $("#newSecondPassword").val();
 
+    let formSelector = '#lk_form form';
+
     if (login === '' || oldPassword === '' || newFirstPassword === '' || newSecondPassword === '') {
-        $('#lk_form form h1').css("color", "red").html(messages.fieldsCannotEmpty);
+        setFormHeaderStatus(messages.fieldsCannotEmpty, 'red');
         return;
     }
 
     if (!(newFirstPassword).match(newSecondPassword)) {
-        $('#lk_form form h1').css("color", "red").html(messages.passwordsNotMatch);
+        setFormHeaderStatusl(messages.passwordsNotMatch, 'red');
         return;
     }
 
-    $('#lk_form form h1').css("color", "white").html(messages.waiting);
+    setFormHeaderStatus(messages.waiting, 'inherit');
 
-    var userRegistration = {
+    var userData = {
         login: login,
         oldPassword: oldPassword,
         newFirstPassword: newFirstPassword,
         newSecondPassword: newSecondPassword
     };
 
-    fetchData('POST', url + '/accounts/changePass', userRegistration).then(response => response.json())
+    send('POST', url + '/accounts/changePass', userData).then(response => response.json())
         .then((result) => {
-            $('#lk_form form').css({ opacity: 0 });
-            setTimeout(function () {
+            elementFadeHide(formSelector);
+
+            setTimeout(function() {
                 switch (result.status) {
                     case 'Success':
-                        $('#lk_form form h1').css("color", "green").html(messages.passwordChanged);
+                        setFormHeaderStatus(result.status, 'green')
+                        setFormsInfoMessage(messages.passwordChanged, 'green');
                         $('form').trigger('reset');
                         break;
-
                     case 'Invalid pass':
-                        $('#lk_form form h1').css("color", "orange").html(messages.incorrerctOldPassword);
+                        setFormHeaderStatus(messages.incorrerctOldPassword, 'orange');
                         $('form').trigger('reset');
                         break;
-
                     case 'No match':
-                        $('#lk_form form h1').css("color", "orange").html(messages.passwordsNotMatch);
+                        setFormHeaderStatus(messages.passwordsNotMatch, 'orange');
                         $('form').trigger('reset');
                         break;
-
                     case null:
-                        $('#lk_form form h1').css("color", "red").html(messages.somthingWrong);
+                        setFormHeaderStatus(messages.somthingWrong, 'red');
                         $('form').trigger('reset');
                         break;
                 }
-                $('#lk_form form').css({ opacity: 9 });
+
+                elementFadeShow(formSelector);
             }, loadTimeout);
         });
-});
+})
 
-$(document).on('click', "button.exit", function () {
-    $('#lk_form form').css({ opacity: 0 });
-    setTimeout(function () {
+$(document).on('click', "#lk_form form button.back", function() {
+    let formSeletor = '#lk_form form';
+
+    elementFadeHide(formSeletor);
+
+    setTimeout(function() {
+        showCabinetMenu();
+        elementFadeShow(formSeletor);
+    }, loadTimeout);
+})
+
+$(document).on('click', "button.exit", function() {
+    let formSeletor = '#lk_form form';
+
+    elementFadeHide(formSeletor);
+
+    setTimeout(function() {
         login = null;
         showLoginForm();
-        $('#lk_form form').css({ opacity: 9 });
+        elementFadeShow(formSeletor);
     }, loadTimeout);
-});
+})
 
-$(document).on('click', "a.forgot", function () {
-    $('#lk_form form').css({ opacity: 0 });
-    setTimeout(function () {
-        $("#lk_form form").html(
-            '<form>' +
-            '<h1>' + messages.passwordChanging + '</h1>' +
-            '<div>' +
-            '<label><span>' + messages.loginName + ':</span><input id="inputLoginl3" type="text"></label></div>' +
-            '<div>' +
-            '<label><span>' + messages.email + ':</span><input id="inputEmail3" type="email"></label></div>' +
-            '<button class="restore" type="button">' + messages.change + '</button>'
-        );
+$(document).on('click', "a.forgot", function() {
+    let formSelector = '#lk_form form';
+
+    elementFadeHide(formSelector);
+
+    setTimeout(function() {
+        $("#lk_form form").html(`
+            <form> 
+                <h1>${messages.passwordChanging}</h1>
+                <div id="formInputs">
+                    <div><span>${messages.loginName}:</span><input id="inputLoginl3" type="text"></div> 
+                    <div><span>${messages.email}:</span><input id="inputEmail3" type="email"></div>
+                </div> 
+            <button class="restore" type="button">${messages.change}</button>
+        `);
 
         $("button[type='button']").removeClass().addClass('restore');
-        $('#right #lk_form form button').css({
+        $(formSelector + 'button').css({
             'width': '134px',
             'margin-right': '35px',
             'margin-top': '5px'
         });
-        $('#lk_form form').css({ opacity: 9 });
+
+        elementFadeShow(formSelector);
     }, loadTimeout);
 })
 
-$(document).on('click', '#lang a#ua', function () {
-    $('nav').css({ opacity: 0 });
-    $('#logo').css({ opacity: 0 });
-    $('main').css({ opacity: 0 });
-    setTimeout(function () {
+$(document).on('click', '#lang a#ua', function() {
+    let navSelector = 'nav';
+    let logoSelector = '#logo';
+    let mainSelector = 'main';
+
+    elementFadeHide(navSelector);
+    elementFadeHide(logoSelector);
+    elementFadeHide(mainSelector);
+
+    setTimeout(function() {
         lang = 'ua';
         messages = uaMessages;
         $.cookie('language', lang);
-        $('nav').css({ opacity: 9 });
-        $('#logo').css({ opacity: 9 });
+
+        elementFadeShow(navSelector);
+        elementFadeShow(logoSelector);
         generateMainPage();
     }, loadTimeout);
 })
 
-$(document).on('click', '#lang a#ru', function () {
-    $('nav').css({ opacity: 0 });
-    $('#logo').css({ opacity: 0 });
-    $('main').css({ opacity: 0 });
-    setTimeout(function () {
+$(document).on('click', '#lang a#ru', function() {
+    let navSelector = 'nav';
+    let logoSelector = '#logo';
+    let mainSelector = 'main';
+
+    elementFadeHide(navSelector);
+    elementFadeHide(logoSelector);
+    elementFadeHide(mainSelector);
+
+    setTimeout(function() {
         lang = 'ru';
         messages = ruMessages;
         $.cookie('language', lang);
-        $('nav').css({ opacity: 9 });
-        $('#logo').css({ opacity: 9 });
+
+        elementFadeShow(navSelector);
+        elementFadeShow(logoSelector);
         generateMainPage();
     }, loadTimeout);
 })
 
-$(document).on('click', '#lang a#en', function () {
-    $('nav').css({ opacity: 0 });
-    $('#logo').css({ opacity: 0 });
-    $('main').css({ opacity: 0 });
-    setTimeout(function () {
+$(document).on('click', '#lang a#en', function() {
+    let navSelector = 'nav';
+    let logoSelector = '#logo';
+    let mainSelector = 'main';
+
+    elementFadeHide(navSelector);
+    elementFadeHide(logoSelector);
+    elementFadeHide(mainSelector);
+    setTimeout(function() {
         lang = 'en';
         messages = enMessages;
         $.cookie('language', lang);
-        $('nav').css({ opacity: 9 });
-        $('#logo').css({ opacity: 9 });
+
+        elementFadeShow(navSelector);
+        elementFadeShow(logoSelector);
         generateMainPage();
     }, loadTimeout);
 })
 
-$(document).on('click', 'button.sendMessage', function () {
+$(document).on('click', 'button.sendMessage', function() {
     grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
         action: 'social'
-    }).then(function (token) {
+    }).then(function(token) {
         if (token !== null) {
-            fetchData('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
+            send('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
                 .then((result) => {
                     if (result.success && result.score > 0.5) {
                         let login = $('div.message form input.name').val();
@@ -1154,10 +1250,10 @@ $(document).on('click', 'button.sendMessage', function () {
                             message: message
                         };
 
-                        fetchData('POST', url + "/accounts/sendMess", userData).then(response => response.json())
+                        send('POST', url + "/accounts/sendMess", userData).then(response => response.json())
                             .then((data) => {
                                 $('main').css({ opacity: 0 });
-                                setTimeout(function () {
+                                setTimeout(function() {
                                     switch (data.status) {
                                         case 'Success':
                                             $('main div.message').html(messages.messageSended).css("color", "green");
@@ -1167,6 +1263,9 @@ $(document).on('click', 'button.sendMessage', function () {
                                             break;
                                         case 'Not found':
                                             $('main div.message').html(messages.accountNotExists).css("color", "red");
+                                            break;
+                                        case 'Email not found':
+                                            $('main div.message').html(messages.incorrectEmail).css("color", "red");
                                             break;
                                     }
                                     $('main').css({ opacity: 9 });
@@ -1179,4 +1278,8 @@ $(document).on('click', 'button.sendMessage', function () {
                 })
         }
     })
+})
+
+$(document).on('keypress', 'input[type="password"]', function(e) {
+    checkSubmit(e);
 });
