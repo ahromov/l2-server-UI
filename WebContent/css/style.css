@@ -32,6 +32,11 @@ body {
     font-family: "Book OS Style";
 }
 
+header {
+    padding-top: 25px;
+    height: 805px;
+}
+
 h2 {
     font-size: 12px;
 }
@@ -43,9 +48,9 @@ h2 {
     border-radius: 0px 0px 15px 15px;
 }
 
-header {
-    padding-top: 25px;
-    height: 805px;
+a,
+button {
+    cursor: pointer;
 }
 
 .main_31 {
@@ -122,10 +127,8 @@ nav ul li a {
     font-family: "BalticaC";
     color: white;
     text-decoration: none;
-    cursor: pointer;
 }
 
-nav ul li a:hover,
 nav ul li.checked a,
 nav ul li a.navActive,
 footer #next_page li a.newsBack,
@@ -503,7 +506,7 @@ article section a:active {
     transition: 0.5s ease-in-out;
 }
 
-#right #lk_form form div {
+#right #lk_form form #formInputs div {
     background-image: -moz-linear-gradient( 90deg, rgb(58, 31, 23) 0%, rgb(96, 47, 35) 100%);
     background-image: -webkit-linear-gradient( 90deg, rgb(58, 31, 23) 0%, rgb(96, 47, 35) 100%);
     background-image: -ms-linear-gradient( 90deg, rgb(58, 31, 23) 0%, rgb(96, 47, 35) 100%);
@@ -549,9 +552,9 @@ article section a:active {
     background-image: -ms-linear-gradient( 90deg, rgb(58, 31, 23) 0%, rgb(157, 76, 56) 100%);
     width: 134px;
     height: 25px;
-    margin-right: 0px;
+    margin-top: 5px;
+    margin-right: 25px;
     color: white;
-    cursor: pointer;
 }
 
 #right #lk_form #formBoard {
@@ -593,7 +596,6 @@ article section a:active {
     padding: 4px 3px;
     box-sizing: border-box;
     font-weight: bolder;
-    cursor: pointer;
 }
 
 #right #lang {
@@ -845,8 +847,8 @@ footer #social .social_list ul li div {
 nav,
 #lk_form form,
 div.message form {
-    transition: all 1s linear;
+    /* transition: all 1s linear;
     -webkit-transition: all 1s linear;
-    -o-transition: all 1s linear;
+    -o-transition: all 1s linear; */
     transition: all 1s linear;
 }
