@@ -1,6 +1,6 @@
 var enMessages = {
-    title: `${serverName}::Free game server`,
-    slogan: `from ${developerName} - time-tested quality`,
+    title: `${serverName} :: Free game server`,
+    slogan: `time-tested quality`,
     general: 'Home',
     aboutServer: 'About server',
     registration: 'Registration',

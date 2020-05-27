@@ -199,7 +199,6 @@ main {
     margin: 0 auto;
     margin-top: -300px;
     opacity: 0;
-    transition: all 1s linear;
 }
 
 #stat {
@@ -264,7 +263,7 @@ main {
 #stat table td {
     text-align: center;
     background-color: rgb(72, 43, 38);
-    /* text-align: justify; */
+    vertical-align: middle;
 }
 
 #left,
@@ -275,10 +274,6 @@ main {
 
 #left {
     float: left;
-}
-
-#articles {
-    transition: all 0.5s ease-out;
 }
 
 article h1 {
@@ -329,9 +324,9 @@ article section div.message form textarea {
     display: block;
     width: 100%;
     border: 1px solid rgb(214, 234, 247, 0.3);
-    background-image: -moz-linear-gradient( 90deg, rgb(96, 47, 35) 0%, rgb(58, 31, 23) 100%);
-    background-image: -webkit-linear-gradient( 90deg, rgb(96, 47, 35) 0%, rgb(58, 31, 23) 100%);
-    background-image: -ms-linear-gradient( 90deg, rgb(96, 47, 35) 0%, rgb(58, 31, 23) 100%);
+    background-image: -moz-linear-gradient(90deg, rgb(96, 47, 35) 0%, rgb(58, 31, 23) 100%);
+    background-image: -webkit-linear-gradient(90deg, rgb(96, 47, 35) 0%, rgb(58, 31, 23) 100%);
+    background-image: -ms-linear-gradient(90deg, rgb(96, 47, 35) 0%, rgb(58, 31, 23) 100%);
     color: white;
     box-sizing: border-box;
     padding-left: 10px;
@@ -454,9 +449,9 @@ article section a {
     border-width: 1px;
     border-color: rgb(255, 132, 109);
     border-radius: 10px;
-    background-image: -moz-linear-gradient( 90deg, rgb(45, 27, 24) 0%, rgb(45, 27, 24) 0%, rgb(108, 56, 41) 1%, rgb(72, 43, 38) 25%, rgb(108, 56, 41) 100%);
-    background-image: -webkit-linear-gradient( 90deg, rgb(45, 27, 24) 0%, rgb(45, 27, 24) 0%, rgb(108, 56, 41) 1%, rgb(72, 43, 38) 25%, rgb(108, 56, 41) 100%);
-    background-image: -ms-linear-gradient( 90deg, rgb(45, 27, 24) 0%, rgb(45, 27, 24) 0%, rgb(108, 56, 41) 1%, rgb(72, 43, 38) 25%, rgb(108, 56, 41) 100%);
+    background-image: -moz-linear-gradient(90deg, rgb(45, 27, 24) 0%, rgb(45, 27, 24) 0%, rgb(108, 56, 41) 1%, rgb(72, 43, 38) 25%, rgb(108, 56, 41) 100%);
+    background-image: -webkit-linear-gradient(90deg, rgb(45, 27, 24) 0%, rgb(45, 27, 24) 0%, rgb(108, 56, 41) 1%, rgb(72, 43, 38) 25%, rgb(108, 56, 41) 100%);
+    background-image: -ms-linear-gradient(90deg, rgb(45, 27, 24) 0%, rgb(45, 27, 24) 0%, rgb(108, 56, 41) 1%, rgb(72, 43, 38) 25%, rgb(108, 56, 41) 100%);
     box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.75);
     margin-top: 10px;
     margin-left: 45px;
@@ -475,9 +470,9 @@ article section a:active {
     border-width: 1px;
     border-color: rgb(255, 132, 109);
     border-radius: 10px;
-    background-image: -moz-linear-gradient( 90deg, rgb(45, 27, 24) 0%, rgb(45, 27, 24) 0%, rgb(108, 56, 41) 1%, rgb(72, 43, 38) 25%, rgb(108, 56, 41) 100%);
-    background-image: -webkit-linear-gradient( 90deg, rgb(45, 27, 24) 0%, rgb(45, 27, 24) 0%, rgb(108, 56, 41) 1%, rgb(72, 43, 38) 25%, rgb(108, 56, 41) 100%);
-    background-image: -ms-linear-gradient( 90deg, rgb(45, 27, 24) 0%, rgb(45, 27, 24) 0%, rgb(108, 56, 41) 1%, rgb(72, 43, 38) 25%, rgb(108, 56, 41) 100%);
+    background-image: -moz-linear-gradient(90deg, rgb(45, 27, 24) 0%, rgb(45, 27, 24) 0%, rgb(108, 56, 41) 1%, rgb(72, 43, 38) 25%, rgb(108, 56, 41) 100%);
+    background-image: -webkit-linear-gradient(90deg, rgb(45, 27, 24) 0%, rgb(45, 27, 24) 0%, rgb(108, 56, 41) 1%, rgb(72, 43, 38) 25%, rgb(108, 56, 41) 100%);
+    background-image: -ms-linear-gradient(90deg, rgb(45, 27, 24) 0%, rgb(45, 27, 24) 0%, rgb(108, 56, 41) 1%, rgb(72, 43, 38) 25%, rgb(108, 56, 41) 100%);
     box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.75), inset 0px 3px 5px 0px rgba(0, 0, 0, 0.75);
 }
 
@@ -513,13 +508,12 @@ footer p {
     margin-bottom: 5px;
     font-size: 12px;
     text-align: center;
-    transition: 0.5s ease-in-out;
 }
 
 #right #lk_form form #formInputs div {
-    background-image: -moz-linear-gradient( 90deg, rgb(58, 31, 23) 0%, rgb(96, 47, 35) 100%);
-    background-image: -webkit-linear-gradient( 90deg, rgb(58, 31, 23) 0%, rgb(96, 47, 35) 100%);
-    background-image: -ms-linear-gradient( 90deg, rgb(58, 31, 23) 0%, rgb(96, 47, 35) 100%);
+    background-image: -moz-linear-gradient(90deg, rgb(58, 31, 23) 0%, rgb(96, 47, 35) 100%);
+    background-image: -webkit-linear-gradient(90deg, rgb(58, 31, 23) 0%, rgb(96, 47, 35) 100%);
+    background-image: -ms-linear-gradient(90deg, rgb(58, 31, 23) 0%, rgb(96, 47, 35) 100%);
     width: 351px;
     margin-left: 21px;
     font-size: 12px;
@@ -538,9 +532,9 @@ footer p {
     border-style: solid;
     border-width: 1px;
     border-color: rgb(214, 234, 247, 0.3);
-    background-image: -moz-linear-gradient( 90deg, rgb(96, 47, 35) 0%, rgb(58, 31, 23) 100%);
-    background-image: -webkit-linear-gradient( 90deg, rgb(96, 47, 35) 0%, rgb(58, 31, 23) 100%);
-    background-image: -ms-linear-gradient( 90deg, rgb(96, 47, 35) 0%, rgb(58, 31, 23) 100%);
+    background-image: -moz-linear-gradient(90deg, rgb(96, 47, 35) 0%, rgb(58, 31, 23) 100%);
+    background-image: -webkit-linear-gradient(90deg, rgb(96, 47, 35) 0%, rgb(58, 31, 23) 100%);
+    background-image: -ms-linear-gradient(90deg, rgb(96, 47, 35) 0%, rgb(58, 31, 23) 100%);
     width: 252px;
     height: 27px;
     color: white;
@@ -557,9 +551,9 @@ footer p {
 
 #right #lk_form form button {
     border: none;
-    background-image: -moz-linear-gradient( 90deg, rgb(58, 31, 23) 0%, rgb(157, 76, 56) 100%);
-    background-image: -webkit-linear-gradient( 90deg, rgb(58, 31, 23) 0%, rgb(157, 76, 56) 100%);
-    background-image: -ms-linear-gradient( 90deg, rgb(58, 31, 23) 0%, rgb(157, 76, 56) 100%);
+    background-image: -moz-linear-gradient(90deg, rgb(58, 31, 23) 0%, rgb(157, 76, 56) 100%);
+    background-image: -webkit-linear-gradient(90deg, rgb(58, 31, 23) 0%, rgb(157, 76, 56) 100%);
+    background-image: -ms-linear-gradient(90deg, rgb(58, 31, 23) 0%, rgb(157, 76, 56) 100%);
     width: 134px;
     height: 25px;
     margin-top: 5px;
@@ -585,7 +579,7 @@ footer p {
     display: block;
     position: absolute;
     margin-left: 8px;
-    margin-top: 9px;
+    margin-top: 11px;
     font-weight: bold;
     text-align: center;
 }
@@ -593,9 +587,9 @@ footer p {
 #right #lk_form #formBoard a {
     display: block;
     border-radius: 9px;
-    background-image: -moz-linear-gradient( 90deg, rgb(52, 13, 5) 0%, rgb(63, 16, 6) 100%);
-    background-image: -webkit-linear-gradient( 90deg, rgb(52, 13, 5) 0%, rgb(63, 16, 6) 100%);
-    background-image: -ms-linear-gradient( 90deg, rgb(52, 13, 5) 0%, rgb(63, 16, 6) 100%);
+    background-image: -moz-linear-gradient(90deg, rgb(52, 13, 5) 0%, rgb(63, 16, 6) 100%);
+    background-image: -webkit-linear-gradient(90deg, rgb(52, 13, 5) 0%, rgb(63, 16, 6) 100%);
+    background-image: -ms-linear-gradient(90deg, rgb(52, 13, 5) 0%, rgb(63, 16, 6) 100%);
     margin-left: 123px;
     position: absolute;
     top: 4px;
@@ -603,7 +597,7 @@ footer p {
     height: 26px;
     text-decoration: none;
     color: white;
-    padding: 4px 3px;
+    padding: 7px 3px;
     box-sizing: border-box;
     font-weight: bolder;
 }
@@ -613,6 +607,11 @@ footer p {
     width: 93px;
     position: absolute;
     margin-left: 386px;
+}
+
+#lang ul li a {
+    padding-top: 2px;
+    display: block;
 }
 
 #right #lang ul {
@@ -694,9 +693,10 @@ footer p {
 }
 
 #forum .posts li h2 img {
-    float: left;
-    width: 20px;
-    margin-top: -5px;
+    width: 14px;
+    position: absolute;
+    top: 20px;
+    left: 39px;
 }
 
 #forum .posts li h2 {
@@ -756,7 +756,7 @@ footer #next_page li a {
     height: 37px;
     text-align: center;
     margin: 0;
-    padding-top: 8px;
+    padding-top: 10px;
     margin-top: 5px;
     text-decoration: none;
     color: white;
@@ -856,30 +856,33 @@ footer #social .social_list ul li div {
     font-size: 11px;
 }
 
+main,
+#articles,
 #logo,
 nav,
 #lk_form form,
+#right #lk_form form h1,
 div.message form,
-#forum .posts {
-    /* transition: all 1s linear;
-    -webkit-transition: all 1s linear;
-    -o-transition: all 1s linear; */
-    transition: all 1s linear;
+#forum .posts,
+nav ul a,
+.posts a,
+#right #lang li a,
+footer #next_page li a {
+    transition: all 0.2s linear;
 }
 
 nav ul a,
-.posts a {
-    /* font-size: unset; */
+.posts a,
+#right #lang li a {
     text-decoration: none;
     color: inherit;
-    transition: color 0.5s linear;
 }
 
 nav ul a:hover,
 .posts a:hover {
-    color: #ffa05f;
+    opacity: 0.5;
 }
 
-input {
-    -webkit-appearance: none;
+#forum .posts li.empty_marker:before {
+    background: url("../images/post_items_empty_marker.png");
 }

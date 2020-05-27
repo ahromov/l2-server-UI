@@ -1,6 +1,6 @@
 var uaMessages = {
-    title: `${serverName}::Безкоштовний ігровий сервер`,
-    slogan: `від ${developerName} - якість, перевірена часом`,
+    title: `${serverName} :: Безкоштовний ігровий сервер`,
+    slogan: `якість, перевірена часом`,
     general: 'Головна',
     aboutServer: 'Про сервер',
     registration: 'Реєстрація',

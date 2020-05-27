@@ -1,6 +1,6 @@
 var ruMessages = {
-    title: `${serverName}::Бесплатный игровой сервер`,
-    slogan: `от ${developerName} - качество, проверенное временем`,
+    title: `${serverName} :: Бесплатный игровой сервер`,
+    slogan: `качество, проверенное временем`,
     general: "Главная",
     aboutServer: "О сервере",
     registration: "Регистрация",
