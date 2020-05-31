@@ -13,7 +13,7 @@ function generateMenu() {
             <li><a target="_blank" href="https://drive.google.com/open?id=1a9jqbmIrBIJxJzH0ADN5LaAdtMbB_zKo" id="files">${messages.files}</a></li>
             <li><a href="#!stat" id="stat">${messages.statistic}</a></li>
             <li><a href="#!cont" id="contact">${messages.contact}</a></li>
-            <li><a target="_blank" href="http://localhost/phpbb3/" id="forum">${messages.forum}</a></li>
+            <li><a target="_blank" href="${urlForum}" id="forum">${messages.forum}</a></li>
         </ul>
     `);
 }
