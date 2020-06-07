@@ -67,7 +67,7 @@ button {
     left: 125px;
 }
 
-#logo h1 {
+h1.logo {
     font-family: "Mirage Ghotic";
     color: white;
     font-size: 36px;
@@ -76,11 +76,11 @@ button {
     text-align: center;
 }
 
-#logo p {
+p.logo {
     font-size: 14px;
     font-family: "Cambria Math";
     color: #ffd40d;
-    line-height: 0.1;
+    /* line-height: 0.1; */
     text-align: center;
     margin-top: 26px;
 }
@@ -801,19 +801,20 @@ footer #social .title {
     width: 490px;
     background: url("../images/socials_title_bg.png") no-repeat;
     padding-top: 5px;
+    text-align: end;
 }
 
 footer #social h1 {
     display: block;
     margin-top: 0px;
-    font-family: "Book OS Style";
+    /* font-family: "Book OS Style"; */
     font-size: 14px;
-    text-align: right;
-    margin-right: 20px;
+    /* text-align: right;
+    margin-right: 20px; */
 }
 
 footer #social .l2logo {
-    background-image: url("../images/lineage2_logo.png");
+    /* background-image: url("../images/lineage2_logo.png"); */
     width: 180px;
     height: 74px;
     float: left;

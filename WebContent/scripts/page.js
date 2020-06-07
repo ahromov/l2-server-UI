@@ -4,6 +4,35 @@ var login;
 var loadTimeout = 400;
 
 
+function generateLogo() {
+    return `
+        <h1 class="logo">${serverName}</h1>
+        <p class="logo">${messages.slogan}</p>
+    `;
+}
+
+
+function generateHeader() {
+    $('header').html(`
+        <nav>
+        </nav>
+        <div class="main_31">
+            <div id="logo">${generateLogo()}</div>
+            <div class="status">
+                <ul>
+                    <li id="serverName">
+                        </li>
+                        <li id="status">
+                        </li>
+                        <li id="count">
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        `);
+}
+
+
 function generateMenu() {
     $('nav').html(`
         <ul>
@@ -16,14 +45,6 @@ function generateMenu() {
             <li><a target="_blank" href="${urlForum}" id="forum">${messages.forum}</a></li>
         </ul>
     `);
-}
-
-
-function generateLogo() {
-    $('#logo').html(`
-        <h1>${serverName}</h1>
-        <p>${messages.slogan}</p>
-    `)
 }
 
 
@@ -252,7 +273,7 @@ function generateFooter() {
         </section>
         <section id="social" class="right">
             <div class="title"><h1>${messages.ourCommunitys}:</h1></div>
-            <div class="l2logo"></div>
+            <div class="l2logo">${generateLogo()}</div>
             <div class="social_list">
                 <ul>
                     <li>
@@ -326,6 +347,7 @@ function initDefaultLanguagesSettings() {
 
 function generateMainPage(newsPageId) {
     document.title = messages.title;
+    generateHeader();
     generateMenu();
     generateLogo();
     generateMain(newsPageId);
