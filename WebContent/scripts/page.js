@@ -268,7 +268,7 @@ function generateFooter() {
     $('footer').html(`
         <section class="left">
             <div id="next_page"><ul></ul></div>
-            <h1>© ${new Date().getFullYear()} Lineage2Server.com</h1>
+            <h1>© ${new Date().getFullYear()} ${developerName}</h1>
             <p>${messages.license}</p>
         </section>
         <section id="social" class="right">
