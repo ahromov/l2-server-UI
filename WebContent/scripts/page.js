@@ -310,19 +310,38 @@ function getRegisteredServerName() {
 }
 
 
-function getServerStatus() {
-    fetch(url + '/gs/get/status')
-        .then(response => response.json())
-        .then(data => {
-            if (data != null) {
-                if (data.status === 'ON')
-                    $('#status').text(data.status).css('color', '#00ff30');
-                else
-                    $('#status').text(data.status);
+function ping() {
+    setInterval(function () {
+        if (stompClient != "undefined") {
+            stompClient.send("/app/ping", {}, '');
+        }
+    }, 5000);
+}
 
-                $('#count').text(data.onlineCounter);
-            }
+function showGreeting(message) {
+    let status = $('#status').text(message.status);
+
+    if (message.status === 'ON')
+        status.css('color', '#00ff30');
+    else
+        status.css('color', '');
+
+    $('#count').text(message.onlineCounter);
+}
+
+
+function getServerStatus() {
+    let socket = new SockJS(url + '/gs-guide-websocket');
+
+    stompClient = Stomp.over(socket);
+
+    stompClient.connect({}, function () {
+        stompClient.subscribe('/topic/greetings', function (greeting) {
+            showGreeting(JSON.parse(greeting.body));
         });
+
+        ping();
+    });
 }
 
 
@@ -347,7 +366,7 @@ function initDefaultLanguagesSettings() {
 
 function generateMainPage(newsPageId) {
     document.title = messages.title;
-    generateHeader();
+    // generateHeader();
     generateMenu();
     generateLogo();
     generateMain(newsPageId);
@@ -393,6 +412,7 @@ function checkSubmit(e) {
 
 function initAll() {
     initDefaultLanguagesSettings();
+    generateHeader();
     generateMainPage();
     getRegisteredServerName();
     getServerStatus();
