@@ -331,6 +331,14 @@ function showGreeting(message) {
 
 
 function getServerStatus() {
+    fetch(url + '/gs/get/status')
+        .then(response => response.json())
+        .then(data => {
+            if (data != null) {
+                showGreeting(data);
+            }
+        });
+
     let socket = new SockJS(url + '/gs-guide-websocket');
 
     stompClient = Stomp.over(socket);
