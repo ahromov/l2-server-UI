@@ -4,20 +4,26 @@ var login;
 var loadTimeout = 400;
 
 
-function generateLogo() {
-    return `
+function generateHeaderLogo() {
+    $('#logo').html(`
         <h1 class="logo">${serverName}</h1>
         <p class="logo">${messages.slogan}</p>
-    `;
+    `);
 }
 
+function generateFooterLogo() {
+    $('#social .l2logo').html(`
+        <h1 class="logo">${serverName}</h1>
+        <p class="logo">${messages.slogan}</p>
+    `);
+}
 
 function generateHeader() {
     $('header').html(`
         <nav>
         </nav>
         <div class="main_31">
-            <div id="logo">${generateLogo()}</div>
+            <div id="logo"></div>
             <div class="status">
                 <ul>
                     <li id="serverName">
@@ -273,7 +279,7 @@ function generateFooter() {
         </section>
         <section id="social" class="right">
             <div class="title"><h1>${messages.ourCommunitys}:</h1></div>
-            <div class="l2logo">${generateLogo()}</div>
+            <div class="l2logo"></div>
             <div class="social_list">
                 <ul>
                     <li>
@@ -376,9 +382,10 @@ function generateMainPage(newsPageId) {
     document.title = messages.title;
     // generateHeader();
     generateMenu();
-    generateLogo();
+    generateHeaderLogo();
     generateMain(newsPageId);
     generateFooter();
+    generateFooterLogo();
 }
 
 
