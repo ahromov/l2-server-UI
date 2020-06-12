@@ -71,18 +71,16 @@ h1.logo {
     font-family: "Mirage Ghotic";
     color: white;
     font-size: 36px;
-    line-height: 0.1;
+
     text-shadow: 0px 1px 5px rgba(0, 0, 0, 0.75);
     text-align: center;
 }
 
 p.logo {
-    font-size: 14px;
     font-family: "Cambria Math";
     color: #ffd40d;
     /* line-height: 0.1; */
     text-align: center;
-    margin-top: 26px;
 }
 
 nav {
@@ -811,6 +809,11 @@ footer #social h1 {
     font-size: 14px;
     /* text-align: right;
     margin-right: 20px; */
+}
+
+footer #social h1.logo {
+    font-size: 23px;
+    margin-top: 9px;
 }
 
 footer #social .l2logo {
