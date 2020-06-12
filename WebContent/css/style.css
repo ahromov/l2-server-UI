@@ -869,7 +869,7 @@ div.message form,
 nav ul a,
 .posts a,
 #right #lang li a,
-footer #next_page li a {
+footer #next_page li a, .social_list a, #articles figure a span {
     transition: all 0.2s linear;
 }
 
@@ -881,7 +881,7 @@ nav ul a,
 }
 
 nav ul a:hover,
-.posts a:hover {
+.posts a:hover, .social_list a:hover, #articles figure a span:hover {
     opacity: 0.5;
 }
 

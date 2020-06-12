@@ -138,7 +138,7 @@ function generateNewsPage(pageId) {
                             <p><span>${messages.publishingIn}</span> ${date.toLocaleTimeString()}</p>
                             </figcaption>
                             </div>
-                            <a class="readMore" id="${value.id}" type="button">${messages.readMore}</a>
+                            <a class="readMore" id="${value.id}" type="button"><span>${messages.readMore}</span></a>
                         </figure>
                         <div id="news">                
                             <h2>${value.title}</h2>
