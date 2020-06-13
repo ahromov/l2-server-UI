@@ -316,26 +316,6 @@ function getRegisteredServerName() {
 }
 
 
-function ping() {
-    setInterval(function () {
-        if (stompClient != "undefined") {
-            stompClient.send("/app/ping", {}, '');
-        }
-    }, 5000);
-}
-
-function showGreeting(message) {
-    let status = $('#status').text(message.status);
-
-    if (message.status === 'ON')
-        status.css('color', '#00ff30');
-    else
-        status.css('color', '');
-
-    $('#count').text(message.onlineCounter);
-}
-
-
 function getServerStatus() {
     fetch(url + '/gs/get/status')
         .then(response => response.json())
@@ -344,18 +324,6 @@ function getServerStatus() {
                 showGreeting(data);
             }
         });
-
-    let socket = new SockJS(url + '/gs-guide-websocket');
-
-    stompClient = Stomp.over(socket);
-
-    stompClient.connect({}, function () {
-        stompClient.subscribe('/topic/greetings', function (greeting) {
-            showGreeting(JSON.parse(greeting.body));
-        });
-
-        ping();
-    });
 }
 
 
