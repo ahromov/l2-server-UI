@@ -222,7 +222,7 @@ function generateMainContent(languagesSelectors) {
 
     elementFadeShow('main');
 
-    fetch(url + '/news/get/pages')
+    fetch(url + '/news/pages/count')
         .then(response => response.json())
         .then(data => {
             if (data != 0) {
@@ -316,6 +316,26 @@ function getRegisteredServerName() {
 }
 
 
+function ping() {
+    setInterval(function () {
+        if (stompClient != "undefined") {
+            stompClient.send("/app/ping", {}, '');
+        }
+    }, 5000);
+}
+
+function showGreeting(message) {
+    let status = $('#status').text(message.status);
+
+    if (message.status === 'ON')
+        status.css('color', '#00ff30');
+    else
+        status.css('color', '');
+
+    $('#count').text(message.onlineCounter);
+}
+
+
 function getServerStatus() {
     fetch(url + '/gs/get/status')
         .then(response => response.json())
@@ -324,6 +344,18 @@ function getServerStatus() {
                 showGreeting(data);
             }
         });
+
+/*
+ * let socket = new SockJS(url + '/gs-guide-websocket');
+ * 
+ * stompClient = Stomp.over(socket);
+ * 
+ * stompClient.connect({}, function () {
+ * stompClient.subscribe('/topic/greetings', function (greeting) {
+ * showGreeting(JSON.parse(greeting.body)); });
+ * 
+ * //ping(); });
+ */
 }
 
 
@@ -588,6 +620,8 @@ $(document).on('click', 'nav #stat', function () {
                                     <th>${messages.clanName}:</th>
                                     <th>${messages.lvl}</th>
                                     <th>${messages.leader}:</th>
+                                    <th>${messages.castleName}:</th>
+                                    <th>${messages.fortName}:</th>
                                     <th>${messages.reputation}:</th>
                                     <th>${messages.midLvl}:</th>
                                     <th>${messages.ally}:</th>
@@ -602,7 +636,7 @@ $(document).on('click', 'nav #stat', function () {
                                 <tr>
                                     <th></th>
                                     <th>${messages.castleName}:</th>
-                                    <th>${messages.owner}:</th>
+                                    <th>${messages.clanName}:</th>
                                     <th>${messages.tax}:</th>
                                     <th>${messages.treasure}:</th>
                                     <th>${messages.siegeDate}:</th>
@@ -617,7 +651,7 @@ $(document).on('click', 'nav #stat', function () {
                                 <tr>
                                     <th></th>
                                     <th>${messages.fortName}:</th>
-                                    <th>${messages.owner}:</th>
+                                    <th>${messages.clanName}:</th>
                                     <th>${messages.siegeDate}:</th>
                                 </tr>
                             </table>
@@ -634,11 +668,19 @@ $(document).on('click', 'nav #stat', function () {
 
         generateBackButton();
 
+        fetch(url + '/accounts/count/all')
+	        .then(response => response.json())
+	        .then(data => {
+	            if (data != null) {
+	                $('#accCount').html(data);
+	            }
+        });
+        
         fetch(url + '/clans/count/all')
             .then(response => response.json())
             .then(data => {
                 if (data != null) {
-                    $('#accCount').html(data.count);
+                    $('#countClans').html(data);
                 }
             });
 
@@ -663,9 +705,11 @@ $(document).on('click', 'nav #stat', function () {
                             '<tr>' +
                             '<td>' + element.name + '</td>' +
                             '<td >' + element.level + '</td>' +
-                            '<td >' + element.leader.charName + '</td>' +
+                            '<td >' + element.leaderName + '</td>' +
+                            '<td >' + element.castleName + '</td>' +
+                            '<td >' + element.fortName + '</td>' +
                             '<td >' + element.reputation + '</td>' +
-                            '<td >' + element.middLevel + '</td>' +
+                            '<td >' + element.midCharsLevel + '</td>' +
                             '<td >' + element.alyName + '</td>' +
                             '</tr>'
                         );
@@ -681,12 +725,12 @@ $(document).on('click', 'nav #stat', function () {
                     data.forEach(element => {
                         $('#stat #top10 table').append(
                             `<tr>
-                            <td>` + element.playerName + `</td>
-                            <td >` + element.playerClass + `</td>
-                            <td >` + element.playerGender + `</td>
-                            <td >` + element.playersClan + `</td>
-                            <td >` + element.playersOnlineTime + ` ч.</td>
-                            <td >` + element.playersPvpKills + '/' + element.playersPkKills + `</td>
+                            <td>` + element.charName + `</td>
+                            <td >` + element.className + `</td>
+                            <td >` + element.gender + `</td>
+                            <td >` + element.clanName + `</td>
+                            <td >` + element.onlineTime / 1000 / 60 + ` ч.</td>
+                            <td >` + element.pvpKills + '/' + element.pkKills + `</td>
                             </tr>`
                         );
                     });
@@ -703,7 +747,7 @@ $(document).on('click', 'nav #stat', function () {
                             '<tr>' +
                             '<td><img src="images/castles/' + element.id + '.jpg"</td>' +
                             '<td>' + element.name + '</td>' +
-                            '<td >' + (element.clan == null ? element.clan : element.clan.name) + '</td>' +
+                            '<td >' + element.clanName + '</td>' +
                             '<td >' + element.taxPercent + '%</td>' +
                             '<td >' + element.treasury + '</td>' +
                             '<td >' + new Date(element.siegeDate).toLocaleDateString() + ' ' + new Date(element.siegeDate).toLocaleTimeString() + '</td>' +
@@ -722,7 +766,7 @@ $(document).on('click', 'nav #stat', function () {
                             '<tr>' +
                             '<td><img src="images/forts/' + element.id + '.jpg"</td>' +
                             '<td>' + element.name + '</td>' +
-                            '<td>' + (element.clan == null ? element.clan : element.clan.name) + '</td>' +
+                            '<td>' + element.clanName + '</td>' +
                             '<td>' + element.siegeDate + '</td>' +
                             '</tr>'
                         );
