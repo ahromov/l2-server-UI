@@ -1,3 +1,4 @@
+
 var lang;
 var messages;
 var login;
@@ -603,6 +604,7 @@ $(document).on('click', 'nav #stat', function () {
                             <table>
                                 <tr>
                                     <th>${messages.charName}:</th>
+                                    <th>${messages.lvl}:</th>
                                     <th>${messages.charClass}:</th>
                                     <th>${messages.charSex}:</th>
                                     <th>${messages.clanName}:</th>
@@ -618,7 +620,7 @@ $(document).on('click', 'nav #stat', function () {
                             <table>
                                 <tr>
                                     <th>${messages.clanName}:</th>
-                                    <th>${messages.lvl}</th>
+                                    <th>${messages.lvl}:</th>
                                     <th>${messages.leader}:</th>
                                     <th>${messages.castleName}:</th>
                                     <th>${messages.fortName}:</th>
@@ -726,6 +728,7 @@ $(document).on('click', 'nav #stat', function () {
                         $('#stat #top10 table').append(
                             `<tr>
                             <td>` + element.charName + `</td>
+                            <td >` + element.level + `</td>
                             <td >` + element.className + `</td>
                             <td >` + element.gender + `</td>
                             <td >` + element.clanName + `</td>
@@ -743,6 +746,8 @@ $(document).on('click', 'nav #stat', function () {
             .then(data => {
                 if (data != null) {
                     data.forEach(element => {
+                        let date = new Date(element.siegeDate);
+
                         $('#stat #castles table').append(
                             '<tr>' +
                             '<td><img src="images/castles/' + element.id + '.jpg"</td>' +
@@ -750,7 +755,7 @@ $(document).on('click', 'nav #stat', function () {
                             '<td >' + element.clanName + '</td>' +
                             '<td >' + element.taxPercent + '%</td>' +
                             '<td >' + element.treasury + '</td>' +
-                            '<td >' + new Date(element.siegeDate).toLocaleDateString() + ' ' + new Date(element.siegeDate).toLocaleTimeString() + '</td>' +
+                            '<td >' + date.toLocaleDateString() + ' ' + date.toLocaleTimeString() + '</td>' +
                             '</tr>'
                         );
                     });
@@ -762,12 +767,19 @@ $(document).on('click', 'nav #stat', function () {
             .then(data => {
                 if (data != null) {
                     data.forEach(element => {
+                        let siegeDate = 'None';
+
+                        if (element.siegeDate !== 0){
+                           let date = new Date(element.siegeDate);
+                              siegeDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+                        }
+
                         $('#stat #forts table').append(
                             '<tr>' +
                             '<td><img src="images/forts/' + element.id + '.jpg"</td>' +
                             '<td>' + element.name + '</td>' +
                             '<td>' + element.clanName + '</td>' +
-                            '<td>' + element.siegeDate + '</td>' +
+                            '<td>' + siegeDate + '</td>' +
                             '</tr>'
                         );
                     });
