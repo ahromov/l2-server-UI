@@ -66,7 +66,7 @@ var enMessages = {
     gameMasters: 'Game Masters',
     clans: 'Clans',
     allys: 'Alliances',
-    top10chars: 'Thor 10 characters',
+    top10chars: 'Top 10 characters',
     charName: 'Game nickname',
     charClass: 'Class',
     charSex: 'Gender',
