@@ -587,13 +587,13 @@ $(document).on('click', 'nav #stat', function () {
                                     <th>${messages.allys}:</th>
                                 </tr>
                                 <tr>
-                                    <td id="accCount">0</td>
-                                    <td id="countAll">0</td>
-                                    <td id="countNobless">0</td>
-                                    <td id="countHeroes">0</td>
-                                    <td id="countGm">0</td>
-                                    <td id="countClans">0</td>
-                                    <td>0</td>
+                                    <td id="accCount"></td>
+                                    <td id="countAll"></td>
+                                    <td id="countNobless"></td>
+                                    <td id="countHeroes"></td>
+                                    <td id="countGm"></td>
+                                    <td id="countClans"></td>
+                                    <td id="countAllys"></td>
                                 </tr>
                             </table>
                         </section>
@@ -677,14 +677,6 @@ $(document).on('click', 'nav #stat', function () {
 	                $('#accCount').html(data);
 	            }
         });
-        
-        fetch(url + '/clans/count/all')
-            .then(response => response.json())
-            .then(data => {
-                if (data != null) {
-                    $('#countClans').html(data);
-                }
-            });
 
         fetch(url + '/characters/count/byType')
             .then(response => response.json())
@@ -697,6 +689,21 @@ $(document).on('click', 'nav #stat', function () {
                 }
             });
 
+        fetch(url + '/clans/count/all')
+            .then(response => response.json())
+            .then(data => {
+                if (data != null) {
+                    $('#countClans').html(data);
+                }
+            });
+
+        fetch(url + '/clans/count/allAllys')
+            .then(response => response.json())
+            .then(data => {
+                if (data != null) {
+                    $('#countAllys').html(data);
+                }
+            });
 
         fetch(url + '/clans/get/all')
             .then(response => response.json())
@@ -706,13 +713,13 @@ $(document).on('click', 'nav #stat', function () {
                         $('#stat #clans table').append(
                             '<tr>' +
                             '<td>' + element.name + '</td>' +
-                            '<td >' + element.level + '</td>' +
-                            '<td >' + element.leaderName + '</td>' +
-                            '<td >' + element.castleName + '</td>' +
-                            '<td >' + element.fortName + '</td>' +
-                            '<td >' + element.reputation + '</td>' +
-                            '<td >' + element.midCharsLevel + '</td>' +
-                            '<td >' + element.alyName + '</td>' +
+                            '<td>' + element.level + '</td>' +
+                            '<td>' + element.leaderName + '</td>' +
+                            '<td>' + element.castleName + '</td>' +
+                            '<td>' + element.fortName + '</td>' +
+                            '<td>' + element.reputation + '</td>' +
+                            '<td>' + element.midCharsLevel + '</td>' +
+                            '<td>' + element.alyName + '</td>' +
                             '</tr>'
                         );
                     });
