@@ -739,7 +739,7 @@ $(document).on('click', 'nav #stat', function () {
                             <td >` + element.className + `</td>
                             <td >` + element.gender + `</td>
                             <td >` + element.clanName + `</td>
-                            <td >` + element.onlineTime / 1000 / 60 + ` ч.</td>
+                            <td >` + Math.round((element.onlineTime / 1000 / 60) * 100) / 100 + ` ч.</td>
                             <td >` + element.pvpKills + '/' + element.pkKills + `</td>
                             </tr>`
                         );
