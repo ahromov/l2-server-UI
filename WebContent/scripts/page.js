@@ -5,21 +5,21 @@ var loadTimeout = 400;
 
 
 function generateHeaderLogo() {
-    $('#logo').html(`
+	$('#logo').html(`
         <h1 class="logo">${serverName}</h1>
         <p class="logo">${messages.slogan}</p>
     `);
 }
 
 function generateFooterLogo() {
-    $('#social .l2logo').html(`
+	$('#social .l2logo').html(`
         <h1 class="logo">${serverName}</h1>
         <p class="logo">${messages.slogan}</p>
     `);
 }
 
 function generateHeader() {
-    $('header').html(`
+	$('header').html(`
         <nav>
         </nav>
         <div class="main_31">
@@ -40,7 +40,7 @@ function generateHeader() {
 
 
 function generateMenu() {
-    $('nav').html(`
+	$('nav').html(`
         <ul>
             <li><a href="#!home" id="home">${messages.general}</a></li>
             <li><a href="#!about" id="about">${messages.aboutServer}</a></li>
@@ -55,7 +55,7 @@ function generateMenu() {
 
 
 function showLoginForm() {
-    $("#lk_form").html(`
+	$("#lk_form").html(`
         <form>
             <h1>${messages.personalCabinet}</h1>
             <div id="formInputs">
@@ -74,61 +74,61 @@ function showLoginForm() {
 
 
 function showCabinetMenu() {
-    let formSelector = '#lk_form form';
+	let formSelector = '#lk_form form';
 
-    $(formSelector).html(`
+	$(formSelector).html(`
         <h1>${messages.welcome}  ${login}!</h1>
         <button type="button" class="changePass">${messages.passwordChanging}</button>
         <button type="button" class="exit">${messages.exit}</button></<button>
     `);
 
-    $(formSelector + ' button').css('width', '159px');
+	$(formSelector + ' button').css('width', '159px');
 }
 
 
 function generatePosts() {
-    $('#forum .posts').html('');
+	$('#forum .posts').html('');
 
-    let countLIstItem = 0;
+	let countLIstItem = 0;
 
-    function myFunction(value) {
-        let date = new Date(value.lastPostedDate);
+	function myFunction(value) {
+		let date = new Date(value.lastPostedDate);
 
-        let topicImageUrl = '';
-        if (value.icon !== null) {
-            topicImageUrl = `<img src="${urlForum}/images/icons/${value.icon.url}">`;
-        }
+		let topicImageUrl = '';
+		if (value.icon !== null) {
+			topicImageUrl = `<img src="${urlForum}/images/icons/${value.icon.url}">`;
+		}
 
-        $('#forum .posts').append(`
+		$('#forum .posts').append(`
             <li id=${countLIstItem}>
                 <h2>${topicImageUrl}<a target="_blank" href="${urlForum}/viewtopic.php?f=${value.forumId}&t=${value.id}">${value.title.substring(0, 25) + (value.title.length > 25 ? " ..." : "")}</a> // ${date.toLocaleDateString()} ${date.toLocaleTimeString()} • ${value.posterName}</h2>
             </li>`).css({ transform: 'translateY(0px)' });
 
-        if (topicImageUrl !== '') {
-            $(`#forum .posts li[id="${countLIstItem}"]`).addClass('empty_marker');
-        }
+		if (topicImageUrl !== '') {
+			$(`#forum .posts li[id="${countLIstItem}"]`).addClass('empty_marker');
+		}
 
-        countLIstItem++;
-    };
+		countLIstItem++;
+	};
 
-    fetch(url + '/forums/get/topics/last5')
-        .then(response => response.json())
-        .then(data => {
-            if (data != null) {
-                data.forEach(element => { myFunction(element) });
-            }
-        });
+	fetch(url + '/forums/get/topics/last5')
+		.then(response => response.json())
+		.then(data => {
+			if (data != null) {
+				data.forEach(element => { myFunction(element) });
+			}
+		});
 
 }
 
 
 function generateNewsPage(pageId) {
-    $('#articles').html('');
+	$('#articles').html('');
 
-    function myFunction(value) {
-        let date = new Date(value.date);
+	function myFunction(value) {
+		let date = new Date(value.date);
 
-        $('#articles').append(`
+		$('#articles').append(`
                     <section>
                         <figure>
                             <img src="data:image/png;base64,${value.image}">
@@ -146,34 +146,34 @@ function generateNewsPage(pageId) {
                         </div>
                     </section>
                 `).css({ transform: 'translateY(0px)' });
-    };
+	};
 
-    if (pageId == null)
-        pageId = 0;
+	if (pageId == null)
+		pageId = 0;
 
-    fetch(url + '/news/get/pages/' + pageId)
-        .then(response => response.json())
-        .then(data => {
-            if (data != null) {
-                data.forEach(element => { myFunction(element) });
-            }
-        });
+	fetch(url + '/news/get/pages/' + pageId)
+		.then(response => response.json())
+		.then(data => {
+			if (data != null) {
+				data.forEach(element => { myFunction(element) });
+			}
+		});
 
-    setButtonActive('a.nextNewsPage', 'npActive', '#next_page ul li a[id="' + pageId + '"]');
+	setButtonActive('a.nextNewsPage', 'npActive', '#next_page ul li a[id="' + pageId + '"]');
 }
 
 
 function generateNewsPagesButtons(id) {
-    $('#next_page ul').append(`
+	$('#next_page ul').append(`
         <li><a class="nextNewsPage" id="${id}" type="button">${id + 1}</a></li>
     `);
 
-    $('#next_page ul li:first-child a').addClass('npActive');
+	$('#next_page ul li:first-child a').addClass('npActive');
 }
 
 
 function generateLanguageSelectors(checkedUa, checkedRu, checkedEn) {
-    return `<ul>
+	return `<ul>
                 <li class="${checkedUa}"><a id="ua" href="#">UA</a></li>
                 <li class="${checkedRu}"><a id="ru" href="#">RU</a></li>
                 <li class="${checkedEn}"><a id="en" href="#">EN</a></li>
@@ -182,9 +182,9 @@ function generateLanguageSelectors(checkedUa, checkedRu, checkedEn) {
 
 
 function generateMainContent(languagesSelectors) {
-    let playIndex = Math.floor(Math.random() * videosIds.length);
+	let playIndex = Math.floor(Math.random() * videosIds.length);
 
-    $('main').html(`
+	$('main').html(`
         <div id="left">
             <article>
                 <h1>${messages.news}</h1>
@@ -218,60 +218,60 @@ function generateMainContent(languagesSelectors) {
         </div>
     `);
 
-    showLoginForm();
+	showLoginForm();
 
-    elementFadeShow('main');
+	elementFadeShow('main');
 
-    fetch(url + '/news/get/pages')
-        .then(response => response.json())
-        .then(data => {
-            if (data != 0) {
-                for (let i = 0; i < data; i++) {
-                    generateNewsPagesButtons(i);
-                }
-            }
-        });
+	fetch(url + '/news/get/pages')
+		.then(response => response.json())
+		.then(data => {
+			if (data != 0) {
+				for (let i = 0; i < data; i++) {
+					generateNewsPagesButtons(i);
+				}
+			}
+		});
 
 }
 
 
 function generateMain(newsPageId) {
-    setButtonActive('nav ul li a', 'navActive', 'nav #home');
+	setButtonActive('nav ul li a', 'navActive', 'nav #home');
 
-    switch (lang) {
-        case 'ru':
-            generateMainContent(generateLanguageSelectors('', 'checked', ''));
-            break;
-        case 'ua':
-            generateMainContent(generateLanguageSelectors('checked', '', ''));
-            break;
-        case 'en':
-            generateMainContent(generateLanguageSelectors('', '', 'checked'));
-            break;
-    }
+	switch (lang) {
+		case 'ru':
+			generateMainContent(generateLanguageSelectors('', 'checked', ''));
+			break;
+		case 'ua':
+			generateMainContent(generateLanguageSelectors('checked', '', ''));
+			break;
+		case 'en':
+			generateMainContent(generateLanguageSelectors('', '', 'checked'));
+			break;
+	}
 
-    generateNewsPage(newsPageId);
-    generatePosts();
+	generateNewsPage(newsPageId);
+	generatePosts();
 }
 
 
 function generateBackButton(id) {
-    let slelector = '#next_page ul';
+	let slelector = '#next_page ul';
 
-    if (id != null) {
-        $(slelector).html(`
+	if (id != null) {
+		$(slelector).html(`
             <li><a class="newsBack" id="${id}" href="#"><<</a></li>
         `);
-    } else {
-        $(slelector).html(`
+	} else {
+		$(slelector).html(`
             <li><a class="homeBack" href="#"><<</a></li>
         `);
-    }
+	}
 }
 
 
 function generateFooter() {
-    $('footer').html(`
+	$('footer').html(`
         <section class="left">
             <div id="next_page"><ul></ul></div>
             <h1>© ${new Date().getFullYear()} ${developerName}</h1>
@@ -298,77 +298,77 @@ function generateFooter() {
 
 
 function setButtonActive(elementRemove, className, elementActive) {
-    $(elementRemove).removeClass(className);
-    $(elementActive).addClass(className);
+	$(elementRemove).removeClass(className);
+	$(elementActive).addClass(className);
 }
 
 
 function getRegisteredServerName() {
-    fetch(url + '/ls/getServers')
-        .then(response => response.json())
-        .then(data => {
-            if (data != null) {
-                data.forEach(element => {
-                    $('#serverName').text(element.name);
-                });
-            }
-        });
+	fetch(url + '/ls/getServers')
+		.then(response => response.json())
+		.then(data => {
+			if (data != null) {
+				data.forEach(element => {
+					$('#serverName').text(element.name);
+				});
+			}
+		});
 }
 
 
 function getServerStatus() {
-    fetch(url + '/gs/get/status')
-        .then(response => response.json())
-        .then(data => {
-            if (data != null) {
-                showGreeting(data);
-            }
-        });
+	fetch(url + '/gs/get/status')
+		.then(response => response.json())
+		.then(data => {
+			if (data != null) {
+				showGreeting(data);
+			}
+		});
 }
 
 
 function initDefaultLanguagesSettings() {
-    if ($.cookie('language') != null)
-        lang = $.cookie('language');
-    else lang = 'ru';
+	if ($.cookie('language') != null)
+		lang = $.cookie('language');
+	else lang = 'ru';
 
-    switch (lang) {
-        case 'ru':
-            messages = ruMessages;
-            break;
-        case 'ua':
-            messages = uaMessages;
-            break;
-        case 'en':
-            messages = enMessages;
-            break;
-    }
+	switch (lang) {
+		case 'ru':
+			messages = ruMessages;
+			break;
+		case 'ua':
+			messages = uaMessages;
+			break;
+		case 'en':
+			messages = enMessages;
+			break;
+	}
 }
 
 
 function generateMainPage(newsPageId) {
-    document.title = messages.title;
-    // generateHeader();
-    generateMenu();
-    generateHeaderLogo();
-    generateMain(newsPageId);
-    generateFooter();
-    generateFooterLogo();
+	document.title = messages.title;
+	// generateHeader();
+	generateMenu();
+	generateHeaderLogo();
+	generateMain(newsPageId);
+	generateFooter();
+	generateFooterLogo();
 }
 
 
 function cantEmpty(data) {
-    $('div.message form  p.' + data).html(messages.fieldsCannotEmpty).css('color', 'red');
+	$('div.message form  p.' + data).html(messages.fieldsCannotEmpty).css('color', 'red');
 }
 
 
 function setFormHeaderStatus(status, color) {
-    $('#lk_form form h1').html(status).css("color", color);
+	$('#lk_form form h1').html(status).css("color", color);
 }
 
 
 function setFormsInfoMessage(message) {
-    $('#lk_form form #formInputs').html(`
+	$('#lk_form form #formInputs').html(`
         <div class="infoMessage">
             ${message}
         </div>
@@ -377,77 +377,77 @@ function setFormsInfoMessage(message) {
 
 
 function elementFadeHide(elSelector) {
-    $(elSelector).css({ opacity: 0 });
+	$(elSelector).css({ opacity: 0 });
 }
 
 
 function elementFadeShow(elSelector) {
-    $(elSelector).css({ opacity: 1 });
+	$(elSelector).css({ opacity: 1 });
 }
 
 
 function checkSubmit(e) {
-    if (e && e.keyCode == 13) {
-        $('form button[type="button"]').focus();
-    }
+	if (e && e.keyCode == 13) {
+		$('form button[type="button"]').focus();
+	}
 }
 
 
 function initAll() {
-    initDefaultLanguagesSettings();
-    generateHeader();
-    generateMainPage();
-    getRegisteredServerName();
-    getServerStatus();
+	initDefaultLanguagesSettings();
+	generateHeader();
+	generateMainPage();
+	getRegisteredServerName();
+	getServerStatus();
 }
 
 
 async function send(method, url, data) {
-    return await fetch(url, {
-        method: method,
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data)
-    });
+	return await fetch(url, {
+		method: method,
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(data)
+	});
 }
 
 
-$(document).ready(function () {
-    initAll();
+$(document).ready(function() {
+	initAll();
 })
 
-$(document).on('click', 'nav #home', function () {
-    let navSelector = 'nav';
-    let mainSelector = 'main';
+$(document).on('click', 'nav #home', function() {
+	let navSelector = 'nav';
+	let mainSelector = 'main';
 
-    elementFadeHide(navSelector);
-    elementFadeHide(mainSelector);
+	elementFadeHide(navSelector);
+	elementFadeHide(mainSelector);
 
-    setTimeout(function () {
-        elementFadeShow(navSelector);
-        generateMainPage();
-    }, loadTimeout);
+	setTimeout(function() {
+		elementFadeShow(navSelector);
+		generateMainPage();
+	}, loadTimeout);
 })
 
-$(document).on('click', 'nav #about', function () {
-    let navSelector = 'nav';
-    let mainSelector = 'main';
+$(document).on('click', 'nav #about', function() {
+	let navSelector = 'nav';
+	let mainSelector = 'main';
 
-    elementFadeHide(navSelector);
-    elementFadeHide(mainSelector);
+	elementFadeHide(navSelector);
+	elementFadeHide(mainSelector);
 
-    let ratesTable = '';
+	let ratesTable = '';
 
-    fetch(url + '/gs/get/rates')
-        .then(response => response.json()).then(data => {
-            if (data != null) {
-                $.each(data, function (i, val) {
-                    ratesTable += `<tr><th>${i}</th><td>x${val}</td></tr>`;
-                });
+	fetch(url + '/gs/get/rates')
+		.then(response => response.json()).then(data => {
+			if (data != null) {
+				$.each(data, function(i, val) {
+					ratesTable += `<tr><th>${i}</th><td>x${val}</td></tr>`;
+				});
 
-                setTimeout(function () {
-                    $(mainSelector).html(`
+				setTimeout(function() {
+					$(mainSelector).html(`
                         <div class="top">
                             <div id="stat">
                                 <article>
@@ -474,30 +474,30 @@ $(document).on('click', 'nav #about', function () {
                         </div>
                     `);
 
-                    setButtonActive('nav ul li a', 'navActive', 'nav #about');
+					setButtonActive('nav ul li a', 'navActive', 'nav #about');
 
-                    elementFadeShow(navSelector);
-                    elementFadeShow(mainSelector);
-                    generateBackButton(null);
-                }, loadTimeout);
-            }
-        });
+					elementFadeShow(navSelector);
+					elementFadeShow(mainSelector);
+					generateBackButton(null);
+				}, loadTimeout);
+			}
+		});
 })
 
-$(document).on('click', 'nav #reg', function () {
-    let formSelector = "#lk_form form";
-    let navSelector = 'nav';
-    let mainSelector = 'main';
+$(document).on('click', 'nav #reg', function() {
+	let formSelector = "#lk_form form";
+	let navSelector = 'nav';
+	let mainSelector = 'main';
 
-    elementFadeHide(navSelector);
-    elementFadeHide(mainSelector);
+	elementFadeHide(navSelector);
+	elementFadeHide(mainSelector);
 
-    setTimeout(function () {
-        elementFadeShow(navSelector);
-        generateMainPage();
-        setButtonActive('nav ul li a', 'navActive', 'nav #reg');
+	setTimeout(function() {
+		elementFadeShow(navSelector);
+		generateMainPage();
+		setButtonActive('nav ul li a', 'navActive', 'nav #reg');
 
-        $(formSelector).html(`
+		$(formSelector).html(`
             <form> 
             <h1>${messages.registration}</h1><div id="formInputs">
             <div><span>${messages.loginName}:</span><input id="inputLoginl3" type="text"></div>
@@ -507,38 +507,38 @@ $(document).on('click', 'nav #reg', function () {
             <button class="register" type="button">${messages.send}</button>
         `);
 
-        $(formSelector + ' h1').css({
-            'font-size': '10px',
-            'margin-top': '-5px'
-        });
+		$(formSelector + ' h1').css({
+			'font-size': '10px',
+			'margin-top': '-5px'
+		});
 
-        $(formSelector + ' div').css({
-            'margin-top': '0px',
-            'margin-bottom': '2px'
-        });
+		$(formSelector + ' div').css({
+			'margin-top': '0px',
+			'margin-bottom': '2px'
+		});
 
-        $(formSelector + ' div input').css('height', '20px');
+		$(formSelector + ' div input').css('height', '20px');
 
-        $(formSelector + ' div span').css('padding-top', '2px');
+		$(formSelector + ' div span').css('padding-top', '2px');
 
-        $(formSelector + ' button').css({
-            'width': '134px',
-            'margin-right': '35px',
-            'height': '18px',
-            'margin-top': '0px'
-        });
-    }, loadTimeout);
+		$(formSelector + ' button').css({
+			'width': '134px',
+			'margin-right': '35px',
+			'height': '18px',
+			'margin-top': '0px'
+		});
+	}, loadTimeout);
 })
 
-$(document).on('click', 'nav #stat', function () {
-    let navSelector = 'nav';
-    let mainSelector = 'main';
+$(document).on('click', 'nav #stat', function() {
+	let navSelector = 'nav';
+	let mainSelector = 'main';
 
-    elementFadeHide(navSelector);
-    elementFadeHide(mainSelector);
-    setTimeout(function () {
-        $('main').html(
-            `<div class="top">
+	elementFadeHide(navSelector);
+	elementFadeHide(mainSelector);
+	setTimeout(function() {
+		$('main').html(
+			`<div class="top">
                 <div id="stat">
                     <article>
                         <h1>${messages.common}</h1>
@@ -627,60 +627,60 @@ $(document).on('click', 'nav #stat', function () {
         </div>
         `);
 
-        elementFadeShow(navSelector);
-        elementFadeShow(mainSelector);
+		elementFadeShow(navSelector);
+		elementFadeShow(mainSelector);
 
-        setButtonActive('nav ul li a', 'navActive', 'nav #stat');
+		setButtonActive('nav ul li a', 'navActive', 'nav #stat');
 
-        generateBackButton();
+		generateBackButton();
 
-        fetch(url + '/clans/count/all')
-            .then(response => response.json())
-            .then(data => {
-                if (data != null) {
-                    $('#accCount').html(data.count);
-                }
-            });
+		fetch(url + '/clans/count/all')
+			.then(response => response.json())
+			.then(data => {
+				if (data != null) {
+					$('#accCount').html(data.count);
+				}
+			});
 
-        fetch(url + '/characters/count/byType')
-            .then(response => response.json())
-            .then(data => {
-                if (data != null) {
-                    $('#countAll').html(data.all);
-                    $('#countNobless').html(data.nobles);
-                    $('#countHeroes').html(data.heroes);
-                    $('#countGm').html(data.gms);
-                }
-            });
-
-
-        fetch(url + '/clans/get/all')
-            .then(response => response.json())
-            .then(data => {
-                if (data != null) {
-                    data.forEach(element => {
-                        $('#stat #clans table').append(
-                            '<tr>' +
-                            '<td>' + element.name + '</td>' +
-                            '<td >' + element.level + '</td>' +
-                            '<td >' + element.leader.charName + '</td>' +
-                            '<td >' + element.reputation + '</td>' +
-                            '<td >' + element.middLevel + '</td>' +
-                            '<td >' + element.alyName + '</td>' +
-                            '</tr>'
-                        );
-                    });
-                }
-            });
+		fetch(url + '/characters/count/byType')
+			.then(response => response.json())
+			.then(data => {
+				if (data != null) {
+					$('#countAll').html(data.all);
+					$('#countNobless').html(data.nobles);
+					$('#countHeroes').html(data.heroes);
+					$('#countGm').html(data.gms);
+				}
+			});
 
 
-        fetch(url + '/characters/get/top10')
-            .then(response => response.json())
-            .then(data => {
-                if (data != null) {
-                    data.forEach(element => {
-                        $('#stat #top10 table').append(
-                            `<tr>
+		fetch(url + '/clans/get/all')
+			.then(response => response.json())
+			.then(data => {
+				if (data != null) {
+					data.forEach(element => {
+						$('#stat #clans table').append(
+							'<tr>' +
+							'<td>' + element.name + '</td>' +
+							'<td >' + element.level + '</td>' +
+							'<td >' + element.leader.charName + '</td>' +
+							'<td >' + element.reputation + '</td>' +
+							'<td >' + element.middLevel + '</td>' +
+							'<td >' + element.alyName + '</td>' +
+							'</tr>'
+						);
+					});
+				}
+			});
+
+
+		fetch(url + '/characters/get/top10')
+			.then(response => response.json())
+			.then(data => {
+				if (data != null) {
+					data.forEach(element => {
+						$('#stat #top10 table').append(
+							`<tr>
                             <td>` + element.playerName + `</td>
                             <td >` + element.playerClass + `</td>
                             <td >` + element.playerGender + `</td>
@@ -688,58 +688,58 @@ $(document).on('click', 'nav #stat', function () {
                             <td >` + element.playersOnlineTime + ` ч.</td>
                             <td >` + element.playersPvpKills + '/' + element.playersPkKills + `</td>
                             </tr>`
-                        );
-                    });
-                }
-            });
+						);
+					});
+				}
+			});
 
 
-        fetch(url + '/castles/get/all')
-            .then(response => response.json())
-            .then(data => {
-                if (data != null) {
-                    data.forEach(element => {
-                        $('#stat #castles table').append(
-                            '<tr>' +
-                            '<td><img src="images/castles/' + element.id + '.jpg"</td>' +
-                            '<td>' + element.name + '</td>' +
-                            '<td >' + (element.clan == null ? element.clan : element.clan.name) + '</td>' +
-                            '<td >' + element.taxPercent + '%</td>' +
-                            '<td >' + element.treasury + '</td>' +
-                            '<td >' + new Date(element.siegeDate).toLocaleDateString() + ' ' + new Date(element.siegeDate).toLocaleTimeString() + '</td>' +
-                            '</tr>'
-                        );
-                    });
-                }
-            });
+		fetch(url + '/castles/get/all')
+			.then(response => response.json())
+			.then(data => {
+				if (data != null) {
+					data.forEach(element => {
+						$('#stat #castles table').append(
+							'<tr>' +
+							'<td><img src="images/castles/' + element.id + '.jpg"</td>' +
+							'<td>' + element.name + '</td>' +
+							'<td >' + (element.clan == null ? element.clan : element.clan.name) + '</td>' +
+							'<td >' + element.taxPercent + '%</td>' +
+							'<td >' + element.treasury + '</td>' +
+							'<td >' + new Date(element.siegeDate).toLocaleDateString() + ' ' + new Date(element.siegeDate).toLocaleTimeString() + '</td>' +
+							'</tr>'
+						);
+					});
+				}
+			});
 
-        fetch(url + '/forts/get/all')
-            .then(response => response.json())
-            .then(data => {
-                if (data != null) {
-                    data.forEach(element => {
-                        $('#stat #forts table').append(
-                            '<tr>' +
-                            '<td><img src="images/forts/' + element.id + '.jpg"</td>' +
-                            '<td>' + element.name + '</td>' +
-                            '<td>' + (element.clan == null ? element.clan : element.clan.name) + '</td>' +
-                            '<td>' + element.siegeDate + '</td>' +
-                            '</tr>'
-                        );
-                    });
-                }
-            });
-    }, loadTimeout);
+		fetch(url + '/forts/get/all')
+			.then(response => response.json())
+			.then(data => {
+				if (data != null) {
+					data.forEach(element => {
+						$('#stat #forts table').append(
+							'<tr>' +
+							'<td><img src="images/forts/' + element.id + '.jpg"</td>' +
+							'<td>' + element.name + '</td>' +
+							'<td>' + (element.clan == null ? element.clan : element.clan.name) + '</td>' +
+							'<td>' + element.siegeDate + '</td>' +
+							'</tr>'
+						);
+					});
+				}
+			});
+	}, loadTimeout);
 })
 
-$(document).on('click', 'nav #contact', function () {
-    let navSelector = 'nav';
-    let mainSelector = 'main';
+$(document).on('click', 'nav #contact', function() {
+	let navSelector = 'nav';
+	let mainSelector = 'main';
 
-    elementFadeHide(navSelector);
-    elementFadeHide(mainSelector);
-    setTimeout(function () {
-        $('main').html(`
+	elementFadeHide(navSelector);
+	elementFadeHide(mainSelector);
+	setTimeout(function() {
+		$('main').html(`
             <div class="top">
                 <div id="stat">
                     <article>
@@ -760,25 +760,25 @@ $(document).on('click', 'nav #contact', function () {
             </div>
         `);
 
-        elementFadeShow(navSelector);
-        elementFadeShow(mainSelector);
-        setButtonActive('nav ul li a', 'navActive', 'nav #contact');
-        generateBackButton();
-    }, loadTimeout);
+		elementFadeShow(navSelector);
+		elementFadeShow(mainSelector);
+		setButtonActive('nav ul li a', 'navActive', 'nav #contact');
+		generateBackButton();
+	}, loadTimeout);
 })
 
-$(document).on('click', 'a.readMore', function () {
-    let articlesSelector = '#articles';
+$(document).on('click', 'a.readMore', function() {
+	let articlesSelector = '#articles';
 
-    elementFadeHide(articlesSelector);
+	elementFadeHide(articlesSelector);
 
-    let newsId = $(this).attr('id');
+	let newsId = $(this).attr('id');
 
-    setTimeout(function () {
-        function myFunction(value) {
-            let date = new Date(value.date);
+	setTimeout(function() {
+		function myFunction(value) {
+			let date = new Date(value.date);
 
-            $(articlesSelector).html(`
+			$(articlesSelector).html(`
                 <section>
                     <figure>
                         <img src="data:image/png;base64,${value.image}">
@@ -797,250 +797,251 @@ $(document).on('click', 'a.readMore', function () {
                 </section>
             `);
 
-            $(articlesSelector + ' section').css({ background: 'none' });
-            $('a.readMore').css({ display: 'none' });
-        };
+			$(articlesSelector + ' section').css({ background: 'none' });
+			$('a.readMore').css({ display: 'none' });
+		};
 
-        fetch(url + '/news/get/' + newsId)
-            .then(response => response.json())
-            .then(data => {
-                if (data != null) {
-                    myFunction(data);
-                }
-            });
+		fetch(url + '/news/get/' + newsId)
+			.then(response => response.json())
+			.then(data => {
+				if (data != null) {
+					myFunction(data);
+				}
+			});
 
-        elementFadeShow(articlesSelector);
-    }, loadTimeout);
+		elementFadeShow(articlesSelector);
+	}, loadTimeout);
 })
 
-$(document).on('click', '.homeBack', function () {
-    let mainSelector = 'main';
+$(document).on('click', '.homeBack', function() {
+	let mainSelector = 'main';
 
-    elementFadeHide(mainSelector);
+	elementFadeHide(mainSelector);
 
-    $(this).css({ display: 'none' });
-    setTimeout(function () {
-        generateMainPage(null);
-    }, loadTimeout);
+	$(this).css({ display: 'none' });
+	setTimeout(function() {
+		generateMainPage(null);
+	}, loadTimeout);
 })
 
-$(document).on('click', '.nextNewsPage', function () {
-    $('#articles').css({ opacity: 0 });
-    let id = $(this).attr('id');
-    setTimeout(function () {
-        generateNewsPage(id);
-        $('#articles').css({ opacity: 9 });
-    }, loadTimeout);
+$(document).on('click', '.nextNewsPage', function() {
+	$('#articles').css({ opacity: 0 });
+	let id = $(this).attr('id');
+	setTimeout(function() {
+		generateNewsPage(id);
+		$('#articles').css({ opacity: 9 });
+	}, loadTimeout);
 })
 
-$(document).on('click', 'button.login', function () {
-    grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
-        action: 'login'
-    }).then(function (token) {
-        if (token !== null) {
-            send('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
-                .then((result) => {
-                    if (result.success && result.score > 0.5) {
-                        let formSelector = '#lk_form form';
+$(document).on('click', 'button.login', function() {
+	grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
+		action: 'login'
+	}).then(function(token) {
+		if (token !== null) {
+			send('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
+				.then((result) => {
+					if (result.success && result.score > 0.5) {
+						let formSelector = '#lk_form form';
 
-                        login = $("#inputLoginl3").val();
-                        let password = $("#inputPassword3").val();
+						login = $("#inputLoginl3").val();
+						let password = $("#inputPassword3").val();
 
-                        if (login === '' || password === '') {
-                            setFormHeaderStatus(messages.fieldsCannotEmpty, 'red');
-                            return;
-                        }
+						if (login === '' || password === '') {
+							setFormHeaderStatus(messages.fieldsCannotEmpty, 'red');
+							return;
+						}
 
-                        setFormHeaderStatus(messages.waiting, 'inherit');
+						setFormHeaderStatus(messages.waiting, 'inherit');
 
-                        let userData = {
-                            login: login,
-                            password: password
-                        };
+						let userData = {
+							login: login,
+							password: password
+						};
 
-                        send('POST', url + "/accounts/login", userData).then(response => response.json())
-                            .then((data) => {
-                                elementFadeHide('#lk_form form');
+						send('POST', url + "/accounts/login", userData).then(response => response.status)
+							.then((data) => {
+								elementFadeHide('#lk_form form');
 
-                                let status = data.status;
+								let status = data;
+								console.log(status);
 
-                                setTimeout(function () {
-                                    switch (status) {
-                                        case 'Success':
-                                            $('form').trigger('reset');
-                                            showCabinetMenu();
-                                            $(formSelector + 'h1').css("color", "green");
-                                            break;
-                                        case 'Not exists':
-                                            $('form').trigger('reset');
-                                            setFormHeaderStatus(messages.accountNotExists, 'orange');
-                                            break;
-                                        case 'Incorrect password':
-                                            $('form').trigger('reset');
-                                            setFormHeaderStatus(messages.incorrectPassword, 'red');
-                                            break;
-                                        default:
-                                            $('form').trigger('reset');
-                                            setFormHeaderStatus(messages.somthingWrong, 'red');
-                                    }
+								setTimeout(function() {
+									switch (status) {
+										case 202:
+											$('form').trigger('reset');
+											showCabinetMenu();
+											$(formSelector + 'h1').css("color", "green");
+											break;
+										case 'Not exists':
+											$('form').trigger('reset');
+											setFormHeaderStatus(messages.accountNotExists, 'orange');
+											break;
+										case 'Incorrect password':
+											$('form').trigger('reset');
+											setFormHeaderStatus(messages.incorrectPassword, 'red');
+											break;
+										default:
+											$('form').trigger('reset');
+											setFormHeaderStatus(messages.somthingWrong, 'red');
+									}
 
-                                    elementFadeShow('#lk_form form');
-                                }, loadTimeout);
-                            });
-                    } else {
-                        $('form').trigger('reset');
-                        setFormHeaderStatus(messages.botsAction, 'red');
-                        return;
-                    }
-                });
-        }
-    });
+									elementFadeShow('#lk_form form');
+								}, loadTimeout);
+							});
+					} else {
+						$('form').trigger('reset');
+						setFormHeaderStatus(messages.botsAction, 'red');
+						return;
+					}
+				});
+		}
+	});
 })
 
-$(document).on('click', "button.register", function () {
-    grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
-        action: 'login'
-    }).then(function (token) {
-        if (token !== null) {
-            send('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
-                .then((result) => {
-                    if (result.success && result.score > 0.5) {
-                        let formSelector = '#lk_form form';
+$(document).on('click', "button.register", function() {
+	grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
+		action: 'login'
+	}).then(function(token) {
+		if (token !== null) {
+			send('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
+				.then((result) => {
+					if (result.success && result.score > 0.5) {
+						let formSelector = '#lk_form form';
 
-                        let login = $("#inputLoginl3").val();
-                        let email = $("#inputEmail3").val();
-                        let pass = $("#inputPassword3").val();
-                        let passSecond = $("#inputSecondPassword3").val();
+						let login = $("#inputLoginl3").val();
+						let email = $("#inputEmail3").val();
+						let pass = $("#inputPassword3").val();
+						let passSecond = $("#inputSecondPassword3").val();
 
-                        if (login === '' || email === '' || pass === '' || passSecond === '') {
-                            setFormHeaderStatus(messages.fieldsCannotEmpty, 'red');
-                            return;
-                        }
+						if (login === '' || email === '' || pass === '' || passSecond === '') {
+							setFormHeaderStatus(messages.fieldsCannotEmpty, 'red');
+							return;
+						}
 
-                        if (!(pass).match(passSecond)) {
-                            setFormHeaderStatus(messages.passwordsNotMatch, 'orange');
-                            return;
-                        }
+						if (!(pass).match(passSecond)) {
+							setFormHeaderStatus(messages.passwordsNotMatch, 'orange');
+							return;
+						}
 
-                        $(formSelector + 'h1').css("color", "white").html(messages.waiting);
+						$(formSelector + 'h1').css("color", "white").html(messages.waiting);
 
-                        var userData = {
-                            login: login,
-                            email: email,
-                            password: pass,
-                            passwordSecond: passSecond
-                        };
+						var userData = {
+							login: login,
+							email: email,
+							password: pass,
+							passwordSecond: passSecond
+						};
 
-                        send('POST', url + '/accounts/create', userData).then(response => response.json())
-                            .then((result) => {
-                                elementFadeHide('#lk_form form');
+						send('POST', url + '/accounts/create', userData).then(response => response.json())
+							.then((result) => {
+								elementFadeHide('#lk_form form');
 
-                                setTimeout(function () {
-                                    switch (result.status) {
-                                        case 'Success':
-                                            $('form').trigger('reset');
-                                            setFormHeaderStatus(messages.accountCreated + '! ' + messages.checkEmail, 'green');
-                                            break;
-                                        case 'No match':
-                                            setFormHeaderStatus(messages.passwordsNotMatch, 'orange');
-                                            $('form').trigger('reset');
-                                            break;
-                                        case 'Login exists':
-                                            setFormHeaderStatus(messages.loginExists, 'yellow');
-                                            $('form').trigger('reset');
-                                            break;
-                                        case 'Email exists':
-                                            setFormHeaderStatus(messages.emailExists, 'red');
-                                            $('form').trigger('reset');
-                                            break;
-                                        case 'Invalid email':
-                                            setFormHeaderStatus(messages.incorrectEmail, 'red');
-                                            $('form').trigger('reset');
-                                            break;
-                                    }
+								setTimeout(function() {
+									switch (result.status) {
+										case 'Success':
+											$('form').trigger('reset');
+											setFormHeaderStatus(messages.accountCreated + '! ' + messages.checkEmail, 'green');
+											break;
+										case 'No match':
+											setFormHeaderStatus(messages.passwordsNotMatch, 'orange');
+											$('form').trigger('reset');
+											break;
+										case 'Login exists':
+											setFormHeaderStatus(messages.loginExists, 'yellow');
+											$('form').trigger('reset');
+											break;
+										case 'Email exists':
+											setFormHeaderStatus(messages.emailExists, 'red');
+											$('form').trigger('reset');
+											break;
+										case 'Invalid email':
+											setFormHeaderStatus(messages.incorrectEmail, 'red');
+											$('form').trigger('reset');
+											break;
+									}
 
-                                    elementFadeShow('#lk_form form');
-                                }, loadTimeout);
-                            });
-                    } else {
-                        setFormHeaderStatus(messages.botsAction, 'red');
-                        $('form').trigger('reset');
-                    }
-                })
-        }
-    });
+									elementFadeShow('#lk_form form');
+								}, loadTimeout);
+							});
+					} else {
+						setFormHeaderStatus(messages.botsAction, 'red');
+						$('form').trigger('reset');
+					}
+				})
+		}
+	});
 })
 
-$(document).on('click', "button.restore", function () {
-    grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
-        action: 'login'
-    }).then(function (token) {
-        if (token !== null) {
-            send('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
-                .then((result) => {
-                    if (result.success && result.score > 0.5) {
-                        let login = $("#inputLoginl3").val();
-                        let email = $("#inputEmail3").val();
+$(document).on('click', "button.restore", function() {
+	grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
+		action: 'login'
+	}).then(function(token) {
+		if (token !== null) {
+			send('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
+				.then((result) => {
+					if (result.success && result.score > 0.5) {
+						let login = $("#inputLoginl3").val();
+						let email = $("#inputEmail3").val();
 
-                        if (login === '' || email === '') {
-                            setFormHeaderStatus(messages.fieldsCannotEmpty, "red");
-                            return;
-                        }
+						if (login === '' || email === '') {
+							setFormHeaderStatus(messages.fieldsCannotEmpty, "red");
+							return;
+						}
 
-                        setFormHeaderStatus(messages.waiting, 'inherit');
+						setFormHeaderStatus(messages.waiting, 'inherit');
 
-                        var userData = {
-                            login: login,
-                            email: email
-                        };
+						var userData = {
+							login: login,
+							email: email
+						};
 
-                        send('POST', url + '/accounts/restorePass', userData).then(response => response.json())
-                            .then((result) => {
-                                $('#lk_form form').addClass('fadeHidde');
+						send('POST', url + '/accounts/restorePass', userData).then(response => response.json())
+							.then((result) => {
+								$('#lk_form form').addClass('fadeHidde');
 
-                                setTimeout(function () {
-                                    switch (result.status) {
-                                        case 'Success':
-                                            $('form').trigger('reset');
-                                            if (result.status == 'Success') {
-                                                setFormHeaderStatus(result.status, "green");
-                                                setFormsInfoMessage(messages.passwordChanged + '! ' + messages.checkEmail);
-                                            }
-                                            break;
-                                        case 'Invalid login':
-                                            setFormHeaderStatus(messages.invalidLogin, 'yellow');
-                                            $('form').trigger('reset');
-                                            break;
-                                        case 'Not exists':
-                                            setFormHeaderStatus(messages.accountNotExists, 'orange');
-                                            $('form').trigger('reset');
-                                            break;
-                                        case 'Invalid data':
-                                            setFormHeaderStatus(messages.somthingWrong, 'red');
-                                            $('form').trigger('reset');
-                                            break;
-                                    }
+								setTimeout(function() {
+									switch (result.status) {
+										case 'Success':
+											$('form').trigger('reset');
+											if (result.status == 'Success') {
+												setFormHeaderStatus(result.status, "green");
+												setFormsInfoMessage(messages.passwordChanged + '! ' + messages.checkEmail);
+											}
+											break;
+										case 'Invalid login':
+											setFormHeaderStatus(messages.invalidLogin, 'yellow');
+											$('form').trigger('reset');
+											break;
+										case 'Not exists':
+											setFormHeaderStatus(messages.accountNotExists, 'orange');
+											$('form').trigger('reset');
+											break;
+										case 'Invalid data':
+											setFormHeaderStatus(messages.somthingWrong, 'red');
+											$('form').trigger('reset');
+											break;
+									}
 
-                                    $('#lk_form form').removeClass('fadeHidde');
-                                }, loadTimeout);
-                            });
-                    } else {
-                        setFormHeaderStatus(messages.botsAction, 'red');
-                        $('form').trigger('reset');
-                        return;
-                    }
-                })
-        }
-    });
+									$('#lk_form form').removeClass('fadeHidde');
+								}, loadTimeout);
+							});
+					} else {
+						setFormHeaderStatus(messages.botsAction, 'red');
+						$('form').trigger('reset');
+						return;
+					}
+				})
+		}
+	});
 })
 
-$(document).on('click', "button.changePass", function () {
-    let formSelector = '#lk_form form';
+$(document).on('click', "button.changePass", function() {
+	let formSelector = '#lk_form form';
 
-    elementFadeHide(formSelector);
+	elementFadeHide(formSelector);
 
-    setTimeout(function () {
-        $(formSelector).html(` 
+	setTimeout(function() {
+		$(formSelector).html(` 
             <h1>${messages.passwordChanging} ${login}!</h1>
             <div id="formInputs">
                 <div><span>${messages.oldPassword}:</span><input id="oldPassword" type="password"></div>
@@ -1051,102 +1052,102 @@ $(document).on('click', "button.changePass", function () {
             <button class="changePassword" type="button">${messages.change}</button>
         `);
 
-        $(formSelector + ' h1').css('font-size', '10px').css('margin-top', '-5px');
-        $(formSelector + ' div span').css('width', '138px');
-        $(formSelector + ' div input').css('height', '25px').css('width', '214px');
-        $(formSelector + ' button').css('width', '105px').css('transform', 'translateX(-32px)').css('margin-right', '2px').css('height', '20px').css('width', '105px');
-        $(formSelector + ' button.back').css('width', '97px');
+		$(formSelector + ' h1').css('font-size', '10px').css('margin-top', '-5px');
+		$(formSelector + ' div span').css('width', '138px');
+		$(formSelector + ' div input').css('height', '25px').css('width', '214px');
+		$(formSelector + ' button').css('width', '105px').css('transform', 'translateX(-32px)').css('margin-right', '2px').css('height', '20px').css('width', '105px');
+		$(formSelector + ' button.back').css('width', '97px');
 
-        elementFadeShow(formSelector);
-    }, loadTimeout);
+		elementFadeShow(formSelector);
+	}, loadTimeout);
 })
 
-$(document).on('click', "button.changePassword", function () {
-    let oldPassword = $("#oldPassword").val();
-    let newFirstPassword = $("#newFirstPassword").val();
-    let newSecondPassword = $("#newSecondPassword").val();
+$(document).on('click', "button.changePassword", function() {
+	let oldPassword = $("#oldPassword").val();
+	let newFirstPassword = $("#newFirstPassword").val();
+	let newSecondPassword = $("#newSecondPassword").val();
 
-    let formSelector = '#lk_form form';
+	let formSelector = '#lk_form form';
 
-    if (login === '' || oldPassword === '' || newFirstPassword === '' || newSecondPassword === '') {
-        setFormHeaderStatus(messages.fieldsCannotEmpty, 'red');
-        return;
-    }
+	if (login === '' || oldPassword === '' || newFirstPassword === '' || newSecondPassword === '') {
+		setFormHeaderStatus(messages.fieldsCannotEmpty, 'red');
+		return;
+	}
 
-    if (!(newFirstPassword).match(newSecondPassword)) {
-        setFormHeaderStatusl(messages.passwordsNotMatch, 'red');
-        return;
-    }
+	if (!(newFirstPassword).match(newSecondPassword)) {
+		setFormHeaderStatusl(messages.passwordsNotMatch, 'red');
+		return;
+	}
 
-    setFormHeaderStatus(messages.waiting, 'inherit');
+	setFormHeaderStatus(messages.waiting, 'inherit');
 
-    var userData = {
-        login: login,
-        oldPassword: oldPassword,
-        newFirstPassword: newFirstPassword,
-        newSecondPassword: newSecondPassword
-    };
+	var userData = {
+		login: login,
+		oldPassword: oldPassword,
+		newFirstPassword: newFirstPassword,
+		newSecondPassword: newSecondPassword
+	};
 
-    send('POST', url + '/accounts/changePass', userData).then(response => response.json())
-        .then((result) => {
-            elementFadeHide(formSelector);
+	send('POST', url + '/accounts/changePass', userData).then(response => response.json())
+		.then((result) => {
+			elementFadeHide(formSelector);
 
-            setTimeout(function () {
-                switch (result.status) {
-                    case 'Success':
-                        setFormHeaderStatus(result.status, 'green')
-                        setFormsInfoMessage(messages.passwordChanged, 'green');
-                        $('form').trigger('reset');
-                        break;
-                    case 'Invalid pass':
-                        setFormHeaderStatus(messages.incorrerctOldPassword, 'orange');
-                        $('form').trigger('reset');
-                        break;
-                    case 'No match':
-                        setFormHeaderStatus(messages.passwordsNotMatch, 'orange');
-                        $('form').trigger('reset');
-                        break;
-                    case null:
-                        setFormHeaderStatus(messages.somthingWrong, 'red');
-                        $('form').trigger('reset');
-                        break;
-                }
+			setTimeout(function() {
+				switch (result.status) {
+					case 'Success':
+						setFormHeaderStatus(result.status, 'green')
+						setFormsInfoMessage(messages.passwordChanged, 'green');
+						$('form').trigger('reset');
+						break;
+					case 'Invalid pass':
+						setFormHeaderStatus(messages.incorrerctOldPassword, 'orange');
+						$('form').trigger('reset');
+						break;
+					case 'No match':
+						setFormHeaderStatus(messages.passwordsNotMatch, 'orange');
+						$('form').trigger('reset');
+						break;
+					case null:
+						setFormHeaderStatus(messages.somthingWrong, 'red');
+						$('form').trigger('reset');
+						break;
+				}
 
-                elementFadeShow(formSelector);
-            }, loadTimeout);
-        });
+				elementFadeShow(formSelector);
+			}, loadTimeout);
+		});
 })
 
-$(document).on('click', "#lk_form form button.back", function () {
-    let formSeletor = '#lk_form form';
+$(document).on('click', "#lk_form form button.back", function() {
+	let formSeletor = '#lk_form form';
 
-    elementFadeHide(formSeletor);
+	elementFadeHide(formSeletor);
 
-    setTimeout(function () {
-        showCabinetMenu();
-        elementFadeShow(formSeletor);
-    }, loadTimeout);
+	setTimeout(function() {
+		showCabinetMenu();
+		elementFadeShow(formSeletor);
+	}, loadTimeout);
 })
 
-$(document).on('click', "button.exit", function () {
-    let formSeletor = '#lk_form form';
+$(document).on('click', "button.exit", function() {
+	let formSeletor = '#lk_form form';
 
-    elementFadeHide(formSeletor);
+	elementFadeHide(formSeletor);
 
-    setTimeout(function () {
-        login = null;
-        showLoginForm();
-        elementFadeShow(formSeletor);
-    }, loadTimeout);
+	setTimeout(function() {
+		login = null;
+		showLoginForm();
+		elementFadeShow(formSeletor);
+	}, loadTimeout);
 })
 
-$(document).on('click', "a.forgot", function () {
-    let formSelector = '#lk_form form';
+$(document).on('click', "a.forgot", function() {
+	let formSelector = '#lk_form form';
 
-    elementFadeHide(formSelector);
+	elementFadeHide(formSelector);
 
-    setTimeout(function () {
-        $("#lk_form form").html(`
+	setTimeout(function() {
+		$("#lk_form form").html(`
             <form> 
                 <h1>${messages.passwordChanging}</h1>
                 <div id="formInputs">
@@ -1156,139 +1157,139 @@ $(document).on('click', "a.forgot", function () {
             <button class="restore" type="button">${messages.change}</button>
         `);
 
-        $("button[type='button']").removeClass().addClass('restore');
-        $(formSelector + 'button').css({
-            'width': '134px',
-            'margin-right': '35px',
-            'margin-top': '5px'
-        });
+		$("button[type='button']").removeClass().addClass('restore');
+		$(formSelector + 'button').css({
+			'width': '134px',
+			'margin-right': '35px',
+			'margin-top': '5px'
+		});
 
-        elementFadeShow(formSelector);
-    }, loadTimeout);
+		elementFadeShow(formSelector);
+	}, loadTimeout);
 })
 
-$(document).on('click', '#lang a#ua', function () {
-    let navSelector = 'nav';
-    let logoSelector = '#logo';
-    let mainSelector = 'main';
+$(document).on('click', '#lang a#ua', function() {
+	let navSelector = 'nav';
+	let logoSelector = '#logo';
+	let mainSelector = 'main';
 
-    elementFadeHide(navSelector);
-    elementFadeHide(logoSelector);
-    elementFadeHide(mainSelector);
+	elementFadeHide(navSelector);
+	elementFadeHide(logoSelector);
+	elementFadeHide(mainSelector);
 
-    setTimeout(function () {
-        lang = 'ua';
-        messages = uaMessages;
-        $.cookie('language', lang);
+	setTimeout(function() {
+		lang = 'ua';
+		messages = uaMessages;
+		$.cookie('language', lang);
 
-        elementFadeShow(navSelector);
-        elementFadeShow(logoSelector);
-        generateMainPage();
-    }, loadTimeout);
+		elementFadeShow(navSelector);
+		elementFadeShow(logoSelector);
+		generateMainPage();
+	}, loadTimeout);
 })
 
-$(document).on('click', '#lang a#ru', function () {
-    let navSelector = 'nav';
-    let logoSelector = '#logo';
-    let mainSelector = 'main';
+$(document).on('click', '#lang a#ru', function() {
+	let navSelector = 'nav';
+	let logoSelector = '#logo';
+	let mainSelector = 'main';
 
-    elementFadeHide(navSelector);
-    elementFadeHide(logoSelector);
-    elementFadeHide(mainSelector);
+	elementFadeHide(navSelector);
+	elementFadeHide(logoSelector);
+	elementFadeHide(mainSelector);
 
-    setTimeout(function () {
-        lang = 'ru';
-        messages = ruMessages;
-        $.cookie('language', lang);
+	setTimeout(function() {
+		lang = 'ru';
+		messages = ruMessages;
+		$.cookie('language', lang);
 
-        elementFadeShow(navSelector);
-        elementFadeShow(logoSelector);
-        generateMainPage();
-    }, loadTimeout);
+		elementFadeShow(navSelector);
+		elementFadeShow(logoSelector);
+		generateMainPage();
+	}, loadTimeout);
 })
 
-$(document).on('click', '#lang a#en', function () {
-    let navSelector = 'nav';
-    let logoSelector = '#logo';
-    let mainSelector = 'main';
+$(document).on('click', '#lang a#en', function() {
+	let navSelector = 'nav';
+	let logoSelector = '#logo';
+	let mainSelector = 'main';
 
-    elementFadeHide(navSelector);
-    elementFadeHide(logoSelector);
-    elementFadeHide(mainSelector);
-    setTimeout(function () {
-        lang = 'en';
-        messages = enMessages;
-        $.cookie('language', lang);
+	elementFadeHide(navSelector);
+	elementFadeHide(logoSelector);
+	elementFadeHide(mainSelector);
+	setTimeout(function() {
+		lang = 'en';
+		messages = enMessages;
+		$.cookie('language', lang);
 
-        elementFadeShow(navSelector);
-        elementFadeShow(logoSelector);
-        generateMainPage();
-    }, loadTimeout);
+		elementFadeShow(navSelector);
+		elementFadeShow(logoSelector);
+		generateMainPage();
+	}, loadTimeout);
 })
 
-$(document).on('click', 'button.sendMessage', function () {
-    grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
-        action: 'social'
-    }).then(function (token) {
-        if (token !== null) {
-            send('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
-                .then((result) => {
-                    if (result.success && result.score > 0.5) {
-                        let login = $('div.message form input.name').val();
-                        let email = $('div.message form input.email').val();
-                        let message = $('div.message form textarea.message').val();
+$(document).on('click', 'button.sendMessage', function() {
+	grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
+		action: 'social'
+	}).then(function(token) {
+		if (token !== null) {
+			send('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
+				.then((result) => {
+					if (result.success && result.score > 0.5) {
+						let login = $('div.message form input.name').val();
+						let email = $('div.message form input.email').val();
+						let message = $('div.message form textarea.message').val();
 
-                        if (login === '' || login == null) {
-                            cantEmpty('name');
-                            return;
-                        }
+						if (login === '' || login == null) {
+							cantEmpty('name');
+							return;
+						}
 
-                        if (email === '' || email == null) {
-                            cantEmpty('email');
-                            return;
-                        }
+						if (email === '' || email == null) {
+							cantEmpty('email');
+							return;
+						}
 
-                        if (message === '' || message == null) {
-                            cantEmpty('message');
-                            return;
-                        }
+						if (message === '' || message == null) {
+							cantEmpty('message');
+							return;
+						}
 
-                        let userData = {
-                            login: login,
-                            email: email,
-                            message: message
-                        };
+						let userData = {
+							login: login,
+							email: email,
+							message: message
+						};
 
-                        send('POST', url + "/accounts/sendMess", userData).then(response => response.json())
-                            .then((data) => {
-                                $('main').css({ opacity: 0 });
-                                setTimeout(function () {
-                                    switch (data.status) {
-                                        case 'Success':
-                                            $('main div.message').html(messages.messageSended).css("color", "green");
-                                            break;
-                                        case 'Invalid login':
-                                            $('main div.message').html(messages.invalidLogin).css("color", "orange");
-                                            break;
-                                        case 'Not found':
-                                            $('main div.message').html(messages.accountNotExists).css("color", "red");
-                                            break;
-                                        case 'Email not found':
-                                            $('main div.message').html(messages.incorrectEmail).css("color", "red");
-                                            break;
-                                    }
-                                    $('main').css({ opacity: 9 });
-                                }, loadTimeout);
-                            });
-                    } else {
-                        $('div.message form p.question').html(message.botsAction).css('color', 'red');
-                        return;
-                    }
-                })
-        }
-    })
+						send('POST', url + "/accounts/sendMess", userData).then(response => response.json())
+							.then((data) => {
+								$('main').css({ opacity: 0 });
+								setTimeout(function() {
+									switch (data.status) {
+										case 'Success':
+											$('main div.message').html(messages.messageSended).css("color", "green");
+											break;
+										case 'Invalid login':
+											$('main div.message').html(messages.invalidLogin).css("color", "orange");
+											break;
+										case 'Not found':
+											$('main div.message').html(messages.accountNotExists).css("color", "red");
+											break;
+										case 'Email not found':
+											$('main div.message').html(messages.incorrectEmail).css("color", "red");
+											break;
+									}
+									$('main').css({ opacity: 9 });
+								}, loadTimeout);
+							});
+					} else {
+						$('div.message form p.question').html(message.botsAction).css('color', 'red');
+						return;
+					}
+				})
+		}
+	})
 })
 
-$(document).on('keypress', 'input[type="password"]', function (e) {
-    checkSubmit(e);
+$(document).on('keypress', 'input[type="password"]', function(e) {
+	checkSubmit(e);
 })
