@@ -1,9 +1,7 @@
-
 var lang;
 var messages;
 var login;
 var loadTimeout = 400;
-
 
 function generateHeaderLogo() {
 	$('#logo').html(`
@@ -39,7 +37,6 @@ function generateHeader() {
         `);
 }
 
-
 function generateMenu() {
 	$('nav').html(`
         <ul>
@@ -53,7 +50,6 @@ function generateMenu() {
         </ul>
     `);
 }
-
 
 function showLoginForm() {
 	$("#lk_form").html(`
@@ -73,7 +69,6 @@ function showLoginForm() {
     `);
 }
 
-
 function showCabinetMenu() {
 	let formSelector = '#lk_form form';
 
@@ -85,7 +80,6 @@ function showCabinetMenu() {
 
 	$(formSelector + ' button').css('width', '159px');
 }
-
 
 function generatePosts() {
 	$('#forum .posts').html('');
@@ -121,7 +115,6 @@ function generatePosts() {
 		});
 
 }
-
 
 function generateNewsPage(pageId) {
 	$('#articles').html('');
@@ -163,7 +156,6 @@ function generateNewsPage(pageId) {
 	setButtonActive('a.nextNewsPage', 'npActive', '#next_page ul li a[id="' + pageId + '"]');
 }
 
-
 function generateNewsPagesButtons(id) {
 	$('#next_page ul').append(`
         <li><a class="nextNewsPage" id="${id}" type="button">${id + 1}</a></li>
@@ -172,7 +164,6 @@ function generateNewsPagesButtons(id) {
 	$('#next_page ul li:first-child a').addClass('npActive');
 }
 
-
 function generateLanguageSelectors(checkedUa, checkedRu, checkedEn) {
 	return `<ul>
                 <li class="${checkedUa}"><a id="ua" href="#">UA</a></li>
@@ -180,7 +171,6 @@ function generateLanguageSelectors(checkedUa, checkedRu, checkedEn) {
                 <li class="${checkedEn}"><a id="en" href="#">EN</a></li>
             </ul>`;
 }
-
 
 function generateMainContent(languagesSelectors) {
 	let playIndex = Math.floor(Math.random() * videosIds.length);
@@ -235,7 +225,6 @@ function generateMainContent(languagesSelectors) {
 
 }
 
-
 function generateMain(newsPageId) {
 	setButtonActive('nav ul li a', 'navActive', 'nav #home');
 
@@ -255,7 +244,6 @@ function generateMain(newsPageId) {
 	generatePosts();
 }
 
-
 function generateBackButton(id) {
 	let slelector = '#next_page ul';
 
@@ -269,7 +257,6 @@ function generateBackButton(id) {
         `);
 	}
 }
-
 
 function generateFooter() {
 	$('footer').html(`
@@ -297,12 +284,10 @@ function generateFooter() {
     `)
 }
 
-
 function setButtonActive(elementRemove, className, elementActive) {
 	$(elementRemove).removeClass(className);
 	$(elementActive).addClass(className);
 }
-
 
 function getRegisteredServerName() {
 	fetch(url + '/ls/getServers')
@@ -316,7 +301,6 @@ function getRegisteredServerName() {
 		});
 }
 
-
 function getServerStatus() {
 	fetch(url + '/gs/get/status')
 		.then(response => response.json())
@@ -326,7 +310,6 @@ function getServerStatus() {
 			}
 		});
 }
-
 
 function initDefaultLanguagesSettings() {
 	if ($.cookie('language') != null)
@@ -346,7 +329,6 @@ function initDefaultLanguagesSettings() {
 	}
 }
 
-
 function generateMainPage(newsPageId) {
 	document.title = messages.title;
 	// generateHeader();
@@ -357,16 +339,13 @@ function generateMainPage(newsPageId) {
 	generateFooterLogo();
 }
 
-
 function cantEmpty(data) {
 	$('div.message form  p.' + data).html(messages.fieldsCannotEmpty).css('color', 'red');
 }
 
-
 function setFormHeaderStatusText(status, color) {
 	$('#lk_form form h1').html(status).css("color", color);
 }
-
 
 function setFormsInfoMessage(message) {
 	$('#lk_form form #formInputs').html(`
@@ -376,16 +355,13 @@ function setFormsInfoMessage(message) {
     `).css('text-align', 'center');
 }
 
-
 function elementFadeHide(elSelector) {
 	$(elSelector).css({ opacity: 0 });
 }
 
-
 function elementFadeShow(elSelector) {
 	$(elSelector).css({ opacity: 1 });
 }
-
 
 function checkSubmit(e) {
 	if (e && e.keyCode == 13) {
@@ -393,6 +369,29 @@ function checkSubmit(e) {
 	}
 }
 
+function setFormTextByStatusCode(data) {
+	switch (data.status) {
+		case 409:
+			formReset();
+			setFormHeaderStatusText(data.message, 'orange');
+			break;
+		case 404:
+			formReset();
+			setFormHeaderStatusText(data.message, 'orange');
+			break;
+		case 400:
+			formReset();
+			setFormHeaderStatusText(data.message, 'red');
+			break;
+		default:
+			formReset();
+			setFormHeaderStatusText(messages.somthingWrong, 'red');
+	}
+
+	function formReset() {
+		$('form').trigger('reset');
+	}
+}
 
 function initAll() {
 	initDefaultLanguagesSettings();
@@ -401,7 +400,6 @@ function initAll() {
 	getRegisteredServerName();
 	getServerStatus();
 }
-
 
 async function send(method, url, data) {
 	return await fetch(url, {
@@ -412,7 +410,6 @@ async function send(method, url, data) {
 		body: JSON.stringify(data)
 	});
 }
-
 
 $(document).ready(function () {
 	initAll();
@@ -776,7 +773,7 @@ $(document).on('click', 'a.readMore', function () {
 	let newsId = $(this).attr('id');
 
 	setTimeout(function () {
-		function myFunction(value) {
+		function newsRender(value) {
 			let date = new Date(value.date);
 
 			$(articlesSelector).html(`
@@ -806,7 +803,7 @@ $(document).on('click', 'a.readMore', function () {
 			.then(response => response.json())
 			.then(data => {
 				if (data != null) {
-					myFunction(data);
+					newsRender(data);
 				}
 			});
 
@@ -861,37 +858,20 @@ $(document).on('click', 'button.login', function () {
 
 						send('POST', url + "/accounts/login", userData)
 							.then(response => {
-								if (response.status == 202) {
-									$('form').trigger('reset');
-									showCabinetMenu();
-									$(formSelector + 'h1').css("color", "green");
-									return;
-								}
-								else {
-									let data = response.json();
-
-									elementFadeHide('#lk_form form');
-
-									console.log(data);
-
-									setTimeout(function () {
-										switch (data.status) {
-											case 404:
-												$('form').trigger('reset');
-												setFormHeaderStatusText(data.message, 'orange');
-												break;
-											case 400:
-												$('form').trigger('reset');
-												setFormHeaderStatusText(data.message, 'red');
-												break;
-											default:
-												$('form').trigger('reset');
-												setFormHeaderStatusText(messages.somthingWrong, 'red');
-										}
-
+								setTimeout(function () {
+									if (response.status == 202) {
+										$('form').trigger('reset');
+										showCabinetMenu();
+										$(formSelector + 'h1').css("color", "green");
+										return;
+									}
+									else {
+										let data = response.json();
+										elementFadeHide('#lk_form form');
+										setFormTextByStatusCode(data);
 										elementFadeShow('#lk_form form');
-									}, loadTimeout);
-								}
+									}
+								}, loadTimeout);
 							})
 					} else {
 						$('form').trigger('reset');
@@ -937,35 +917,18 @@ $(document).on('click', "button.register", function () {
 							passwordSecond: passSecond
 						};
 
-						send('POST', url + '/accounts/create', userData).then(response => response.json())
-							.then((result) => {
-								elementFadeHide('#lk_form form');
-
+						send('POST', url + '/accounts/create', userData)
+							.then(function (response) {
 								setTimeout(function () {
-									switch (result.status) {
-										case 'Success':
-											$('form').trigger('reset');
-											setFormHeaderStatusText(messages.accountCreated + '! ' + messages.checkEmail, 'green');
-											break;
-										case 'No match':
-											setFormHeaderStatusText(messages.passwordsNotMatch, 'orange');
-											$('form').trigger('reset');
-											break;
-										case 'Login exists':
-											setFormHeaderStatusText(messages.loginExists, 'yellow');
-											$('form').trigger('reset');
-											break;
-										case 'Email exists':
-											setFormHeaderStatusText(messages.emailExists, 'red');
-											$('form').trigger('reset');
-											break;
-										case 'Invalid email':
-											setFormHeaderStatusText(messages.incorrectEmail, 'red');
-											$('form').trigger('reset');
-											break;
+									if (response.status == 201) {
+										$('form').trigger('reset');
+										setFormHeaderStatusText(messages.accountCreated + '! ' + messages.checkEmail, 'green');
+									} else {
+										let data = response.json();
+										elementFadeHide('#lk_form form');
+										setFormTextByStatusCode(data);
+										elementFadeShow('#lk_form form');
 									}
-
-									elementFadeShow('#lk_form form');
 								}, loadTimeout);
 							});
 					} else {
@@ -1002,31 +965,18 @@ $(document).on('click', "button.restore", function () {
 
 						send('POST', url + '/accounts/restorePass', userData)
 							.then(function (response) {
-								if (response.status == 200) {
-									$('form').trigger('reset');
-									setFormHeaderStatusText(response.status, "green");
-									setFormsInfoMessage(messages.passwordChanged + '! ' + messages.checkEmail);
-									return;
-								} else {
-									let responseObject = response.json();
-
-									$('#lk_form form').addClass('fadeHidde');
-
-									setTimeout(function () {
-										switch (responseObject.status) {
-											case 404:
-												setFormHeaderStatusText(responseObject.message, 'yellow');
-												$('form').trigger('reset');
-												break;
-											case 400:
-												setFormHeaderStatusText(responseObject.message, 'orange');
-												$('form').trigger('reset');
-												break;
-										}
-
+								setTimeout(function () {
+									if (response.status == 200) {
+										$('form').trigger('reset');
+										setFormHeaderStatusText(response.status, "green");
+										setFormsInfoMessage(messages.passwordChanged + '! ' + messages.checkEmail);
+									} else {
+										let data = response.json();
+										$('#lk_form form').addClass('fadeHidde');
+										setFormTextByStatusCode(data);
 										$('#lk_form form').removeClass('fadeHidde');
-									}, loadTimeout);
-								}
+									}
+								}, loadTimeout);
 							});
 					} else {
 						setFormHeaderStatusText(messages.botsAction, 'red');
@@ -1100,21 +1050,9 @@ $(document).on('click', "button.changePassword", function () {
 				return;
 			} else {
 				let data = response.json();
-
 				elementFadeHide(formSelector);
-
 				setTimeout(function () {
-					switch (data.status) {
-						case 400:
-							setFormHeaderStatusText(data.message, 'orange');
-							$('form').trigger('reset');
-							break;
-						default:
-							setFormHeaderStatusText(messages.somthingWrong, 'red');
-							$('form').trigger('reset');
-							break;
-					}
-
+					setFormTextByStatusCode(data);
 					elementFadeShow(formSelector);
 				})
 			}
@@ -1296,3 +1234,5 @@ $(document).on('click', 'button.sendMessage', function () {
 $(document).on('keypress', 'input[type="password"]', function (e) {
 	checkSubmit(e);
 })
+
+
