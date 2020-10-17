@@ -1,3 +1,4 @@
+
 var lang;
 var messages;
 var login;
@@ -5,7 +6,7 @@ var loadTimeout = 400;
 
 
 function generateHeaderLogo() {
-	$('#logo').html(`
+    $('#logo').html(`
         <h1 class="logo">${serverName}</h1>
         <p class="logo">${messages.slogan}</p>
     `);
