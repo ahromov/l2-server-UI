@@ -411,24 +411,24 @@ async function send(method, url, data) {
 	});
 }
 
-$(document).ready(function () {
+$(document).ready(function() {
 	initAll();
 })
 
-$(document).on('click', 'nav #home', function () {
+$(document).on('click', 'nav #home', function() {
 	let navSelector = 'nav';
 	let mainSelector = 'main';
 
 	elementFadeHide(navSelector);
 	elementFadeHide(mainSelector);
 
-	setTimeout(function () {
+	setTimeout(function() {
 		elementFadeShow(navSelector);
 		generateMainPage();
 	}, loadTimeout);
 })
 
-$(document).on('click', 'nav #about', function () {
+$(document).on('click', 'nav #about', function() {
 	let navSelector = 'nav';
 	let mainSelector = 'main';
 
@@ -440,11 +440,11 @@ $(document).on('click', 'nav #about', function () {
 	fetch(url + '/gs/get/rates')
 		.then(response => response.json()).then(data => {
 			if (data != null) {
-				$.each(data, function (i, val) {
+				$.each(data, function(i, val) {
 					ratesTable += `<tr><th>${i}</th><td>x${val}</td></tr>`;
 				});
 
-				setTimeout(function () {
+				setTimeout(function() {
 					$(mainSelector).html(`
                         <div class="top">
                             <div id="stat">
@@ -482,7 +482,7 @@ $(document).on('click', 'nav #about', function () {
 		});
 })
 
-$(document).on('click', 'nav #reg', function () {
+$(document).on('click', 'nav #reg', function() {
 	let formSelector = "#lk_form form";
 	let navSelector = 'nav';
 	let mainSelector = 'main';
@@ -490,7 +490,7 @@ $(document).on('click', 'nav #reg', function () {
 	elementFadeHide(navSelector);
 	elementFadeHide(mainSelector);
 
-	setTimeout(function () {
+	setTimeout(function() {
 		elementFadeShow(navSelector);
 		generateMainPage();
 		setButtonActive('nav ul li a', 'navActive', 'nav #reg');
@@ -528,13 +528,13 @@ $(document).on('click', 'nav #reg', function () {
 	}, loadTimeout);
 })
 
-$(document).on('click', 'nav #stat', function () {
+$(document).on('click', 'nav #stat', function() {
 	let navSelector = 'nav';
 	let mainSelector = 'main';
 
 	elementFadeHide(navSelector);
 	elementFadeHide(mainSelector);
-	setTimeout(function () {
+	setTimeout(function() {
 		$('main').html(
 			`<div class="top">
                 <div id="stat">
@@ -730,13 +730,13 @@ $(document).on('click', 'nav #stat', function () {
 	}, loadTimeout);
 })
 
-$(document).on('click', 'nav #contact', function () {
+$(document).on('click', 'nav #contact', function() {
 	let navSelector = 'nav';
 	let mainSelector = 'main';
 
 	elementFadeHide(navSelector);
 	elementFadeHide(mainSelector);
-	setTimeout(function () {
+	setTimeout(function() {
 		$('main').html(`
             <div class="top">
                 <div id="stat">
@@ -765,14 +765,14 @@ $(document).on('click', 'nav #contact', function () {
 	}, loadTimeout);
 })
 
-$(document).on('click', 'a.readMore', function () {
+$(document).on('click', 'a.readMore', function() {
 	let articlesSelector = '#articles';
 
 	elementFadeHide(articlesSelector);
 
 	let newsId = $(this).attr('id');
 
-	setTimeout(function () {
+	setTimeout(function() {
 		function newsRender(value) {
 			let date = new Date(value.date);
 
@@ -811,30 +811,30 @@ $(document).on('click', 'a.readMore', function () {
 	}, loadTimeout);
 })
 
-$(document).on('click', '.homeBack', function () {
+$(document).on('click', '.homeBack', function() {
 	let mainSelector = 'main';
 
 	elementFadeHide(mainSelector);
 
 	$(this).css({ display: 'none' });
-	setTimeout(function () {
+	setTimeout(function() {
 		generateMainPage(null);
 	}, loadTimeout);
 })
 
-$(document).on('click', '.nextNewsPage', function () {
+$(document).on('click', '.nextNewsPage', function() {
 	$('#articles').css({ opacity: 0 });
 	let id = $(this).attr('id');
-	setTimeout(function () {
+	setTimeout(function() {
 		generateNewsPage(id);
 		$('#articles').css({ opacity: 9 });
 	}, loadTimeout);
 })
 
-$(document).on('click', 'button.login', function () {
+$(document).on('click', 'button.login', function() {
 	grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
 		action: 'login'
-	}).then(function (token) {
+	}).then(function(token) {
 		if (token !== null) {
 			send('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
 				.then((result) => {
@@ -858,7 +858,7 @@ $(document).on('click', 'button.login', function () {
 
 						send('POST', url + "/accounts/login", userData)
 							.then(response => {
-								setTimeout(function () {
+								setTimeout(function() {
 									if (response.status == 202) {
 										$('form').trigger('reset');
 										showCabinetMenu();
@@ -883,10 +883,10 @@ $(document).on('click', 'button.login', function () {
 	});
 })
 
-$(document).on('click', "button.register", function () {
+$(document).on('click', "button.register", function() {
 	grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
 		action: 'login'
-	}).then(function (token) {
+	}).then(function(token) {
 		if (token !== null) {
 			send('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
 				.then((result) => {
@@ -918,8 +918,8 @@ $(document).on('click', "button.register", function () {
 						};
 
 						send('POST', url + '/accounts/create', userData)
-							.then(function (response) {
-								setTimeout(function () {
+							.then(function(response) {
+								setTimeout(function() {
 									if (response.status == 201) {
 										$('form').trigger('reset');
 										setFormHeaderStatusText(messages.accountCreated + '! ' + messages.checkEmail, 'green');
@@ -940,10 +940,10 @@ $(document).on('click', "button.register", function () {
 	});
 })
 
-$(document).on('click', "button.restore", function () {
+$(document).on('click', "button.restore", function() {
 	grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
 		action: 'login'
-	}).then(function (token) {
+	}).then(function(token) {
 		if (token !== null) {
 			send('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
 				.then((result) => {
@@ -964,8 +964,8 @@ $(document).on('click', "button.restore", function () {
 						};
 
 						send('POST', url + '/accounts/restorePass', userData)
-							.then(function (response) {
-								setTimeout(function () {
+							.then(function(response) {
+								setTimeout(function() {
 									if (response.status == 200) {
 										$('form').trigger('reset');
 										setFormHeaderStatusText(response.status, "green");
@@ -988,12 +988,12 @@ $(document).on('click', "button.restore", function () {
 	});
 })
 
-$(document).on('click', "button.changePass", function () {
+$(document).on('click', "button.changePass", function() {
 	let formSelector = '#lk_form form';
 
 	elementFadeHide(formSelector);
 
-	setTimeout(function () {
+	setTimeout(function() {
 		$(formSelector).html(` 
             <h1>${messages.passwordChanging} ${login}!</h1>
             <div id="formInputs">
@@ -1015,7 +1015,7 @@ $(document).on('click', "button.changePass", function () {
 	}, loadTimeout);
 })
 
-$(document).on('click', "button.changePassword", function () {
+$(document).on('click', "button.changePassword", function() {
 	let oldPassword = $("#oldPassword").val();
 	let newFirstPassword = $("#newFirstPassword").val();
 	let newSecondPassword = $("#newSecondPassword").val();
@@ -1042,7 +1042,7 @@ $(document).on('click', "button.changePassword", function () {
 	};
 
 	send('POST', url + '/accounts/changePass', userData)
-		.then(function (response) {
+		.then(function(response) {
 			if (response.status == 200) {
 				setFormHeaderStatusText(response.status, 'green')
 				setFormsInfoMessage(messages.passwordChanged, 'green');
@@ -1051,7 +1051,7 @@ $(document).on('click', "button.changePassword", function () {
 			} else {
 				let data = response.json();
 				elementFadeHide(formSelector);
-				setTimeout(function () {
+				setTimeout(function() {
 					setFormTextByStatusCode(data);
 					elementFadeShow(formSelector);
 				})
@@ -1059,35 +1059,35 @@ $(document).on('click', "button.changePassword", function () {
 		}, loadTimeout);
 })
 
-$(document).on('click', "#lk_form form button.back", function () {
+$(document).on('click', "#lk_form form button.back", function() {
 	let formSeletor = '#lk_form form';
 
 	elementFadeHide(formSeletor);
 
-	setTimeout(function () {
+	setTimeout(function() {
 		showCabinetMenu();
 		elementFadeShow(formSeletor);
 	}, loadTimeout);
 })
 
-$(document).on('click', "button.exit", function () {
+$(document).on('click', "button.exit", function() {
 	let formSeletor = '#lk_form form';
 
 	elementFadeHide(formSeletor);
 
-	setTimeout(function () {
+	setTimeout(function() {
 		login = null;
 		showLoginForm();
 		elementFadeShow(formSeletor);
 	}, loadTimeout);
 })
 
-$(document).on('click', "a.forgot", function () {
+$(document).on('click', "a.forgot", function() {
 	let formSelector = '#lk_form form';
 
 	elementFadeHide(formSelector);
 
-	setTimeout(function () {
+	setTimeout(function() {
 		$("#lk_form form").html(`
             <form> 
                 <h1>${messages.passwordChanging}</h1>
@@ -1109,7 +1109,7 @@ $(document).on('click', "a.forgot", function () {
 	}, loadTimeout);
 })
 
-$(document).on('click', '#lang a#ua', function () {
+$(document).on('click', '#lang a#ua', function() {
 	let navSelector = 'nav';
 	let logoSelector = '#logo';
 	let mainSelector = 'main';
@@ -1118,7 +1118,7 @@ $(document).on('click', '#lang a#ua', function () {
 	elementFadeHide(logoSelector);
 	elementFadeHide(mainSelector);
 
-	setTimeout(function () {
+	setTimeout(function() {
 		lang = 'ua';
 		messages = uaMessages;
 		$.cookie('language', lang);
@@ -1129,7 +1129,7 @@ $(document).on('click', '#lang a#ua', function () {
 	}, loadTimeout);
 })
 
-$(document).on('click', '#lang a#ru', function () {
+$(document).on('click', '#lang a#ru', function() {
 	let navSelector = 'nav';
 	let logoSelector = '#logo';
 	let mainSelector = 'main';
@@ -1138,7 +1138,7 @@ $(document).on('click', '#lang a#ru', function () {
 	elementFadeHide(logoSelector);
 	elementFadeHide(mainSelector);
 
-	setTimeout(function () {
+	setTimeout(function() {
 		lang = 'ru';
 		messages = ruMessages;
 		$.cookie('language', lang);
@@ -1149,7 +1149,7 @@ $(document).on('click', '#lang a#ru', function () {
 	}, loadTimeout);
 })
 
-$(document).on('click', '#lang a#en', function () {
+$(document).on('click', '#lang a#en', function() {
 	let navSelector = 'nav';
 	let logoSelector = '#logo';
 	let mainSelector = 'main';
@@ -1157,7 +1157,7 @@ $(document).on('click', '#lang a#en', function () {
 	elementFadeHide(navSelector);
 	elementFadeHide(logoSelector);
 	elementFadeHide(mainSelector);
-	setTimeout(function () {
+	setTimeout(function() {
 		lang = 'en';
 		messages = enMessages;
 		$.cookie('language', lang);
@@ -1168,10 +1168,10 @@ $(document).on('click', '#lang a#en', function () {
 	}, loadTimeout);
 })
 
-$(document).on('click', 'button.sendMessage', function () {
+$(document).on('click', 'button.sendMessage', function() {
 	grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
 		action: 'social'
-	}).then(function (token) {
+	}).then(function(token) {
 		if (token !== null) {
 			send('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
 				.then((result) => {
@@ -1204,7 +1204,7 @@ $(document).on('click', 'button.sendMessage', function () {
 						send('POST', url + "/accounts/sendMess", userData).then(response => response.json())
 							.then((data) => {
 								$('main').css({ opacity: 0 });
-								setTimeout(function () {
+								setTimeout(function() {
 									switch (data.status) {
 										case 'Success':
 											$('main div.message').html(messages.messageSended).css("color", "green");
@@ -1231,7 +1231,7 @@ $(document).on('click', 'button.sendMessage', function () {
 	})
 })
 
-$(document).on('keypress', 'input[type="password"]', function (e) {
+$(document).on('keypress', 'input[type="password"]', function(e) {
 	checkSubmit(e);
 })
 
