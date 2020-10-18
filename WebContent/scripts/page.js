@@ -343,6 +343,10 @@ function checkSubmit(e) {
 	}
 }
 
+function formReset() {
+	$('form').trigger('reset');
+}
+
 function setFormTextByStatusCode(data) {
 	console.log(data);
 	switch (data.status) {
@@ -362,9 +366,6 @@ function setFormTextByStatusCode(data) {
 			formReset();
 			setFormHeaderStatusText(messages.somthingWrong, 'red');
 	}
-	function formReset() {
-		$('form').trigger('reset');
-	}
 }
 
 async function sendHttpRequest(method, url, data) {
@@ -377,21 +378,21 @@ async function sendHttpRequest(method, url, data) {
 	});
 }
 
-function sendFormRequest(userData, path, formSelector) {
+function sendFormRequest(userData, path, /* formSelector, */ view) {
 	let prom = sendHttpRequest('POST', serverUrl + path, userData);
 	prom.then((response) => {
 		setTimeout(function () {
-			if (response.status == 202) {
-				$('form').trigger('reset');
-				showCabinetMenu();
-				$(formSelector + 'h1').css("color", "green");
+			elementFadeHide('#lk_form form');
+			if (response.status >= 200 && response.status <= 299) {
+				setFormHeaderStatusText(data.message, 'green');
+				formReset();
+				view;
 				return;
 			}
 			prom.then(response => response.json()).then(data => {
-				elementFadeHide('#lk_form form');
 				setFormTextByStatusCode(data);
-				elementFadeShow('#lk_form form');
 			});
+			elementFadeShow('#lk_form form');
 		}, loadTimeout);
 	});
 }
@@ -808,7 +809,7 @@ $(document).on('click', 'button.login', function () {
 			sendHttpRequest('POST', serverUrl + '/reCaptcha/validate', { response: token }).then(response => response.json())
 				.then((result) => {
 					if (result.success && result.score > 0.5) {
-						let formSelector = '#lk_form form';
+						// let formSelector = '#lk_form form';
 						login = $("#inputLoginl3").val();
 						let password = $("#inputPassword3").val();
 						if (login === '' || password === '') {
@@ -820,7 +821,7 @@ $(document).on('click', 'button.login', function () {
 							login: login,
 							password: password
 						};
-						sendFormRequest(userData, "/accounts/login", formSelector);
+						sendFormRequest(userData, "/accounts/login", /* formSelector, */ showCabinetMenu());
 					} else {
 						$('form').trigger('reset');
 						setFormHeaderStatusText(messages.botsAction, 'red');
@@ -857,7 +858,7 @@ $(document).on('click', "button.register", function () {
 							login: login,
 							email: email,
 							password: pass,
-							passwordSecond: passSecond
+							repeatedPassword: passSecond
 						};
 						sendFormRequest(userData, "/accounts/create", formSelector);
 					} else {
@@ -877,6 +878,7 @@ $(document).on('click', "button.restore", function () {
 			sendHttpRequest('POST', serverUrl + '/reCaptcha/validate', { response: token }).then(response => response.json())
 				.then((result) => {
 					if (result.success && result.score > 0.5) {
+						let formSelector = '#lk_form form';
 						let login = $("#inputLoginl3").val();
 						let email = $("#inputEmail3").val();
 						if (login === '' || email === '') {
