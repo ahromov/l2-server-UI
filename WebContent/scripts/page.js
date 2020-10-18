@@ -1,6 +1,6 @@
-var lang;
-var messages;
-var login;
+var lang = '';
+var login = '';
+var messages = {};
 var loadTimeout = 400;
 
 function generateHeaderLogo() {
@@ -71,57 +71,45 @@ function showLoginForm() {
 
 function showCabinetMenu() {
 	let formSelector = '#lk_form form';
-
 	$(formSelector).html(`
         <h1>${messages.welcome}  ${login}!</h1>
         <button type="button" class="changePass">${messages.passwordChanging}</button>
         <button type="button" class="exit">${messages.exit}</button></<button>
     `);
-
 	$(formSelector + ' button').css('width', '159px');
 }
 
 function generatePosts() {
 	$('#forum .posts').html('');
-
-	let countLIstItem = 0;
-
+	let countListItem = 0;
 	function myFunction(value) {
 		let date = new Date(value.lastPostedDate);
-
 		let topicImageUrl = '';
 		if (value.icon !== null) {
 			topicImageUrl = `<img src="${urlForum}/images/icons/${value.icon.url}">`;
 		}
-
 		$('#forum .posts').append(`
-            <li id=${countLIstItem}>
+            <li id=${countListItem}>
                 <h2>${topicImageUrl}<a target="_blank" href="${urlForum}/viewtopic.php?f=${value.forumId}&t=${value.id}">${value.title.substring(0, 25) + (value.title.length > 25 ? " ..." : "")}</a> // ${date.toLocaleDateString()} ${date.toLocaleTimeString()} • ${value.posterName}</h2>
             </li>`).css({ transform: 'translateY(0px)' });
-
 		if (topicImageUrl !== '') {
-			$(`#forum .posts li[id="${countLIstItem}"]`).addClass('empty_marker');
+			$(`#forum .posts li[id="${countListItem}"]`).addClass('empty_marker');
 		}
-
-		countLIstItem++;
+		countListItem++;
 	};
-
-	fetch(url + '/forums/get/topics/last5')
+	fetch(serverUrl + '/forums/get/topics/last5')
 		.then(response => response.json())
 		.then(data => {
 			if (data != null) {
 				data.forEach(element => { myFunction(element) });
 			}
 		});
-
 }
 
 function generateNewsPage(pageId) {
 	$('#articles').html('');
-
 	function myFunction(value) {
 		let date = new Date(value.date);
-
 		$('#articles').append(`
                     <section>
                         <figure>
@@ -141,18 +129,15 @@ function generateNewsPage(pageId) {
                     </section>
                 `).css({ transform: 'translateY(0px)' });
 	};
-
 	if (pageId == null)
 		pageId = 0;
-
-	fetch(url + '/news/get/pages/' + pageId)
+	fetch(serverUrl + '/news/get/pages/' + pageId)
 		.then(response => response.json())
 		.then(data => {
 			if (data != null) {
 				data.forEach(element => { myFunction(element) });
 			}
 		});
-
 	setButtonActive('a.nextNewsPage', 'npActive', '#next_page ul li a[id="' + pageId + '"]');
 }
 
@@ -160,7 +145,6 @@ function generateNewsPagesButtons(id) {
 	$('#next_page ul').append(`
         <li><a class="nextNewsPage" id="${id}" type="button">${id + 1}</a></li>
     `);
-
 	$('#next_page ul li:first-child a').addClass('npActive');
 }
 
@@ -174,7 +158,6 @@ function generateLanguageSelectors(checkedUa, checkedRu, checkedEn) {
 
 function generateMainContent(languagesSelectors) {
 	let playIndex = Math.floor(Math.random() * videosIds.length);
-
 	$('main').html(`
         <div id="left">
             <article>
@@ -208,12 +191,9 @@ function generateMainContent(languagesSelectors) {
             </section>
         </div>
     `);
-
 	showLoginForm();
-
 	elementFadeShow('main');
-
-	fetch(url + '/news/get/pages')
+	fetch(serverUrl + '/news/get/pages')
 		.then(response => response.json())
 		.then(data => {
 			if (data != 0) {
@@ -222,12 +202,10 @@ function generateMainContent(languagesSelectors) {
 				}
 			}
 		});
-
 }
 
 function generateMain(newsPageId) {
 	setButtonActive('nav ul li a', 'navActive', 'nav #home');
-
 	switch (lang) {
 		case 'ru':
 			generateMainContent(generateLanguageSelectors('', 'checked', ''));
@@ -239,14 +217,12 @@ function generateMain(newsPageId) {
 			generateMainContent(generateLanguageSelectors('', '', 'checked'));
 			break;
 	}
-
 	generateNewsPage(newsPageId);
 	generatePosts();
 }
 
 function generateBackButton(id) {
 	let slelector = '#next_page ul';
-
 	if (id != null) {
 		$(slelector).html(`
             <li><a class="newsBack" id="${id}" href="#"><<</a></li>
@@ -290,7 +266,7 @@ function setButtonActive(elementRemove, className, elementActive) {
 }
 
 function getRegisteredServerName() {
-	fetch(url + '/ls/getServers')
+	fetch(serverUrl + '/ls/getServers')
 		.then(response => response.json())
 		.then(data => {
 			if (data != null) {
@@ -302,7 +278,7 @@ function getRegisteredServerName() {
 }
 
 function getServerStatus() {
-	fetch(url + '/gs/get/status')
+	fetch(serverUrl + '/gs/get/status')
 		.then(response => response.json())
 		.then(data => {
 			if (data != null) {
@@ -315,7 +291,6 @@ function initDefaultLanguagesSettings() {
 	if ($.cookie('language') != null)
 		lang = $.cookie('language');
 	else lang = 'ru';
-
 	switch (lang) {
 		case 'ru':
 			messages = ruMessages;
@@ -331,7 +306,6 @@ function initDefaultLanguagesSettings() {
 
 function generateMainPage(newsPageId) {
 	document.title = messages.title;
-	// generateHeader();
 	generateMenu();
 	generateHeaderLogo();
 	generateMain(newsPageId);
@@ -370,6 +344,7 @@ function checkSubmit(e) {
 }
 
 function setFormTextByStatusCode(data) {
+	console.log(data);
 	switch (data.status) {
 		case 409:
 			formReset();
@@ -387,10 +362,55 @@ function setFormTextByStatusCode(data) {
 			formReset();
 			setFormHeaderStatusText(messages.somthingWrong, 'red');
 	}
-
 	function formReset() {
 		$('form').trigger('reset');
 	}
+}
+
+async function sendHttpRequest(method, url, data) {
+	return await fetch(url, {
+		method: method,
+		headers: {
+			'Content-Type': 'application/json'
+		},
+		body: JSON.stringify(data)
+	});
+}
+
+function sendFormRequest(userData, path, formSelector) {
+	let prom = sendHttpRequest('POST', serverUrl + path, userData);
+	prom.then((response) => {
+		setTimeout(function () {
+			if (response.status == 202) {
+				$('form').trigger('reset');
+				showCabinetMenu();
+				$(formSelector + 'h1').css("color", "green");
+				return;
+			}
+			prom.then(response => response.json()).then(data => {
+				elementFadeHide('#lk_form form');
+				setFormTextByStatusCode(data);
+				elementFadeShow('#lk_form form');
+			});
+		}, loadTimeout);
+	});
+}
+
+function changePageLanguage(langAbbr, messagesObj) {
+	let navSelector = 'nav';
+	let logoSelector = '#logo';
+	let mainSelector = 'main';
+	elementFadeHide(navSelector);
+	elementFadeHide(logoSelector);
+	elementFadeHide(mainSelector);
+	setTimeout(function () {
+		lang = langAbbr;
+		messages = messagesObj;
+		$.cookie('language', lang);
+		elementFadeShow(navSelector);
+		elementFadeShow(logoSelector);
+		generateMainPage();
+	}, loadTimeout);
 }
 
 function initAll() {
@@ -401,50 +421,34 @@ function initAll() {
 	getServerStatus();
 }
 
-async function send(method, url, data) {
-	return await fetch(url, {
-		method: method,
-		headers: {
-			'Content-Type': 'application/json'
-		},
-		body: JSON.stringify(data)
-	});
-}
-
-$(document).ready(function() {
+$(document).ready(function () {
 	initAll();
 })
 
-$(document).on('click', 'nav #home', function() {
+$(document).on('click', 'nav #home', function () {
 	let navSelector = 'nav';
 	let mainSelector = 'main';
-
 	elementFadeHide(navSelector);
 	elementFadeHide(mainSelector);
-
-	setTimeout(function() {
+	setTimeout(function () {
 		elementFadeShow(navSelector);
 		generateMainPage();
 	}, loadTimeout);
 })
 
-$(document).on('click', 'nav #about', function() {
+$(document).on('click', 'nav #about', function () {
 	let navSelector = 'nav';
 	let mainSelector = 'main';
-
 	elementFadeHide(navSelector);
 	elementFadeHide(mainSelector);
-
 	let ratesTable = '';
-
-	fetch(url + '/gs/get/rates')
+	fetch(serverUrl + '/gs/get/rates')
 		.then(response => response.json()).then(data => {
 			if (data != null) {
-				$.each(data, function(i, val) {
+				$.each(data, function (i, val) {
 					ratesTable += `<tr><th>${i}</th><td>x${val}</td></tr>`;
 				});
-
-				setTimeout(function() {
+				setTimeout(function () {
 					$(mainSelector).html(`
                         <div class="top">
                             <div id="stat">
@@ -471,9 +475,7 @@ $(document).on('click', 'nav #about', function() {
                             </div>
                         </div>
                     `);
-
 					setButtonActive('nav ul li a', 'navActive', 'nav #about');
-
 					elementFadeShow(navSelector);
 					elementFadeShow(mainSelector);
 					generateBackButton(null);
@@ -482,19 +484,16 @@ $(document).on('click', 'nav #about', function() {
 		});
 })
 
-$(document).on('click', 'nav #reg', function() {
+$(document).on('click', 'nav #reg', function () {
 	let formSelector = "#lk_form form";
 	let navSelector = 'nav';
 	let mainSelector = 'main';
-
 	elementFadeHide(navSelector);
 	elementFadeHide(mainSelector);
-
-	setTimeout(function() {
+	setTimeout(function () {
 		elementFadeShow(navSelector);
 		generateMainPage();
 		setButtonActive('nav ul li a', 'navActive', 'nav #reg');
-
 		$(formSelector).html(`
             <form> 
             <h1>${messages.registration}</h1><div id="formInputs">
@@ -504,21 +503,16 @@ $(document).on('click', 'nav #reg', function() {
             <div><span>${messages.repeatePassword}:</span><input id="inputSecondPassword3" type="password"></div></div> 
             <button class="register" type="button">${messages.send}</button>
         `);
-
 		$(formSelector + ' h1').css({
 			'font-size': '10px',
 			'margin-top': '-5px'
 		});
-
 		$(formSelector + ' div').css({
 			'margin-top': '0px',
 			'margin-bottom': '2px'
 		});
-
 		$(formSelector + ' div input').css('height', '20px');
-
 		$(formSelector + ' div span').css('padding-top', '2px');
-
 		$(formSelector + ' button').css({
 			'width': '134px',
 			'margin-right': '35px',
@@ -528,13 +522,12 @@ $(document).on('click', 'nav #reg', function() {
 	}, loadTimeout);
 })
 
-$(document).on('click', 'nav #stat', function() {
+$(document).on('click', 'nav #stat', function () {
 	let navSelector = 'nav';
 	let mainSelector = 'main';
-
 	elementFadeHide(navSelector);
 	elementFadeHide(mainSelector);
-	setTimeout(function() {
+	setTimeout(function () {
 		$('main').html(
 			`<div class="top">
                 <div id="stat">
@@ -624,23 +617,18 @@ $(document).on('click', 'nav #stat', function() {
             </div>
         </div>
         `);
-
 		elementFadeShow(navSelector);
 		elementFadeShow(mainSelector);
-
 		setButtonActive('nav ul li a', 'navActive', 'nav #stat');
-
 		generateBackButton();
-
-		fetch(url + '/clans/count/all')
+		fetch(serverUrl + '/clans/count/all')
 			.then(response => response.json())
 			.then(data => {
 				if (data != null) {
 					$('#accCount').html(data.count);
 				}
 			});
-
-		fetch(url + '/characters/count/byType')
+		fetch(serverUrl + '/characters/count/byType')
 			.then(response => response.json())
 			.then(data => {
 				if (data != null) {
@@ -650,9 +638,7 @@ $(document).on('click', 'nav #stat', function() {
 					$('#countGm').html(data.gms);
 				}
 			});
-
-
-		fetch(url + '/clans/get/all')
+		fetch(serverUrl + '/clans/get/all')
 			.then(response => response.json())
 			.then(data => {
 				if (data != null) {
@@ -670,9 +656,7 @@ $(document).on('click', 'nav #stat', function() {
 					});
 				}
 			});
-
-
-		fetch(url + '/characters/get/top10')
+		fetch(serverUrl + '/characters/get/top10')
 			.then(response => response.json())
 			.then(data => {
 				if (data != null) {
@@ -690,9 +674,7 @@ $(document).on('click', 'nav #stat', function() {
 					});
 				}
 			});
-
-
-		fetch(url + '/castles/get/all')
+		fetch(serverUrl + '/castles/get/all')
 			.then(response => response.json())
 			.then(data => {
 				if (data != null) {
@@ -710,8 +692,7 @@ $(document).on('click', 'nav #stat', function() {
 					});
 				}
 			});
-
-		fetch(url + '/forts/get/all')
+		fetch(serverUrl + '/forts/get/all')
 			.then(response => response.json())
 			.then(data => {
 				if (data != null) {
@@ -730,13 +711,12 @@ $(document).on('click', 'nav #stat', function() {
 	}, loadTimeout);
 })
 
-$(document).on('click', 'nav #contact', function() {
+$(document).on('click', 'nav #contact', function () {
 	let navSelector = 'nav';
 	let mainSelector = 'main';
-
 	elementFadeHide(navSelector);
 	elementFadeHide(mainSelector);
-	setTimeout(function() {
+	setTimeout(function () {
 		$('main').html(`
             <div class="top">
                 <div id="stat">
@@ -747,7 +727,6 @@ $(document).on('click', 'nav #contact', function() {
                             <div class="message">
                                 <form>
                                     <label>${messages.fullName}: <input type="text" class="name"><p class="name"></p></label>
-                                    <label>${messages.emailForFeedback}: <input type="email" class="email"><p class="email"></p></label>
                                     <label>${messages.messagesText}: <textarea class="message"></textarea><p class="message"></p></label>
                                     <button class="sendMessage" type="button">${messages.send}</button>
                                 </form>
@@ -757,7 +736,6 @@ $(document).on('click', 'nav #contact', function() {
                 </div>
             </div>
         `);
-
 		elementFadeShow(navSelector);
 		elementFadeShow(mainSelector);
 		setButtonActive('nav ul li a', 'navActive', 'nav #contact');
@@ -765,17 +743,13 @@ $(document).on('click', 'nav #contact', function() {
 	}, loadTimeout);
 })
 
-$(document).on('click', 'a.readMore', function() {
+$(document).on('click', 'a.readMore', function () {
 	let articlesSelector = '#articles';
-
 	elementFadeHide(articlesSelector);
-
 	let newsId = $(this).attr('id');
-
-	setTimeout(function() {
+	setTimeout(function () {
 		function newsRender(value) {
 			let date = new Date(value.date);
-
 			$(articlesSelector).html(`
                 <section>
                     <figure>
@@ -794,85 +768,59 @@ $(document).on('click', 'a.readMore', function() {
                     </div>
                 </section>
             `);
-
 			$(articlesSelector + ' section').css({ background: 'none' });
 			$('a.readMore').css({ display: 'none' });
 		};
-
-		fetch(url + '/news/get/' + newsId)
+		fetch(serverUrl + '/news/get/' + newsId)
 			.then(response => response.json())
 			.then(data => {
 				if (data != null) {
 					newsRender(data);
 				}
 			});
-
 		elementFadeShow(articlesSelector);
 	}, loadTimeout);
 })
 
-$(document).on('click', '.homeBack', function() {
+$(document).on('click', '.homeBack', function () {
 	let mainSelector = 'main';
-
 	elementFadeHide(mainSelector);
-
 	$(this).css({ display: 'none' });
-	setTimeout(function() {
+	setTimeout(function () {
 		generateMainPage(null);
 	}, loadTimeout);
 })
 
-$(document).on('click', '.nextNewsPage', function() {
+$(document).on('click', '.nextNewsPage', function () {
 	$('#articles').css({ opacity: 0 });
 	let id = $(this).attr('id');
-	setTimeout(function() {
+	setTimeout(function () {
 		generateNewsPage(id);
 		$('#articles').css({ opacity: 9 });
 	}, loadTimeout);
 })
 
-$(document).on('click', 'button.login', function() {
+$(document).on('click', 'button.login', function () {
 	grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
 		action: 'login'
-	}).then(function(token) {
+	}).then(function (token) {
 		if (token !== null) {
-			send('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
+			sendHttpRequest('POST', serverUrl + '/reCaptcha/validate', { response: token }).then(response => response.json())
 				.then((result) => {
 					if (result.success && result.score > 0.5) {
 						let formSelector = '#lk_form form';
-
 						login = $("#inputLoginl3").val();
 						let password = $("#inputPassword3").val();
-
 						if (login === '' || password === '') {
 							setFormHeaderStatusText(messages.fieldsCannotEmpty, 'red');
 							return;
 						}
-
 						setFormHeaderStatusText(messages.waiting, 'inherit');
-
 						let userData = {
 							login: login,
 							password: password
 						};
-
-						send('POST', url + "/accounts/login", userData)
-							.then(response => {
-								setTimeout(function() {
-									if (response.status == 202) {
-										$('form').trigger('reset');
-										showCabinetMenu();
-										$(formSelector + 'h1').css("color", "green");
-										return;
-									}
-									else {
-										let data = response.json();
-										elementFadeHide('#lk_form form');
-										setFormTextByStatusCode(data);
-										elementFadeShow('#lk_form form');
-									}
-								}, loadTimeout);
-							})
+						sendFormRequest(userData, "/accounts/login", formSelector);
 					} else {
 						$('form').trigger('reset');
 						setFormHeaderStatusText(messages.botsAction, 'red');
@@ -883,54 +831,35 @@ $(document).on('click', 'button.login', function() {
 	});
 })
 
-$(document).on('click', "button.register", function() {
+$(document).on('click', "button.register", function () {
 	grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
 		action: 'login'
-	}).then(function(token) {
+	}).then(function (token) {
 		if (token !== null) {
-			send('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
+			sendHttpRequest('POST', serverUrl + '/reCaptcha/validate', { response: token }).then(response => response.json())
 				.then((result) => {
 					if (result.success && result.score > 0.5) {
 						let formSelector = '#lk_form form';
-
 						let login = $("#inputLoginl3").val();
 						let email = $("#inputEmail3").val();
 						let pass = $("#inputPassword3").val();
 						let passSecond = $("#inputSecondPassword3").val();
-
 						if (login === '' || email === '' || pass === '' || passSecond === '') {
 							setFormHeaderStatusText(messages.fieldsCannotEmpty, 'red');
 							return;
 						}
-
 						if (!(pass).match(passSecond)) {
 							setFormHeaderStatusText(messages.passwordsNotMatch, 'orange');
 							return;
 						}
-
 						$(formSelector + 'h1').css("color", "white").html(messages.waiting);
-
 						var userData = {
 							login: login,
 							email: email,
 							password: pass,
 							passwordSecond: passSecond
 						};
-
-						send('POST', url + '/accounts/create', userData)
-							.then(function(response) {
-								setTimeout(function() {
-									if (response.status == 201) {
-										$('form').trigger('reset');
-										setFormHeaderStatusText(messages.accountCreated + '! ' + messages.checkEmail, 'green');
-									} else {
-										let data = response.json();
-										elementFadeHide('#lk_form form');
-										setFormTextByStatusCode(data);
-										elementFadeShow('#lk_form form');
-									}
-								}, loadTimeout);
-							});
+						sendFormRequest(userData, "/accounts/create", formSelector);
 					} else {
 						setFormHeaderStatusText(messages.botsAction, 'red');
 						$('form').trigger('reset');
@@ -940,44 +869,26 @@ $(document).on('click', "button.register", function() {
 	});
 })
 
-$(document).on('click', "button.restore", function() {
+$(document).on('click', "button.restore", function () {
 	grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
 		action: 'login'
-	}).then(function(token) {
+	}).then(function (token) {
 		if (token !== null) {
-			send('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
+			sendHttpRequest('POST', serverUrl + '/reCaptcha/validate', { response: token }).then(response => response.json())
 				.then((result) => {
 					if (result.success && result.score > 0.5) {
 						let login = $("#inputLoginl3").val();
 						let email = $("#inputEmail3").val();
-
 						if (login === '' || email === '') {
 							setFormHeaderStatusText(messages.fieldsCannotEmpty, "red");
 							return;
 						}
-
 						setFormHeaderStatusText(messages.waiting, 'inherit');
-
 						var userData = {
 							login: login,
 							email: email
 						};
-
-						send('POST', url + '/accounts/restorePass', userData)
-							.then(function(response) {
-								setTimeout(function() {
-									if (response.status == 200) {
-										$('form').trigger('reset');
-										setFormHeaderStatusText(response.status, "green");
-										setFormsInfoMessage(messages.passwordChanged + '! ' + messages.checkEmail);
-									} else {
-										let data = response.json();
-										$('#lk_form form').addClass('fadeHidde');
-										setFormTextByStatusCode(data);
-										$('#lk_form form').removeClass('fadeHidde');
-									}
-								}, loadTimeout);
-							});
+						sendFormRequest(userData, "/accounts/restorePass", formSelector);
 					} else {
 						setFormHeaderStatusText(messages.botsAction, 'red');
 						$('form').trigger('reset');
@@ -988,12 +899,10 @@ $(document).on('click', "button.restore", function() {
 	});
 })
 
-$(document).on('click', "button.changePass", function() {
+$(document).on('click', "button.changePass", function () {
 	let formSelector = '#lk_form form';
-
 	elementFadeHide(formSelector);
-
-	setTimeout(function() {
+	setTimeout(function () {
 		$(formSelector).html(` 
             <h1>${messages.passwordChanging} ${login}!</h1>
             <div id="formInputs">
@@ -1004,45 +913,37 @@ $(document).on('click', "button.changePass", function() {
             <button class="back" type="button"><< ${messages.back}</button>
             <button class="changePassword" type="button">${messages.change}</button>
         `);
-
 		$(formSelector + ' h1').css('font-size', '10px').css('margin-top', '-5px');
 		$(formSelector + ' div span').css('width', '138px');
 		$(formSelector + ' div input').css('height', '25px').css('width', '214px');
 		$(formSelector + ' button').css('width', '105px').css('transform', 'translateX(-32px)').css('margin-right', '2px').css('height', '20px').css('width', '105px');
 		$(formSelector + ' button.back').css('width', '97px');
-
 		elementFadeShow(formSelector);
 	}, loadTimeout);
 })
 
-$(document).on('click', "button.changePassword", function() {
+$(document).on('click', "button.changePassword", function () {
 	let oldPassword = $("#oldPassword").val();
 	let newFirstPassword = $("#newFirstPassword").val();
 	let newSecondPassword = $("#newSecondPassword").val();
-
 	let formSelector = '#lk_form form';
-
 	if (login === '' || oldPassword === '' || newFirstPassword === '' || newSecondPassword === '') {
 		setFormHeaderStatusText(messages.fieldsCannotEmpty, 'red');
 		return;
 	}
-
 	if (!(newFirstPassword).match(newSecondPassword)) {
 		setFormHeaderStatusl(messages.passwordsNotMatch, 'red');
 		return;
 	}
-
 	setFormHeaderStatusText(messages.waiting, 'inherit');
-
 	var userData = {
 		login: login,
 		oldPassword: oldPassword,
 		newFirstPassword: newFirstPassword,
 		newSecondPassword: newSecondPassword
 	};
-
-	send('POST', url + '/accounts/changePass', userData)
-		.then(function(response) {
+	sendHttpRequest('POST', serverUrl + '/accounts/changePass', userData)
+		.then(function (response) {
 			if (response.status == 200) {
 				setFormHeaderStatusText(response.status, 'green')
 				setFormsInfoMessage(messages.passwordChanged, 'green');
@@ -1051,7 +952,7 @@ $(document).on('click', "button.changePassword", function() {
 			} else {
 				let data = response.json();
 				elementFadeHide(formSelector);
-				setTimeout(function() {
+				setTimeout(function () {
 					setFormTextByStatusCode(data);
 					elementFadeShow(formSelector);
 				})
@@ -1059,35 +960,29 @@ $(document).on('click', "button.changePassword", function() {
 		}, loadTimeout);
 })
 
-$(document).on('click', "#lk_form form button.back", function() {
+$(document).on('click', "#lk_form form button.back", function () {
 	let formSeletor = '#lk_form form';
-
 	elementFadeHide(formSeletor);
-
-	setTimeout(function() {
+	setTimeout(function () {
 		showCabinetMenu();
 		elementFadeShow(formSeletor);
 	}, loadTimeout);
 })
 
-$(document).on('click', "button.exit", function() {
+$(document).on('click', "button.exit", function () {
 	let formSeletor = '#lk_form form';
-
 	elementFadeHide(formSeletor);
-
-	setTimeout(function() {
+	setTimeout(function () {
 		login = null;
 		showLoginForm();
 		elementFadeShow(formSeletor);
 	}, loadTimeout);
 })
 
-$(document).on('click', "a.forgot", function() {
+$(document).on('click', "a.forgot", function () {
 	let formSelector = '#lk_form form';
-
 	elementFadeHide(formSelector);
-
-	setTimeout(function() {
+	setTimeout(function () {
 		$("#lk_form form").html(`
             <form> 
                 <h1>${messages.passwordChanging}</h1>
@@ -1097,131 +992,71 @@ $(document).on('click', "a.forgot", function() {
                 </div> 
             <button class="restore" type="button">${messages.change}</button>
         `);
-
 		$("button[type='button']").removeClass().addClass('restore');
 		$(formSelector + 'button').css({
 			'width': '134px',
 			'margin-right': '35px',
 			'margin-top': '5px'
 		});
-
 		elementFadeShow(formSelector);
 	}, loadTimeout);
 })
 
-$(document).on('click', '#lang a#ua', function() {
-	let navSelector = 'nav';
-	let logoSelector = '#logo';
-	let mainSelector = 'main';
-
-	elementFadeHide(navSelector);
-	elementFadeHide(logoSelector);
-	elementFadeHide(mainSelector);
-
-	setTimeout(function() {
-		lang = 'ua';
-		messages = uaMessages;
-		$.cookie('language', lang);
-
-		elementFadeShow(navSelector);
-		elementFadeShow(logoSelector);
-		generateMainPage();
-	}, loadTimeout);
+$(document).on('click', '#lang a#ua', function () {
+	changePageLanguage('ua', uaMessages);
 })
 
-$(document).on('click', '#lang a#ru', function() {
-	let navSelector = 'nav';
-	let logoSelector = '#logo';
-	let mainSelector = 'main';
-
-	elementFadeHide(navSelector);
-	elementFadeHide(logoSelector);
-	elementFadeHide(mainSelector);
-
-	setTimeout(function() {
-		lang = 'ru';
-		messages = ruMessages;
-		$.cookie('language', lang);
-
-		elementFadeShow(navSelector);
-		elementFadeShow(logoSelector);
-		generateMainPage();
-	}, loadTimeout);
+$(document).on('click', '#lang a#ru', function () {
+	changePageLanguage('ru', ruMessages);
 })
 
-$(document).on('click', '#lang a#en', function() {
-	let navSelector = 'nav';
-	let logoSelector = '#logo';
-	let mainSelector = 'main';
-
-	elementFadeHide(navSelector);
-	elementFadeHide(logoSelector);
-	elementFadeHide(mainSelector);
-	setTimeout(function() {
-		lang = 'en';
-		messages = enMessages;
-		$.cookie('language', lang);
-
-		elementFadeShow(navSelector);
-		elementFadeShow(logoSelector);
-		generateMainPage();
-	}, loadTimeout);
+$(document).on('click', '#lang a#en', function () {
+	changePageLanguage('en', enMessages);
 })
 
-$(document).on('click', 'button.sendMessage', function() {
+$(document).on('click', 'button.sendMessage', function () {
 	grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
 		action: 'social'
-	}).then(function(token) {
+	}).then(function (token) {
 		if (token !== null) {
-			send('POST', url + '/reCaptcha/validate', { response: token }).then(response => response.json())
+			sendHttpRequest('POST', serverUrl + '/reCaptcha/validate', { response: token }).then(response => response.json())
 				.then((result) => {
 					if (result.success && result.score > 0.5) {
 						let login = $('div.message form input.name').val();
-						let email = $('div.message form input.email').val();
 						let message = $('div.message form textarea.message').val();
-
 						if (login === '' || login == null) {
 							cantEmpty('name');
 							return;
 						}
-
-						if (email === '' || email == null) {
-							cantEmpty('email');
-							return;
-						}
-
 						if (message === '' || message == null) {
 							cantEmpty('message');
 							return;
 						}
-
 						let userData = {
 							login: login,
-							email: email,
 							message: message
 						};
-
-						send('POST', url + "/accounts/sendMess", userData).then(response => response.json())
-							.then((data) => {
-								$('main').css({ opacity: 0 });
-								setTimeout(function() {
-									switch (data.status) {
-										case 'Success':
-											$('main div.message').html(messages.messageSended).css("color", "green");
-											break;
-										case 'Invalid login':
-											$('main div.message').html(messages.invalidLogin).css("color", "orange");
-											break;
-										case 'Not found':
-											$('main div.message').html(messages.accountNotExists).css("color", "red");
-											break;
-										case 'Email not found':
-											$('main div.message').html(messages.incorrectEmail).css("color", "red");
-											break;
-									}
-									$('main').css({ opacity: 9 });
-								}, loadTimeout);
-							});
+						let prom = sendHttpRequest('POST', serverUrl + "/accounts/sendMess", userData);
+						prom.then(response => {
+							$('main').css({ opacity: 0 });
+							setTimeout(function () {
+								if (response.status == 200) {
+									$('main div.message').html(messages.messageSended).css("color", "green");
+								} else {
+									prom.then(response => response.json()).then(data => {
+										switch (data.status) {
+											case 400:
+												$('main div.message').html(data.message).css("color", "orange");
+												break;
+											case 404:
+												$('main div.message').html(data.message).css("color", "red");
+												break;
+										}
+									})
+								}
+								$('main').css({ opacity: 9 });
+							}, loadTimeout);
+						})
 					} else {
 						$('div.message form p.question').html(message.botsAction).css('color', 'red');
 						return;
@@ -1231,8 +1066,12 @@ $(document).on('click', 'button.sendMessage', function() {
 	})
 })
 
-$(document).on('keypress', 'input[type="password"]', function(e) {
+$(document).on('keypress', 'input[type="password"]', function (e) {
 	checkSubmit(e);
 })
+
+
+
+
 
 
