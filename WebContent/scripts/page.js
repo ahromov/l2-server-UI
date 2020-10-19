@@ -51,7 +51,7 @@ function generateMenu() {
     `);
 }
 
-function showLoginForm() {
+function looginFormView() {
 	$("#lk_form").html(`
         <form>
             <h1>${messages.personalCabinet}</h1>
@@ -69,12 +69,21 @@ function showLoginForm() {
     `);
 }
 
-function showCabinetMenu() {
+function cabinetFormView() {
 	let formSelector = '#lk_form form';
 	$(formSelector).html(`
         <h1>${messages.welcome}  ${login}!</h1>
         <button type="button" class="changePass">${messages.passwordChanging}</button>
-        <button type="button" class="exit">${messages.exit}</button></<button>
+        <button type="button" class="exit">${messages.exit}</button>
+    `);
+	$(formSelector + ' button').css('width', '159px');
+}
+
+function formInfoView(status, message) {
+	let formSelector = '#lk_form form';
+	$(formSelector).html(`
+        <h1>${status}  ${message}!</h1>
+        ${message}
     `);
 	$(formSelector + ' button').css('width', '159px');
 }
@@ -191,7 +200,7 @@ function generateMainContent(languagesSelectors) {
             </section>
         </div>
     `);
-	showLoginForm();
+	looginFormView();
 	elementFadeShow('main');
 	fetch(serverUrl + '/news/get/pages')
 		.then(response => response.json())
@@ -329,6 +338,27 @@ function setFormsInfoMessage(message) {
     `).css('text-align', 'center');
 }
 
+function formsPsswordChangedView() {
+	$('#lk_form form #formInputs').html(`
+        <div class="infoMessage">
+            ${messages.passwordChanged}
+        </div>
+	`).css('text-align', 'center');
+	$('button.changePassword').hide();
+	$('button.restore').hide();
+	setFormHeaderStatusText(messages.passwordChanged, 'green');
+}
+
+function formsRegisteredUserView() {
+	$('#lk_form form #formInputs').html(`
+        <div class="infoMessage">
+            ${messages.accountCreated}
+        </div>
+	`).css('text-align', 'center');
+	$('button.register').hide();
+	setFormHeaderStatusText(messages.accountCreated, 'green');
+}
+
 function elementFadeHide(elSelector) {
 	$(elSelector).css({ opacity: 0 });
 }
@@ -347,12 +377,11 @@ function formReset() {
 	$('form').trigger('reset');
 }
 
-function setFormTextByStatusCode(data) {
-	console.log(data);
+function setFormHeaderMessageByStatusCode(data) {
 	switch (data.status) {
 		case 409:
 			formReset();
-			setFormHeaderStatusText(data.message, 'orange');
+			setFormHeaderStatusText(data.message, 'yellow');
 			break;
 		case 404:
 			formReset();
@@ -362,9 +391,6 @@ function setFormTextByStatusCode(data) {
 			formReset();
 			setFormHeaderStatusText(data.message, 'red');
 			break;
-		default:
-			formReset();
-			setFormHeaderStatusText(messages.somthingWrong, 'red');
 	}
 }
 
@@ -378,20 +404,24 @@ async function sendHttpRequest(method, url, data) {
 	});
 }
 
-function sendFormRequest(userData, path, /* formSelector, */ view) {
+function sendRequestAndChangeFormView(userData, path, view) {
 	let prom = sendHttpRequest('POST', serverUrl + path, userData);
+	elementFadeHide('#lk_form form');
 	prom.then((response) => {
 		setTimeout(function () {
-			elementFadeHide('#lk_form form');
-			if (response.status >= 200 && response.status <= 299) {
-				setFormHeaderStatusText(data.message, 'green');
+			if (response.status <= 299) {
 				formReset();
-				view;
-				return;
+				if (view !== null) {
+					view();
+				} else {
+					setFormHeaderMessageByStatusCode(response.status)
+					formInfoView(response.status, "All OK");
+				}
+			} else {
+				prom.then(response => response.json()).then(data => {
+					setFormHeaderMessageByStatusCode(data);
+				});
 			}
-			prom.then(response => response.json()).then(data => {
-				setFormTextByStatusCode(data);
-			});
 			elementFadeShow('#lk_form form');
 		}, loadTimeout);
 	});
@@ -526,6 +556,7 @@ $(document).on('click', 'nav #reg', function () {
 $(document).on('click', 'nav #stat', function () {
 	let navSelector = 'nav';
 	let mainSelector = 'main';
+
 	elementFadeHide(navSelector);
 	elementFadeHide(mainSelector);
 	setTimeout(function () {
@@ -546,13 +577,13 @@ $(document).on('click', 'nav #stat', function () {
                                     <th>${messages.allys}:</th>
                                 </tr>
                                 <tr>
-                                    <td id="accCount">0</td>
-                                    <td id="countAll">0</td>
-                                    <td id="countNobless">0</td>
-                                    <td id="countHeroes">0</td>
-                                    <td id="countGm">0</td>
-                                    <td id="countClans">0</td>
-                                    <td>0</td>
+                                    <td id="accCount"></td>
+                                    <td id="countAll"></td>
+                                    <td id="countNobless"></td>
+                                    <td id="countHeroes"></td>
+                                    <td id="countGm"></td>
+                                    <td id="countClans"></td>
+                                    <td id="countAllys"></td>
                                 </tr>
                             </table>
                         </section>
@@ -563,6 +594,7 @@ $(document).on('click', 'nav #stat', function () {
                             <table>
                                 <tr>
                                     <th>${messages.charName}:</th>
+                                    <th>${messages.lvl}:</th>
                                     <th>${messages.charClass}:</th>
                                     <th>${messages.charSex}:</th>
                                     <th>${messages.clanName}:</th>
@@ -578,8 +610,10 @@ $(document).on('click', 'nav #stat', function () {
                             <table>
                                 <tr>
                                     <th>${messages.clanName}:</th>
-                                    <th>${messages.lvl}</th>
+                                    <th>${messages.lvl}:</th>
                                     <th>${messages.leader}:</th>
+                                    <th>${messages.castleName}:</th>
+                                    <th>${messages.fortName}:</th>
                                     <th>${messages.reputation}:</th>
                                     <th>${messages.midLvl}:</th>
                                     <th>${messages.ally}:</th>
@@ -594,7 +628,7 @@ $(document).on('click', 'nav #stat', function () {
                                 <tr>
                                     <th></th>
                                     <th>${messages.castleName}:</th>
-                                    <th>${messages.owner}:</th>
+                                    <th>${messages.clanName}:</th>
                                     <th>${messages.tax}:</th>
                                     <th>${messages.treasure}:</th>
                                     <th>${messages.siegeDate}:</th>
@@ -609,7 +643,7 @@ $(document).on('click', 'nav #stat', function () {
                                 <tr>
                                     <th></th>
                                     <th>${messages.fortName}:</th>
-                                    <th>${messages.owner}:</th>
+                                    <th>${messages.clanName}:</th>
                                     <th>${messages.siegeDate}:</th>
                                 </tr>
                             </table>
@@ -618,17 +652,20 @@ $(document).on('click', 'nav #stat', function () {
             </div>
         </div>
         `);
+
 		elementFadeShow(navSelector);
 		elementFadeShow(mainSelector);
 		setButtonActive('nav ul li a', 'navActive', 'nav #stat');
 		generateBackButton();
-		fetch(serverUrl + '/clans/count/all')
+
+		fetch(serverUrl + '/accounts/count/all')
 			.then(response => response.json())
 			.then(data => {
 				if (data != null) {
-					$('#accCount').html(data.count);
+					$('#accCount').html(data);
 				}
 			});
+
 		fetch(serverUrl + '/characters/count/byType')
 			.then(response => response.json())
 			.then(data => {
@@ -639,6 +676,23 @@ $(document).on('click', 'nav #stat', function () {
 					$('#countGm').html(data.gms);
 				}
 			});
+
+		fetch(serverUrl + '/clans/count/all')
+			.then(response => response.json())
+			.then(data => {
+				if (data != null) {
+					$('#countClans').html(data);
+				}
+			});
+
+		fetch(serverUrl + '/clans/count/allAllys')
+			.then(response => response.json())
+			.then(data => {
+				if (data != null) {
+					$('#countAllys').html(data);
+				}
+			});
+
 		fetch(serverUrl + '/clans/get/all')
 			.then(response => response.json())
 			.then(data => {
@@ -647,16 +701,19 @@ $(document).on('click', 'nav #stat', function () {
 						$('#stat #clans table').append(
 							'<tr>' +
 							'<td>' + element.name + '</td>' +
-							'<td >' + element.level + '</td>' +
-							'<td >' + element.leader.charName + '</td>' +
-							'<td >' + element.reputation + '</td>' +
-							'<td >' + element.middLevel + '</td>' +
-							'<td >' + element.alyName + '</td>' +
+							'<td>' + element.level + '</td>' +
+							'<td>' + element.leaderName + '</td>' +
+							'<td>' + element.castleName + '</td>' +
+							'<td>' + element.fortName + '</td>' +
+							'<td>' + element.reputation + '</td>' +
+							'<td>' + element.midCharsLevel + '</td>' +
+							'<td>' + element.alyName + '</td>' +
 							'</tr>'
 						);
 					});
 				}
 			});
+
 		fetch(serverUrl + '/characters/get/top10')
 			.then(response => response.json())
 			.then(data => {
@@ -664,46 +721,58 @@ $(document).on('click', 'nav #stat', function () {
 					data.forEach(element => {
 						$('#stat #top10 table').append(
 							`<tr>
-                            <td>` + element.playerName + `</td>
-                            <td >` + element.playerClass + `</td>
-                            <td >` + element.playerGender + `</td>
-                            <td >` + element.playersClan + `</td>
-                            <td >` + element.playersOnlineTime + ` ч.</td>
-                            <td >` + element.playersPvpKills + '/' + element.playersPkKills + `</td>
+                            <td>` + element.charName + `</td>
+                            <td >` + element.level + `</td>
+                            <td >` + element.className + `</td>
+                            <td >` + element.gender + `</td>
+                            <td >` + element.clanName + `</td>
+                            <td >` + Math.round((element.onlineTime / 1000 / 60) * 100) / 100 + ` С‡.</td>
+                            <td >` + element.pvpKills + '/' + element.pkKills + `</td>
                             </tr>`
 						);
 					});
 				}
 			});
+
 		fetch(serverUrl + '/castles/get/all')
 			.then(response => response.json())
 			.then(data => {
 				if (data != null) {
 					data.forEach(element => {
+						let date = new Date(element.siegeDate);
+
 						$('#stat #castles table').append(
 							'<tr>' +
 							'<td><img src="images/castles/' + element.id + '.jpg"</td>' +
 							'<td>' + element.name + '</td>' +
-							'<td >' + (element.clan == null ? element.clan : element.clan.name) + '</td>' +
+							'<td >' + element.clanName + '</td>' +
 							'<td >' + element.taxPercent + '%</td>' +
 							'<td >' + element.treasury + '</td>' +
-							'<td >' + new Date(element.siegeDate).toLocaleDateString() + ' ' + new Date(element.siegeDate).toLocaleTimeString() + '</td>' +
+							'<td >' + date.toLocaleDateString() + ' ' + date.toLocaleTimeString() + '</td>' +
 							'</tr>'
 						);
 					});
 				}
 			});
+
 		fetch(serverUrl + '/forts/get/all')
 			.then(response => response.json())
 			.then(data => {
 				if (data != null) {
 					data.forEach(element => {
+						let siegeDate = 'None';
+
+						if (element.siegeDate !== 0) {
+							let date = new Date(element.siegeDate);
+							siegeDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+						}
+
 						$('#stat #forts table').append(
 							'<tr>' +
 							'<td><img src="images/forts/' + element.id + '.jpg"</td>' +
 							'<td>' + element.name + '</td>' +
-							'<td>' + (element.clan == null ? element.clan : element.clan.name) + '</td>' +
-							'<td>' + element.siegeDate + '</td>' +
+							'<td>' + element.clanName + '</td>' +
+							'<td>' + siegeDate + '</td>' +
 							'</tr>'
 						);
 					});
@@ -808,25 +877,19 @@ $(document).on('click', 'button.login', function () {
 		if (token !== null) {
 			sendHttpRequest('POST', serverUrl + '/reCaptcha/validate', { response: token }).then(response => response.json())
 				.then((result) => {
-					if (result.success && result.score > 0.5) {
-						// let formSelector = '#lk_form form';
-						login = $("#inputLoginl3").val();
-						let password = $("#inputPassword3").val();
-						if (login === '' || password === '') {
-							setFormHeaderStatusText(messages.fieldsCannotEmpty, 'red');
-							return;
-						}
-						setFormHeaderStatusText(messages.waiting, 'inherit');
-						let userData = {
-							login: login,
-							password: password
-						};
-						sendFormRequest(userData, "/accounts/login", /* formSelector, */ showCabinetMenu());
-					} else {
+					if (!result.success && result.score < 0.5) {
 						$('form').trigger('reset');
 						setFormHeaderStatusText(messages.botsAction, 'red');
 						return;
 					}
+					login = $("#inputLoginl3").val();
+					let password = $("#inputPassword3").val();
+					setFormHeaderStatusText(messages.waiting, 'inherit');
+					let userData = {
+						login: login,
+						password: password
+					};
+					sendRequestAndChangeFormView(userData, "/accounts/login", cabinetFormView);
 				});
 		}
 	});
@@ -845,14 +908,6 @@ $(document).on('click', "button.register", function () {
 						let email = $("#inputEmail3").val();
 						let pass = $("#inputPassword3").val();
 						let passSecond = $("#inputSecondPassword3").val();
-						if (login === '' || email === '' || pass === '' || passSecond === '') {
-							setFormHeaderStatusText(messages.fieldsCannotEmpty, 'red');
-							return;
-						}
-						if (!(pass).match(passSecond)) {
-							setFormHeaderStatusText(messages.passwordsNotMatch, 'orange');
-							return;
-						}
 						$(formSelector + 'h1').css("color", "white").html(messages.waiting);
 						var userData = {
 							login: login,
@@ -860,7 +915,7 @@ $(document).on('click', "button.register", function () {
 							password: pass,
 							repeatedPassword: passSecond
 						};
-						sendFormRequest(userData, "/accounts/create", formSelector);
+						sendRequestAndChangeFormView(userData, "/accounts/create", formsRegisteredUserView);
 					} else {
 						setFormHeaderStatusText(messages.botsAction, 'red');
 						$('form').trigger('reset');
@@ -878,19 +933,14 @@ $(document).on('click', "button.restore", function () {
 			sendHttpRequest('POST', serverUrl + '/reCaptcha/validate', { response: token }).then(response => response.json())
 				.then((result) => {
 					if (result.success && result.score > 0.5) {
-						let formSelector = '#lk_form form';
 						let login = $("#inputLoginl3").val();
 						let email = $("#inputEmail3").val();
-						if (login === '' || email === '') {
-							setFormHeaderStatusText(messages.fieldsCannotEmpty, "red");
-							return;
-						}
 						setFormHeaderStatusText(messages.waiting, 'inherit');
 						var userData = {
 							login: login,
 							email: email
 						};
-						sendFormRequest(userData, "/accounts/restorePass", formSelector);
+						sendRequestAndChangeFormView(userData, "/accounts/restorePass", formsPsswordChangedView);
 					} else {
 						setFormHeaderStatusText(messages.botsAction, 'red');
 						$('form').trigger('reset');
@@ -928,45 +978,21 @@ $(document).on('click', "button.changePassword", function () {
 	let oldPassword = $("#oldPassword").val();
 	let newFirstPassword = $("#newFirstPassword").val();
 	let newSecondPassword = $("#newSecondPassword").val();
-	let formSelector = '#lk_form form';
-	if (login === '' || oldPassword === '' || newFirstPassword === '' || newSecondPassword === '') {
-		setFormHeaderStatusText(messages.fieldsCannotEmpty, 'red');
-		return;
-	}
-	if (!(newFirstPassword).match(newSecondPassword)) {
-		setFormHeaderStatusl(messages.passwordsNotMatch, 'red');
-		return;
-	}
 	setFormHeaderStatusText(messages.waiting, 'inherit');
 	var userData = {
 		login: login,
 		oldPassword: oldPassword,
-		newFirstPassword: newFirstPassword,
-		newSecondPassword: newSecondPassword
+		newPassword: newFirstPassword,
+		newRepeatedPassword: newSecondPassword
 	};
-	sendHttpRequest('POST', serverUrl + '/accounts/changePass', userData)
-		.then(function (response) {
-			if (response.status == 200) {
-				setFormHeaderStatusText(response.status, 'green')
-				setFormsInfoMessage(messages.passwordChanged, 'green');
-				$('form').trigger('reset');
-				return;
-			} else {
-				let data = response.json();
-				elementFadeHide(formSelector);
-				setTimeout(function () {
-					setFormTextByStatusCode(data);
-					elementFadeShow(formSelector);
-				})
-			}
-		}, loadTimeout);
+	sendRequestAndChangeFormView(userData, '/accounts/changePass', formsPsswordChangedView)
 })
 
 $(document).on('click', "#lk_form form button.back", function () {
 	let formSeletor = '#lk_form form';
 	elementFadeHide(formSeletor);
 	setTimeout(function () {
-		showCabinetMenu();
+		cabinetFormView();
 		elementFadeShow(formSeletor);
 	}, loadTimeout);
 })
@@ -976,7 +1002,7 @@ $(document).on('click', "button.exit", function () {
 	elementFadeHide(formSeletor);
 	setTimeout(function () {
 		login = null;
-		showLoginForm();
+		looginFormView();
 		elementFadeShow(formSeletor);
 	}, loadTimeout);
 })
