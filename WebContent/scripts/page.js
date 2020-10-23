@@ -25,16 +25,13 @@ function generateHeader() {
             <div id="logo"></div>
             <div class="status">
                 <ul>
-                    <li id="serverName">
-                        </li>
-                        <li id="status">
-                        </li>
-                        <li id="count">
-                        </li>
-                    </ul>
-                </div>
+                    <li id="serverName"></li>
+                    <li id="status"></li>
+                    <li id="count"></li>
+                </ul>
             </div>
-        `);
+        </div>
+    `);
 }
 
 function generateMenu() {
@@ -286,14 +283,22 @@ function getRegisteredServerName() {
 		});
 }
 
+function showGreeting(statusText, onlineCount) {
+	$('.status #status').html(statusText).css('color', 'green');
+	$('.status #count').html(onlineCount);
+}
+
 function getServerStatus() {
-	fetch(serverUrl + '/gs/get/status')
-		.then(response => response.json())
-		.then(data => {
-			if (data != null) {
-				showGreeting(data);
-			}
-		});
+	let prom = fetch(serverUrl + '/gs/status');
+	prom.then(response => {
+		if (response.status == 200) {
+			prom.then(response => response.text()).then(data => {
+				showGreeting("ON", data);
+			});
+		} else {
+			showGreeting("OFF", 0);
+		}
+	});
 }
 
 function initDefaultLanguagesSettings() {
@@ -328,14 +333,6 @@ function cantEmpty(data) {
 
 function setFormHeaderStatusText(status, color) {
 	$('#lk_form form h1').html(status).css("color", color);
-}
-
-function setFormsInfoMessage(message) {
-	$('#lk_form form #formInputs').html(`
-        <div class="infoMessage">
-            ${message}
-        </div>
-    `).css('text-align', 'center');
 }
 
 function formsPsswordChangedView() {
@@ -1097,9 +1094,3 @@ $(document).on('click', 'button.sendMessage', function () {
 $(document).on('keypress', 'input[type="password"]', function (e) {
 	checkSubmit(e);
 })
-
-
-
-
-
-
