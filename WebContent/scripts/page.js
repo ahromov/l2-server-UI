@@ -331,8 +331,8 @@ function cantEmpty(data) {
 	$('div.message form  p.' + data).html(messages.fieldsCannotEmpty).css('color', 'red');
 }
 
-function setFormHeaderStatusText(status, color) {
-	$('#lk_form form h1').html(status).css("color", color);
+function setFormHeaderStatusText(statusMessage, color) {
+	$('#lk_form form h1').html(statusMessage).css("color", color);
 }
 
 function formsPsswordChangedView() {
@@ -867,6 +867,12 @@ $(document).on('click', '.nextNewsPage', function () {
 	}, loadTimeout);
 })
 
+function isInputEmpty(obj) {
+	if (obj.login === "" || obj.email === "" || obj.password === "" || obj.repeatedPassword === "" || obj.newPassword === "" || obj.newRepeatedPassword === "")
+		return true;
+	return false;
+}
+
 $(document).on('click', 'button.login', function () {
 	grecaptcha.execute('6LcW18QUAAAAAO7x430ImUvox3gR3SzhUwJCIr8C', {
 		action: 'login'
@@ -881,11 +887,19 @@ $(document).on('click', 'button.login', function () {
 					}
 					login = $("#inputLoginl3").val();
 					let password = $("#inputPassword3").val();
-					setFormHeaderStatusText(messages.waiting, 'inherit');
+
 					let userData = {
 						login: login,
 						password: password
 					};
+
+					if (isInputEmpty(userData)) {
+						setFormHeaderStatusText(messages.fieldsCannotEmpty, 'red');
+						return;
+					}
+
+					setFormHeaderStatusText(messages.waiting, 'inherit');
+
 					sendRequestAndChangeFormView(userData, "/accounts/login", cabinetFormView);
 				});
 		}
@@ -905,13 +919,21 @@ $(document).on('click', "button.register", function () {
 						let email = $("#inputEmail3").val();
 						let pass = $("#inputPassword3").val();
 						let passSecond = $("#inputSecondPassword3").val();
+
 						$(formSelector + 'h1').css("color", "white").html(messages.waiting);
+
 						var userData = {
 							login: login,
 							email: email,
 							password: pass,
 							repeatedPassword: passSecond
 						};
+
+						if (isInputEmpty(userData)) {
+							setFormHeaderStatusText(messages.fieldsCannotEmpty, 'red');
+							return;
+						}
+
 						sendRequestAndChangeFormView(userData, "/accounts/create", formsRegisteredUserView);
 					} else {
 						setFormHeaderStatusText(messages.botsAction, 'red');
@@ -932,11 +954,19 @@ $(document).on('click', "button.restore", function () {
 					if (result.success && result.score > 0.5) {
 						let login = $("#inputLoginl3").val();
 						let email = $("#inputEmail3").val();
+
 						setFormHeaderStatusText(messages.waiting, 'inherit');
+
 						var userData = {
 							login: login,
 							email: email
 						};
+
+						if (isInputEmpty(userData)) {
+							setFormHeaderStatusText(messages.fieldsCannotEmpty, 'red');
+							return;
+						}
+
 						sendRequestAndChangeFormView(userData, "/accounts/restorePass", formsPsswordChangedView);
 					} else {
 						setFormHeaderStatusText(messages.botsAction, 'red');
@@ -975,13 +1005,20 @@ $(document).on('click', "button.changePassword", function () {
 	let oldPassword = $("#oldPassword").val();
 	let newFirstPassword = $("#newFirstPassword").val();
 	let newSecondPassword = $("#newSecondPassword").val();
-	setFormHeaderStatusText(messages.waiting, 'inherit');
-	var userData = {
+
+	let userData = {
 		login: login,
 		password: oldPassword,
 		newPassword: newFirstPassword,
 		newRepeatedPassword: newSecondPassword
 	};
+
+	if (isInputEmpty(userData)) {
+		setFormHeaderStatusText(messages.fieldsCannotEmpty, 'red');
+		return;
+	}
+
+	setFormHeaderStatusText(messages.waiting, 'inherit');
 	sendRequestAndChangeFormView(userData, '/accounts/changePass', formsPsswordChangedView)
 })
 
