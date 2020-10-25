@@ -199,10 +199,10 @@ function generateMainContent(languagesSelectors) {
     `);
 	looginFormView();
 	elementFadeShow('main');
-	fetch(serverUrl + '/news/get/pages')
-		.then(response => response.json())
+	fetch(serverUrl + '/news/pages/count')
+		.then(response => response.text())
 		.then(data => {
-			if (data != 0) {
+			if (data > 0) {
 				for (let i = 0; i < data; i++) {
 					generateNewsPagesButtons(i);
 				}
@@ -978,7 +978,7 @@ $(document).on('click', "button.changePassword", function () {
 	setFormHeaderStatusText(messages.waiting, 'inherit');
 	var userData = {
 		login: login,
-		oldPassword: oldPassword,
+		password: oldPassword,
 		newPassword: newFirstPassword,
 		newRepeatedPassword: newSecondPassword
 	};
