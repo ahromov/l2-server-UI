@@ -697,15 +697,15 @@ $(document).on('click', 'nav #stat', function () {
 					data.forEach(element => {
 						$('#stat #clans table').append(
 							'<tr>' +
-							'<td>' + element.name + '</td>' +
-							'<td>' + element.level + '</td>' +
-							'<td>' + element.leaderName + '</td>' +
-							'<td>' + element.castleName + '</td>' +
-							'<td>' + element.fortName + '</td>' +
-							'<td>' + element.reputation + '</td>' +
-							'<td>' + element.midCharsLevel + '</td>' +
-							'<td>' + element.alyName + '</td>' +
-							'</tr>'
+								'<td>' + element.name + '</td>' +
+								'<td>' + element.level + '</td>' +
+								'<td>' + element.leaderName + '</td>' +
+								'<td>' + element.castleName + '</td>' +
+								'<td>' + element.fortName + '</td>' +
+								'<td>' + element.reputation + '</td>' +
+								'<td>' + element.midCharsLevel + '</td>' +
+								'<td>' + (element.alyName == null ? 'None' : element.alyName) + '</td>' +
+								'</tr>'
 						);
 					});
 				}
