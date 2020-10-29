@@ -284,8 +284,8 @@ function getRegisteredServerName() {
 }
 
 function showGreeting(statusText, onlineCount) {
-	$('.status #status').html(statusText).css('color', 'green');
-	$('.status #count').html(onlineCount);
+	$('.status ul li#status').html(statusText).css('color', (statusText === 'ON' ? 'green' : null));
+	$('.status ul li#count').html(onlineCount);
 }
 
 function getServerStatus() {
@@ -697,15 +697,15 @@ $(document).on('click', 'nav #stat', function () {
 					data.forEach(element => {
 						$('#stat #clans table').append(
 							'<tr>' +
-								'<td>' + element.name + '</td>' +
-								'<td>' + element.level + '</td>' +
-								'<td>' + element.leaderName + '</td>' +
-								'<td>' + element.castleName + '</td>' +
-								'<td>' + element.fortName + '</td>' +
-								'<td>' + element.reputation + '</td>' +
-								'<td>' + element.midCharsLevel + '</td>' +
-								'<td>' + (element.alyName == null ? 'None' : element.alyName) + '</td>' +
-								'</tr>'
+							'<td>' + element.name + '</td>' +
+							'<td>' + element.level + '</td>' +
+							'<td>' + element.leaderName + '</td>' +
+							'<td>' + element.castleName + '</td>' +
+							'<td>' + element.fortName + '</td>' +
+							'<td>' + element.reputation + '</td>' +
+							'<td>' + element.midCharsLevel + '</td>' +
+							'<td>' + (element.alyName == null ? 'None' : element.alyName) + '</td>' +
+							'</tr>'
 						);
 					});
 				}
