@@ -272,15 +272,15 @@ function setButtonActive(elementRemove, className, elementActive) {
 }
 
 function getRegisteredServerName() {
-	fetch(serverUrl + '/ls/getServers')
-		.then(response => response.json())
-		.then(data => {
-			if (data != null) {
-				data.forEach(element => {
-					$('#serverName').text(element.name);
-				});
-			}
-		});
+	let prom = fetch(serverUrl + '/ls/getServers');
+	prom.then(response => response.json()).then(data => {
+		if (data.length > 0) {
+			data.forEach(element => {
+				$('#serverName').text(element.name);
+			});
+		} else
+			$('#serverName').text("None");
+	});
 }
 
 function showGreeting(statusText, onlineCount) {
@@ -296,6 +296,7 @@ function getServerStatus() {
 				showGreeting("ON", data);
 			});
 		} else {
+			console.log("Server unavailable")
 			showGreeting("OFF", 0);
 		}
 	});
