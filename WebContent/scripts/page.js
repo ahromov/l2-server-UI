@@ -402,8 +402,8 @@ async function sendHttpRequest(method, url, data) {
 	});
 }
 
-function sendRequestAndChangeFormView(userData, path, view) {
-	let prom = sendHttpRequest('POST', serverUrl + path, userData);
+function sendRequestAndChangeFormView(method, userData, path, view) {
+	let prom = sendHttpRequest(method, serverUrl + path, userData);
 	elementFadeHide('#lk_form form');
 	prom.then((response) => {
 		setTimeout(function () {
@@ -901,7 +901,7 @@ $(document).on('click', 'button.login', function () {
 
 					setFormHeaderStatusText(messages.waiting, 'inherit');
 
-					sendRequestAndChangeFormView(userData, "/accounts/login", cabinetFormView);
+					sendRequestAndChangeFormView('POST', userData, "/accounts/login", cabinetFormView);
 				});
 		}
 	});
@@ -935,7 +935,7 @@ $(document).on('click', "button.register", function () {
 							return;
 						}
 
-						sendRequestAndChangeFormView(userData, "/accounts/create", formsRegisteredUserView);
+						sendRequestAndChangeFormView('POST', userData, "/accounts/create", formsRegisteredUserView);
 					} else {
 						setFormHeaderStatusText(messages.botsAction, 'red');
 						$('form').trigger('reset');
@@ -968,7 +968,7 @@ $(document).on('click', "button.restore", function () {
 							return;
 						}
 
-						sendRequestAndChangeFormView(userData, "/accounts/restorePass", formsPsswordChangedView);
+						sendRequestAndChangeFormView('PUT', userData, "/accounts/restorePass", formsPsswordChangedView);
 					} else {
 						setFormHeaderStatusText(messages.botsAction, 'red');
 						$('form').trigger('reset');
@@ -1020,7 +1020,7 @@ $(document).on('click', "button.changePassword", function () {
 	}
 
 	setFormHeaderStatusText(messages.waiting, 'inherit');
-	sendRequestAndChangeFormView(userData, '/accounts/changePass', formsPsswordChangedView)
+	sendRequestAndChangeFormView('PUT', userData, '/accounts/changePass', formsPsswordChangedView)
 })
 
 $(document).on('click', "#lk_form form button.back", function () {
